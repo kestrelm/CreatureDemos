@@ -11,4 +11,6 @@ The actual animation logic for the walking pheasants and tapir is all authored u
 
 ![img](https://raw.githubusercontent.com/kestrelm/CreatureDemos/master/BL.png)
 
+View the Demo Video [here](https://youtu.be/MQK1mVSXaAk).
+
 The UE4 Project Archive for this is called **BritishLibraryScene.7z**
