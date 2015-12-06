@@ -30,3 +30,25 @@ The actual animation logic for the walking pheasants and tapir is all authored u
 View the Demo Video [here](https://youtu.be/MQK1mVSXaAk).
 
 The UE4 Project Archive for this is called **BritishLibraryScene.7z**
+
+##Elephant Stomp: Game Tech Demo
+Elephant Stomp! is a demo game showcasing the Creature Animation System and its UE4 Plugin. The entire game runs off the Creature UE4 Plugin and is written 100% in the BP system.
+
+Control the Elephant and its Magic Rider battling waves of soldiers. As you take out the soldiers, you gain spell powers enabling you to either summon in a rain drop of fish from the heavens or call in a flock of deadly stampeding ostriches!
+
+The character art from the game is from the public domain [British Library Flickr Archive](https://www.flickr.com/photos/britishlibrary/albums).
+
+![img](https://raw.githubusercontent.com/kestrelm/CreatureDemos/master/stomp.png)
+
+###Controls:
+Movement - Click to the Left or Right of the Elephant to move
+
+Summon Fish Raindrop - 1
+
+Summon Ostrich Rush - 2
+
+Stomp - Space
+
+View the Demo Video [here](https://youtu.be/KbKBJdJn7bA).
+
+The UE4 Project folder is called **BattleGame**
