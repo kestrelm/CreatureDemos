@@ -49,6 +49,6 @@ Summon Ostrich Rush - 2
 
 Stomp - Space
 
-View the Demo Video [here](https://youtu.be/KbKBJdJn7bA).
+View the **Demo Video** [here](https://youtu.be/KbKBJdJn7bA).
 
 The UE4 Project folder is called **BattleGame**
