@@ -1,0 +1,1071 @@
+﻿[2016.03.19-16.44.50:003][  0]Log file open, 03/19/16 09:44:50
+[2016.03.19-16.44.50:003][  0]LogInit:Display: Running engine for game: CreatureDragon2D
+[2016.03.19-16.44.50:003][  0]LogPlatformFile: Not using cached read wrapper
+[2016.03.19-16.44.50:003][  0]LogInit:Display: RandInit(-1506166882) SRandInit(-1506166881).
+[2016.03.19-16.44.50:003][  0]LogTaskGraph: Started task graph with 4 named threads and 7 total threads.
+[2016.03.19-16.44.50:003][  0]LogStats: Stats thread started at 0.113497
+[2016.03.19-16.44.50:003][  0]LogInit: Version: 4.10.1-2791327+++depot+UE4-Releases+4.10
+[2016.03.19-16.44.50:003][  0]LogInit: API Version: 2758231
+[2016.03.19-16.44.50:003][  0]LogInit: Compiled (64-bit): Dec  4 2015 19:44:40
+[2016.03.19-16.44.50:003][  0]LogInit: Compiled with Visual C++: 19.00.23026.00
+[2016.03.19-16.44.50:003][  0]LogInit: Build Configuration: Development
+[2016.03.19-16.44.50:003][  0]LogInit: Branch Name: ++depot+UE4-Releases+4.10
+[2016.03.19-16.44.50:003][  0]LogInit: Command line:  
+[2016.03.19-16.44.50:003][  0]LogInit: Base directory: C:/Program Files/Epic Games/4.10/Engine/Binaries/Win64/
+[2016.03.19-16.44.50:003][  0]LogInit: Rocket: 1
+[2016.03.19-16.44.50:018][  0]LogInit: Using libcurl 7.41.0
+[2016.03.19-16.44.50:018][  0]LogInit:  - built for x86_64-pc-win32
+[2016.03.19-16.44.50:018][  0]LogInit:  - supports SSL with WinSSL
+[2016.03.19-16.44.50:018][  0]LogInit:  - other features:
+[2016.03.19-16.44.50:018][  0]LogInit:      CURL_VERSION_SSL
+[2016.03.19-16.44.50:018][  0]LogInit:      CURL_VERSION_IPV6
+[2016.03.19-16.44.50:018][  0]LogInit:      CURL_VERSION_ASYNCHDNS
+[2016.03.19-16.44.50:018][  0]LogInit:      CURL_VERSION_LARGEFILE
+[2016.03.19-16.44.50:018][  0]LogInit:      CURL_VERSION_IDN
+[2016.03.19-16.44.50:018][  0]LogInit:  CurlRequestOptions (configurable via config and command line):
+[2016.03.19-16.44.50:018][  0]LogInit:  - bVerifyPeer = true  - Libcurl will verify peer certificate
+[2016.03.19-16.44.50:018][  0]LogInit:  - bUseHttpProxy = false  - Libcurl will NOT use HTTP proxy
+[2016.03.19-16.44.50:018][  0]LogInit:  - bDontReuseConnections = false  - Libcurl will reuse connections
+[2016.03.19-16.44.50:018][  0]LogInit:  - CertBundlePath = nullptr  - Libcurl will use whatever was configured at build time.
+[2016.03.19-16.44.50:034][  0]LogInit: Presizing for 0 objects not considered by GC, pre-allocating 0 bytes.
+[2016.03.19-16.44.50:049][  0]LogInit: Object subsystem initialized
+[2016.03.19-16.44.50:049][  0]LogInit: Selected Device Profile: [Windows]
+[2016.03.19-16.44.50:049][  0]LogInit: Applying CVar settings loaded from the selected device profile: [Windows]
+[2016.03.19-16.44.50:068][  0]LogInit: Computer: MERLIN
+[2016.03.19-16.44.50:068][  0]LogInit: User: jychong
+[2016.03.19-16.44.50:068][  0]LogInit: CPU Page size=4096, Cores=4
+[2016.03.19-16.44.50:068][  0]LogInit: High frequency timer resolution =3.914058 MHz
+[2016.03.19-16.44.50:068][  0]LogMemory: Memory total: Physical=15.9GB (16GB approx)
+[2016.03.19-16.44.50:068][  0]LogMemory: Platform Memory Stats for Windows
+[2016.03.19-16.44.50:068][  0]LogMemory: Process Physical Memory: 56.15 MB used, 56.15 MB peak
+[2016.03.19-16.44.50:068][  0]LogMemory: Process Virtual Memory: 56.80 MB used, 56.80 MB peak
+[2016.03.19-16.44.50:068][  0]LogMemory: Physical Memory: 3729.92 MB used, 16332.17 MB total
+[2016.03.19-16.44.50:068][  0]LogMemory: Virtual Memory: 382.86 MB used, 134217728.00 MB total
+[2016.03.19-16.44.50:205][  0]LogTextLocalizationManager: No specific translations for ('en-US') exist, so ('en') translations will be used.
+[2016.03.19-16.44.50:540][  0]LogD3D11RHI: Found D3D11 adapter 0: NVIDIA GeForce GTX 950 (Feature Level 11_0)
+[2016.03.19-16.44.50:540][  0]LogD3D11RHI: Adapter has 1969MB of dedicated video memory, 0MB of dedicated system memory, and 8166MB of shared system memory, 1 output[s]
+[2016.03.19-16.44.50:541][  0]LogD3D11RHI: Found D3D11 adapter 1: Microsoft Basic Render Driver (Feature Level 11_0)
+[2016.03.19-16.44.50:541][  0]LogD3D11RHI: Adapter has 0MB of dedicated video memory, 0MB of dedicated system memory, and 8166MB of shared system memory, 0 output[s]
+[2016.03.19-16.44.50:541][  0]LogD3D11RHI: Chosen D3D11 Adapter Id = 0
+[2016.03.19-16.44.50:544][  0]LogD3D11RHI: !Direct3DDevice
+[2016.03.19-16.44.50:544][  0]LogRHI: Texture pool is 1361 MB (70% of 1945 MB)
+[2016.03.19-16.44.50:553][  0]LogD3D11RHI: Async texture creation enabled
+[2016.03.19-16.44.50:567][  0]LogShaderCompilers: Guid format shader working directory is -38 characters bigger than the processId version (../../../../../../Users/jychong/Documents/Work/Projects/UE4_Projects/CreatureDragon2D/Intermediate/Shaders/WorkingDirectory/11012/).
+[2016.03.19-16.44.50:567][  0]LogShaderCompilers: Cleaned the shader compiler working directory 'C:/Users/jychong/AppData/Local/Temp/UnrealShaderWorkingDir/5C3DD94E46C3AAD753E0F09EF1F809C8/'.
+[2016.03.19-16.44.50:567][  0]LogShaderCompilers:Display: Using Local Shader Compiler.
+[2016.03.19-16.44.51:653][  0]LogTemp:Display: Loaded TP AllDesktopTargetPlatform
+[2016.03.19-16.44.51:657][  0]LogTemp:Display: Loaded TP WindowsClientTargetPlatform
+[2016.03.19-16.44.51:660][  0]LogTemp:Display: Loaded TP WindowsNoEditorTargetPlatform
+[2016.03.19-16.44.51:663][  0]LogTemp:Display: Loaded TP WindowsServerTargetPlatform
+[2016.03.19-16.44.51:667][  0]LogTemp:Display: Loaded TP WindowsTargetPlatform
+[2016.03.19-16.44.51:672][  0]LogTemp:Display: Loaded TP AndroidTargetPlatform
+[2016.03.19-16.44.51:674][  0]LogTemp:Display: Loaded TP Android_ASTCTargetPlatform
+[2016.03.19-16.44.51:676][  0]LogTemp:Display: Loaded TP Android_ATCTargetPlatform
+[2016.03.19-16.44.51:679][  0]LogTemp:Display: Loaded TP Android_DXTTargetPlatform
+[2016.03.19-16.44.51:682][  0]LogTemp:Display: Loaded TP Android_ETC1TargetPlatform
+[2016.03.19-16.44.51:684][  0]LogTemp:Display: Loaded TP Android_ETC2TargetPlatform
+[2016.03.19-16.44.51:690][  0]LogTemp:Display: Loaded TP Android_MultiTargetPlatform
+[2016.03.19-16.44.51:690][  0]LogTemp:Display: Loaded TP Android_PVRTCTargetPlatform
+[2016.03.19-16.44.51:690][  0]LogTemp:Display: Loaded TP HTML5TargetPlatform
+[2016.03.19-16.44.51:724][  0]LogTemp:Display: Loaded TP IOSTargetPlatform
+[2016.03.19-16.44.51:726][  0]LogTemp:Display: Loaded TP LinuxNoEditorTargetPlatform
+[2016.03.19-16.44.51:729][  0]LogTemp:Display: Loaded TP LinuxServerTargetPlatform
+[2016.03.19-16.44.51:733][  0]LogTemp:Display: Loaded TP LinuxTargetPlatform
+[2016.03.19-16.44.51:733][  0]LogTargetPlatformManager:Display: Building Assets For Windows
+[2016.03.19-16.44.51:941][  0]LogDerivedDataCache:Display: Max Cache Size: 512 MB
+[2016.03.19-16.44.52:078][  0]LogDerivedDataCache: Loaded boot cache 0.14s 41MB C:/Users/jychong/AppData/Local/UnrealEngine/4.10/DerivedDataCache/Boot.ddc.
+[2016.03.19-16.44.52:079][  0]LogDerivedDataCache:Display: Loaded Boot cache: C:/Users/jychong/AppData/Local/UnrealEngine/4.10/DerivedDataCache/Boot.ddc
+[2016.03.19-16.44.52:079][  0]LogDerivedDataCache: FDerivedDataBackendGraph:  Pak pak cache file ../../../../../../Users/jychong/Documents/Work/Projects/UE4_Projects/CreatureDragon2D/DerivedDataCache/DDC.ddp not found, will not use a pak cache.
+[2016.03.19-16.44.52:079][  0]LogDerivedDataCache: Unable to find inner node Pak for hierarchical cache Hierarchy.
+[2016.03.19-16.44.52:079][  0]LogDerivedDataCache: FDerivedDataBackendGraph:  CompressedPak pak cache file ../../../../../../Users/jychong/Documents/Work/Projects/UE4_Projects/CreatureDragon2D/DerivedDataCache/Compressed.ddp not found, will not use a pak cache.
+[2016.03.19-16.44.52:079][  0]LogDerivedDataCache: Unable to find inner node CompressedPak for hierarchical cache Hierarchy.
+[2016.03.19-16.44.52:128][  0]LogDerivedDataCache:Display: Pak cache opened for reading ../../../Engine/DerivedDataCache/Compressed.ddp.
+[2016.03.19-16.44.52:139][  0]LogDerivedDataCache: Using Local data cache path C:/Users/jychong/AppData/Local/UnrealEngine/Common/DerivedDataCache: Writable
+[2016.03.19-16.44.54:112][  0]LogInit: Selected Device Profile: [Windows]
+[2016.03.19-16.44.54:123][  0]LogContentStreaming: Texture pool size is 0.000000MB
+[2016.03.19-16.44.54:308][  0]LogMeshUtilities: No automatic mesh reduction module available
+[2016.03.19-16.44.54:308][  0]LogMeshUtilities: No automatic mesh merging module available
+[2016.03.19-16.44.54:818][  0]LogInit: WinSock: version 1.1 (2.2), MaxSocks=32767, MaxUdp=65467
+[2016.03.19-16.44.56:622][  0]UdpMessaging: Initializing bridge on interface 0.0.0.0:0 to multicast group 230.0.0.1:6666.
+[2016.03.19-16.44.56:781][  0]LogAssetRegistry: FAssetRegistry took 0.0129 seconds to start up
+[2016.03.19-16.44.57:034][  0]SourceControl: Info Source control is disabled
+[2016.03.19-16.44.57:040][  0]SourceControl: Info Source control is disabled
+[2016.03.19-16.44.57:051][  0]SourceControl: Info Source control is disabled
+[2016.03.19-16.44.57:061][  0]SourceControl: Info Source control is disabled
+[2016.03.19-16.44.57:299][  0]LogObj: 28953 objects as part of root set at end of initial load.
+[2016.03.19-16.44.57:299][  0]LogUObjectAllocator: 6167816 out of 0 bytes used by permanent object pool.
+[2016.03.19-16.44.57:380][  0]LogEngine: Initializing Engine...
+[2016.03.19-16.44.57:383][  0]LogHMD: Can't find Oculus library dev build: is proper Runtime installed? Version: 0.8.0.0
+[2016.03.19-16.44.57:392][  0]LogHMD: SteamVR failed to initialize.  Err: 110
+[2016.03.19-16.44.57:566][  0]LogAIModule: Creating AISystem for world NewWorld
+[2016.03.19-16.44.57:578][  0]LogInit: XAudio2 using 'VS24A-4 (NVIDIA High Definition Audio)' : 2 channels at 48 kHz using 16 bits per sample (channel mask 0x3)
+[2016.03.19-16.44.57:592][  0]LogInit: FAudioDevice initialized.
+[2016.03.19-16.44.57:607][  0]LogDerivedDataCache: Saved boot cache 0.02s 41MB C:/Users/jychong/AppData/Local/UnrealEngine/4.10/DerivedDataCache/Boot.ddc.
+[2016.03.19-16.44.57:610][  0]LogInit: Texture streaming: Enabled
+[2016.03.19-16.44.57:625][  0]LogAnalytics: Creating configured Analytics provider AnalyticsET
+[2016.03.19-16.44.57:625][  0]LogAnalytics: [UEEditor.Rocket.Release] APIServer = http://et2.epicgames.com/ET2/. AppVersion = 4.10.1-2791327+++depot+UE4-Releases+4.10
+[2016.03.19-16.44.57:625][  0]LogAnalytics: [UEEditor.Rocket.Release] SetUserId 0a664b9e40ce3392435320acb25808e8|d085e2169ed74ad5919a9c5f09bdfc6a|342dfd8c-d9ad-42f6-b691-24b5970a92ec
+[2016.03.19-16.44.57:626][  0]LogAnalytics: [UEEditor.Rocket.Release] AnalyticsET::StartSession
+[2016.03.19-16.44.57:674][  0]LogInit: Transaction tracking system initialized
+[2016.03.19-16.44.57:783][  0]BlueprintLog: New page: Editor Load
+[2016.03.19-16.44.57:917][  0]LocalizationService: Info Localization service is disabled
+[2016.03.19-16.44.58:010][  0]LogConsoleResponse:Display: 
+[2016.03.19-16.44.58:211][  0]LogCook:Display: Done creating registry. It took  0.00s.
+[2016.03.19-16.44.58:278][  0]LogFileCache: Scanning file cache for directory 'C:/Users/jychong/Documents/Work/Projects/UE4_Projects/CreatureDragon2D/Content/' took 0.01s
+[2016.03.19-16.44.58:278][  0]SourceControl: Info Source control is disabled
+[2016.03.19-16.44.58:279][  0]Cmd: MAP LOAD FILE="../../../../../../Users/jychong/Documents/Work/Projects/UE4_Projects/CreatureDragon2D/Content/StarterContent/Maps/Minimal_Default.umap" TEMPLATE=0 SHOWPROGRESS=1 FEATURELEVEL=3
+[2016.03.19-16.44.58:282][  0]LightingResults: New page: Lighting Build
+[2016.03.19-16.44.58:287][  0]MapCheck: New page: Map Check
+[2016.03.19-16.44.58:287][  0]LightingResults: New page: Lighting Build
+[2016.03.19-16.44.58:299][  0]LogParticles: Destroying 0 GPU particle simulations for FXSystem 0x00000170C5D04400
+[2016.03.19-16.44.59:447][  0]LogAIModule: Creating AISystem for world Minimal_Default
+[2016.03.19-16.44.59:470][  0]LogEditorServer: Finished looking for orphan Actors (0.000 secs)
+[2016.03.19-16.44.59:472][  0]Cmd: MAP CHECKDEP NOCLEARLOG
+[2016.03.19-16.44.59:498][  0]MapCheck: Info Map check complete: 0 Error(s), 0 Warning(s), took 25.745ms to complete.
+[2016.03.19-16.44.59:498][  0]LogFileHelpers: Loading map 'Minimal_Default' took 1.220
+[2016.03.19-16.44.59:639][  0]LogCollectionManager: Loaded 0 collections in 0.001496 seconds
+[2016.03.19-16.44.59:687][  0]LogFileCache: Scanning file cache for directory 'C:/Users/jychong/Documents/Work/Projects/UE4_Projects/CreatureDragon2D/Saved/Collections/' took 0.01s
+[2016.03.19-16.44.59:687][  0]LogFileCache: Scanning file cache for directory 'C:/Users/jychong/Documents/Work/Projects/UE4_Projects/CreatureDragon2D/Content/Developers/jychong/Collections/' took 0.01s
+[2016.03.19-16.44.59:687][  0]LogFileCache: Scanning file cache for directory 'C:/Users/jychong/Documents/Work/Projects/UE4_Projects/CreatureDragon2D/Content/Collections/' took 0.01s
+[2016.03.19-16.44.59:687][  0]LogCollectionManager: Rebuilt the GUID cache for 0 collections in 0.000005 seconds
+[2016.03.19-16.44.59:695][  0]LogContentBrowser: Native class hierarchy populated in 0.0077 seconds. Added 1912 classes and 345 folders.
+[2016.03.19-16.44.59:704][  0]LogContentBrowser: Native class hierarchy updated for 'WidgetCarousel' in 0.0007 seconds. Added 0 classes and 0 folders.
+[2016.03.19-16.44.59:919][  0]LogContentBrowser: Native class hierarchy updated for 'AddContentDialog' in 0.0007 seconds. Added 0 classes and 0 folders.
+[2016.03.19-16.44.59:926][  0]LogContentBrowser: Native class hierarchy updated for 'SceneOutliner' in 0.0008 seconds. Added 1 classes and 2 folders.
+[2016.03.19-16.44.59:979][  0]LogCrashTracker: Crashtracker disabled due to settings.
+[2016.03.19-16.44.59:989][  0]LogUObjectGlobals:Warning: Failed to find object 'Class None.'
+[2016.03.19-16.45.00:013][  0]LogLoad: Full Startup: 11.28 seconds (BP compile: 0.05 seconds)
+[2016.03.19-16.45.00:026][  0]LogOcInput: Can't find Oculus library dev build: is proper Runtime installed? Version: 0.8.0.0
+[2016.03.19-16.45.00:100][  0]LogContentStreaming: Texture pool size now 1000 MB
+[2016.03.19-16.45.00:221][  0]LogRenderer: Reallocating scene render targets to support 1204x736 (Frame:2).
+[2016.03.19-16.45.00:316][  1]LogAssetRegistry: Asset discovery search completed in 3.5473 seconds
+[2016.03.19-16.45.00:317][  1]LogCollectionManager: Rebuilt the object cache for 0 collections in 0.000001 seconds (found 0 objects)
+[2016.03.19-16.45.00:317][  1]LogCollectionManager: Fixed up redirectors for 0 collections in 0.000332 seconds (updated 0 objects)
+[2016.03.19-16.45.19:723][438]LogBlueprintUserMessages: Early PlayInEditor Detection: Level '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default:PersistentLevel' has LevelScriptBlueprint '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default:PersistentLevel.Minimal_Default' with GeneratedClass '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default_C' with ClassGeneratedBy '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default:PersistentLevel.Minimal_Default'
+[2016.03.19-16.45.19:723][438]LogPlayLevel: PlayLevel: No blueprints needed recompiling
+[2016.03.19-16.45.19:723][438]PIE: New page: PIE session: Minimal_Default (Mar 19, 2016, 2:45:19 AM)
+[2016.03.19-16.45.19:724][438]LogPlayLevel: Creating play world package: /Game/StarterContent/Maps/UEDPIE_0_Minimal_Default
+[2016.03.19-16.45.19:725][438]LogPlayLevel: PIE: StaticDuplicateObject took: (0.001742s)
+[2016.03.19-16.45.19:726][438]LogAIModule: Creating AISystem for world Minimal_Default
+[2016.03.19-16.45.19:726][438]LogPlayLevel: PIE: World Init took: (0.000438s)
+[2016.03.19-16.45.19:726][438]LogPlayLevel: PIE: Created PIE world by copying editor world from /Game/StarterContent/Maps/Minimal_Default.Minimal_Default to /Game/StarterContent/Maps/UEDPIE_0_Minimal_Default.Minimal_Default (0.002307s)
+[2016.03.19-16.45.19:737][438]LogInit: XAudio2 using 'VS24A-4 (NVIDIA High Definition Audio)' : 2 channels at 48 kHz using 16 bits per sample (channel mask 0x3)
+[2016.03.19-16.45.19:740][438]LogInit: FAudioDevice initialized.
+[2016.03.19-16.45.19:788][438]LogWorld: Game class is 'CreatureDragon2DGameMode'
+[2016.03.19-16.45.19:794][438]LogWorld: Bringing World /Game/StarterContent/Maps/UEDPIE_0_Minimal_Default.Minimal_Default up for play (max tick rate 0) at 2016.03.19-09.45.19
+[2016.03.19-16.45.19:794][438]LogActor:Warning: GameSession /Game/StarterContent/Maps/UEDPIE_0_Minimal_Default.Minimal_Default:PersistentLevel.GameSession_0 has natively added scene component(s), but none of them were set as the actor's RootComponent - picking one arbitrarily
+[2016.03.19-16.45.19:794][438]LogActor:Warning: GameNetworkManager /Game/StarterContent/Maps/UEDPIE_0_Minimal_Default.Minimal_Default:PersistentLevel.GameNetworkManager_0 has natively added scene component(s), but none of them were set as the actor's RootComponent - picking one arbitrarily
+[2016.03.19-16.45.19:795][438]LogWorld: Bringing up level for play took: 0.004967
+[2016.03.19-16.45.19:807][438]PIE: Info Play in editor start time for /Game/StarterContent/Maps/UEDPIE_0_Minimal_Default -0.032
+[2016.03.19-16.45.19:807][438]LogBlueprintUserMessages: Late PlayInEditor Detection: Level '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default:PersistentLevel' has LevelScriptBlueprint '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default:PersistentLevel.Minimal_Default' with GeneratedClass '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default_C' with ClassGeneratedBy '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default:PersistentLevel.Minimal_Default'
+[2016.03.19-16.45.48:508][880]LogBlueprintUserMessages: Early EndPlayMap Detection: Level '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default:PersistentLevel' has LevelScriptBlueprint '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default:PersistentLevel.Minimal_Default' with GeneratedClass '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default_C' with ClassGeneratedBy '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default:PersistentLevel.Minimal_Default'
+[2016.03.19-16.45.48:546][880]LogBlueprintUserMessages: Late EndPlayMap Detection: Level '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default:PersistentLevel' has LevelScriptBlueprint '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default:PersistentLevel.Minimal_Default' with GeneratedClass '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default_C' with ClassGeneratedBy '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default:PersistentLevel.Minimal_Default'
+[2016.03.19-16.45.48:556][880]LogParticles: Destroying 0 GPU particle simulations for FXSystem 0x00000170E210EC00
+[2016.03.19-16.46.17:482][320]LogBlueprintUserMessages: Early PlayInEditor Detection: Level '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default:PersistentLevel' has LevelScriptBlueprint '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default:PersistentLevel.Minimal_Default' with GeneratedClass '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default_C' with ClassGeneratedBy '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default:PersistentLevel.Minimal_Default'
+[2016.03.19-16.46.17:482][320]LogPlayLevel: PlayLevel: No blueprints needed recompiling
+[2016.03.19-16.46.17:482][320]PIE: New page: PIE session: Minimal_Default (Mar 19, 2016, 2:46:17 AM)
+[2016.03.19-16.46.17:482][320]LogPlayLevel: Creating play world package: /Game/StarterContent/Maps/UEDPIE_0_Minimal_Default
+[2016.03.19-16.46.17:483][320]LogPlayLevel: PIE: StaticDuplicateObject took: (0.001979s)
+[2016.03.19-16.46.17:484][320]LogAIModule: Creating AISystem for world Minimal_Default
+[2016.03.19-16.46.17:485][320]LogPlayLevel: PIE: World Init took: (0.000563s)
+[2016.03.19-16.46.17:485][320]LogPlayLevel: PIE: Created PIE world by copying editor world from /Game/StarterContent/Maps/Minimal_Default.Minimal_Default to /Game/StarterContent/Maps/UEDPIE_0_Minimal_Default.Minimal_Default (0.002673s)
+[2016.03.19-16.46.17:486][320]LogActorComponent: UnregisterComponent: (/Engine/Transient.MovementComponent0) Not registered. Aborting.
+[2016.03.19-16.46.17:497][320]LogInit: XAudio2 using 'VS24A-4 (NVIDIA High Definition Audio)' : 2 channels at 48 kHz using 16 bits per sample (channel mask 0x3)
+[2016.03.19-16.46.17:500][320]LogInit: FAudioDevice initialized.
+[2016.03.19-16.46.17:528][320]LogWorld: Game class is 'CreatureDragon2DGameMode'
+[2016.03.19-16.46.17:533][320]LogWorld: Bringing World /Game/StarterContent/Maps/UEDPIE_0_Minimal_Default.Minimal_Default up for play (max tick rate 0) at 2016.03.19-09.46.17
+[2016.03.19-16.46.17:533][320]LogActor:Warning: GameSession /Game/StarterContent/Maps/UEDPIE_0_Minimal_Default.Minimal_Default:PersistentLevel.GameSession_1 has natively added scene component(s), but none of them were set as the actor's RootComponent - picking one arbitrarily
+[2016.03.19-16.46.17:533][320]LogActor:Warning: GameNetworkManager /Game/StarterContent/Maps/UEDPIE_0_Minimal_Default.Minimal_Default:PersistentLevel.GameNetworkManager_1 has natively added scene component(s), but none of them were set as the actor's RootComponent - picking one arbitrarily
+[2016.03.19-16.46.17:535][320]LogWorld: Bringing up level for play took: 0.004945
+[2016.03.19-16.46.17:536][320]PIE: Info Play in editor start time for /Game/StarterContent/Maps/UEDPIE_0_Minimal_Default -0.302
+[2016.03.19-16.46.17:536][320]LogBlueprintUserMessages: Late PlayInEditor Detection: Level '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default:PersistentLevel' has LevelScriptBlueprint '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default:PersistentLevel.Minimal_Default' with GeneratedClass '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default_C' with ClassGeneratedBy '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default:PersistentLevel.Minimal_Default'
+[2016.03.19-16.46.21:471][792]LogBlueprintUserMessages: Early EndPlayMap Detection: Level '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default:PersistentLevel' has LevelScriptBlueprint '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default:PersistentLevel.Minimal_Default' with GeneratedClass '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default_C' with ClassGeneratedBy '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default:PersistentLevel.Minimal_Default'
+[2016.03.19-16.46.21:507][792]LogBlueprintUserMessages: Late EndPlayMap Detection: Level '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default:PersistentLevel' has LevelScriptBlueprint '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default:PersistentLevel.Minimal_Default' with GeneratedClass '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default_C' with ClassGeneratedBy '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default:PersistentLevel.Minimal_Default'
+[2016.03.19-16.46.21:516][792]LogParticles: Destroying 0 GPU particle simulations for FXSystem 0x00000170857F3380
+[2016.03.19-16.48.24:782][560]LogBlueprintUserMessages: Early PlayInEditor Detection: Level '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default:PersistentLevel' has LevelScriptBlueprint '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default:PersistentLevel.Minimal_Default' with GeneratedClass '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default_C' with ClassGeneratedBy '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default:PersistentLevel.Minimal_Default'
+[2016.03.19-16.48.24:782][560]LogPlayLevel: PlayLevel: No blueprints needed recompiling
+[2016.03.19-16.48.24:782][560]PIE: New page: PIE session: Minimal_Default (Mar 19, 2016, 2:48:24 AM)
+[2016.03.19-16.48.24:782][560]LogPlayLevel: Creating play world package: /Game/StarterContent/Maps/UEDPIE_0_Minimal_Default
+[2016.03.19-16.48.24:784][560]LogPlayLevel: PIE: StaticDuplicateObject took: (0.002205s)
+[2016.03.19-16.48.24:785][560]LogAIModule: Creating AISystem for world Minimal_Default
+[2016.03.19-16.48.24:785][560]LogPlayLevel: PIE: World Init took: (0.000689s)
+[2016.03.19-16.48.24:785][560]LogPlayLevel: PIE: Created PIE world by copying editor world from /Game/StarterContent/Maps/Minimal_Default.Minimal_Default to /Game/StarterContent/Maps/UEDPIE_0_Minimal_Default.Minimal_Default (0.003031s)
+[2016.03.19-16.48.24:796][560]LogInit: XAudio2 using 'VS24A-4 (NVIDIA High Definition Audio)' : 2 channels at 48 kHz using 16 bits per sample (channel mask 0x3)
+[2016.03.19-16.48.24:799][560]LogInit: FAudioDevice initialized.
+[2016.03.19-16.48.24:830][560]LogWorld: Game class is 'CreatureDragon2DGameMode'
+[2016.03.19-16.48.24:834][560]LogWorld: Bringing World /Game/StarterContent/Maps/UEDPIE_0_Minimal_Default.Minimal_Default up for play (max tick rate 0) at 2016.03.19-09.48.24
+[2016.03.19-16.48.24:834][560]LogActor:Warning: GameSession /Game/StarterContent/Maps/UEDPIE_0_Minimal_Default.Minimal_Default:PersistentLevel.GameSession_2 has natively added scene component(s), but none of them were set as the actor's RootComponent - picking one arbitrarily
+[2016.03.19-16.48.24:834][560]LogActor:Warning: GameNetworkManager /Game/StarterContent/Maps/UEDPIE_0_Minimal_Default.Minimal_Default:PersistentLevel.GameNetworkManager_2 has natively added scene component(s), but none of them were set as the actor's RootComponent - picking one arbitrarily
+[2016.03.19-16.48.24:836][560]LogWorld: Bringing up level for play took: 0.004759
+[2016.03.19-16.48.24:837][560]PIE: Info Play in editor start time for /Game/StarterContent/Maps/UEDPIE_0_Minimal_Default 0.999
+[2016.03.19-16.48.24:837][560]LogBlueprintUserMessages: Late PlayInEditor Detection: Level '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default:PersistentLevel' has LevelScriptBlueprint '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default:PersistentLevel.Minimal_Default' with GeneratedClass '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default_C' with ClassGeneratedBy '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default:PersistentLevel.Minimal_Default'
+[2016.03.19-16.48.28:930][ 51]LogBlueprintUserMessages: Early EndPlayMap Detection: Level '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default:PersistentLevel' has LevelScriptBlueprint '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default:PersistentLevel.Minimal_Default' with GeneratedClass '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default_C' with ClassGeneratedBy '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default:PersistentLevel.Minimal_Default'
+[2016.03.19-16.48.28:960][ 51]LogBlueprintUserMessages: Late EndPlayMap Detection: Level '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default:PersistentLevel' has LevelScriptBlueprint '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default:PersistentLevel.Minimal_Default' with GeneratedClass '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default_C' with ClassGeneratedBy '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default:PersistentLevel.Minimal_Default'
+[2016.03.19-16.48.28:984][ 52]LogParticles: Destroying 0 GPU particle simulations for FXSystem 0x0000017089A8EA20
+[2016.03.19-16.48.29:847][140]LogSavePackage: Save=42.782452ms
+[2016.03.19-16.48.29:847][140]LogSavePackage: Moving '../../../../../../Users/jychong/Documents/Work/Projects/UE4_Projects/CreatureDragon2D/Saved/Minimal_Default3F9B0B1C4393FEC135692C8F5926C2EE.tmp' to '../../../../../../Users/jychong/Documents/Work/Projects/UE4_Projects/CreatureDragon2D/Content/StarterContent/Maps/Minimal_Default.umap'
+[2016.03.19-16.48.29:850][140]LogSavePackage: Total save time: 63.055787ms
+[2016.03.19-16.48.29:850][140]LogSavePackage:Display: Finished SavePackage ../../../../../../Users/jychong/Documents/Work/Projects/UE4_Projects/CreatureDragon2D/Content/StarterContent/Maps/Minimal_Default.umap
+[2016.03.19-16.48.29:873][140]LogFileHelpers: Saving map 'Minimal_Default' took 0.125
+[2016.03.19-16.48.30:850][256]LogEditorViewport: Clicking on Actor (LMB): StaticMeshActor (Floor)
+[2016.03.19-16.48.46:533][113]LogSavePackage: Save=33.814777ms
+[2016.03.19-16.48.46:533][113]LogSavePackage: Moving '../../../../../../Users/jychong/Documents/Work/Projects/UE4_Projects/CreatureDragon2D/Saved/Minimal_Default0AECADE24B9357302FB5D79B57A3C82A.tmp' to '../../../../../../Users/jychong/Documents/Work/Projects/UE4_Projects/CreatureDragon2D/Content/StarterContent/Maps/Minimal_Default.umap'
+[2016.03.19-16.48.46:535][113]LogSavePackage: Total save time: 38.057689ms
+[2016.03.19-16.48.46:535][113]LogSavePackage:Display: Finished SavePackage ../../../../../../Users/jychong/Documents/Work/Projects/UE4_Projects/CreatureDragon2D/Content/StarterContent/Maps/Minimal_Default.umap
+[2016.03.19-16.48.46:554][113]LogFileHelpers: Saving map 'Minimal_Default' took 0.092
+[2016.03.19-16.48.46:912][155]LogBlueprintUserMessages: Early PlayInEditor Detection: Level '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default:PersistentLevel' has LevelScriptBlueprint '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default:PersistentLevel.Minimal_Default' with GeneratedClass '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default_C' with ClassGeneratedBy '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default:PersistentLevel.Minimal_Default'
+[2016.03.19-16.48.46:912][155]LogPlayLevel: PlayLevel: No blueprints needed recompiling
+[2016.03.19-16.48.46:912][155]PIE: New page: PIE session: Minimal_Default (Mar 19, 2016, 2:48:46 AM)
+[2016.03.19-16.48.46:912][155]LogPlayLevel: Creating play world package: /Game/StarterContent/Maps/UEDPIE_0_Minimal_Default
+[2016.03.19-16.48.46:914][155]LogPlayLevel: PIE: StaticDuplicateObject took: (0.001906s)
+[2016.03.19-16.48.46:915][155]LogAIModule: Creating AISystem for world Minimal_Default
+[2016.03.19-16.48.46:915][155]LogPlayLevel: PIE: World Init took: (0.000557s)
+[2016.03.19-16.48.46:915][155]LogPlayLevel: PIE: Created PIE world by copying editor world from /Game/StarterContent/Maps/Minimal_Default.Minimal_Default to /Game/StarterContent/Maps/UEDPIE_0_Minimal_Default.Minimal_Default (0.002594s)
+[2016.03.19-16.48.46:925][155]LogInit: XAudio2 using 'VS24A-4 (NVIDIA High Definition Audio)' : 2 channels at 48 kHz using 16 bits per sample (channel mask 0x3)
+[2016.03.19-16.48.46:928][155]LogInit: FAudioDevice initialized.
+[2016.03.19-16.48.46:961][155]LogWorld: Game class is 'CreatureDragon2DGameMode'
+[2016.03.19-16.48.46:965][155]LogWorld: Bringing World /Game/StarterContent/Maps/UEDPIE_0_Minimal_Default.Minimal_Default up for play (max tick rate 0) at 2016.03.19-09.48.46
+[2016.03.19-16.48.46:965][155]LogActor:Warning: GameSession /Game/StarterContent/Maps/UEDPIE_0_Minimal_Default.Minimal_Default:PersistentLevel.GameSession_3 has natively added scene component(s), but none of them were set as the actor's RootComponent - picking one arbitrarily
+[2016.03.19-16.48.46:965][155]LogActor:Warning: GameNetworkManager /Game/StarterContent/Maps/UEDPIE_0_Minimal_Default.Minimal_Default:PersistentLevel.GameNetworkManager_3 has natively added scene component(s), but none of them were set as the actor's RootComponent - picking one arbitrarily
+[2016.03.19-16.48.46:967][155]LogWorld: Bringing up level for play took: 0.004810
+[2016.03.19-16.48.46:968][155]PIE: Info Play in editor start time for /Game/StarterContent/Maps/UEDPIE_0_Minimal_Default -0.87
+[2016.03.19-16.48.46:968][155]LogBlueprintUserMessages: Late PlayInEditor Detection: Level '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default:PersistentLevel' has LevelScriptBlueprint '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default:PersistentLevel.Minimal_Default' with GeneratedClass '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default_C' with ClassGeneratedBy '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default:PersistentLevel.Minimal_Default'
+[2016.03.19-16.48.48:253][309]LogBlueprintUserMessages: Early EndPlayMap Detection: Level '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default:PersistentLevel' has LevelScriptBlueprint '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default:PersistentLevel.Minimal_Default' with GeneratedClass '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default_C' with ClassGeneratedBy '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default:PersistentLevel.Minimal_Default'
+[2016.03.19-16.48.48:288][309]LogBlueprintUserMessages: Late EndPlayMap Detection: Level '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default:PersistentLevel' has LevelScriptBlueprint '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default:PersistentLevel.Minimal_Default' with GeneratedClass '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default_C' with ClassGeneratedBy '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default:PersistentLevel.Minimal_Default'
+[2016.03.19-16.48.48:297][309]LogParticles: Destroying 0 GPU particle simulations for FXSystem 0x00000170991AE8E0
+[2016.03.19-16.48.50:439][562]MapCheck: New page: Map Check
+[2016.03.19-16.48.50:464][562]Cmd: MAP REBUILD ALLVISIBLE
+[2016.03.19-16.48.50:464][562]LogEditorServer: Rebuildmap Clear paths rebuilt
+[2016.03.19-16.48.50:483][562]LightingResults: New page: Lighting Build - Mar 19, 2016, 2:48:50 AM
+[2016.03.19-16.48.53:961][562]LogStaticLightingSystem:Warning: No importance volume found, so the scene bounding box was used.  You can optimize your scene's quality and lighting build times by adding importance volumes.
+[2016.03.19-16.48.53:961][562]LogStaticLightingSystem: Running Lightmass w/ ImmediateImport mode ENABLED
+[2016.03.19-16.48.53:961][562]LogStaticLightingSystem: Running Lightmass w/ ImmediateProcess mode ENABLED
+[2016.03.19-16.48.53:961][562]LogStaticLightingSystem: Running Lightmass w/ Sorting mode ENABLED
+[2016.03.19-16.48.53:961][562]LogStaticLightingSystem: Running Lightmass w/ Mapping paddings ENABLED
+[2016.03.19-16.48.53:961][562]LogStaticLightingSystem: Running Lightmass w/ Mapping debug paddings DISABLED
+[2016.03.19-16.48.54:126][562]LogEditorBuildUtils: Build time 0:00:03
+[2016.03.19-16.48.55:256][654]Job is a success!
+[2016.03.19-16.48.55:311][656]LogTexture:Display: Building textures: HQ_Lightmap0_1 (AutoDXT)
+[2016.03.19-16.48.55:321][656]LogTexture:Display: Building textures: LQ_Lightmap_0_1 (DXT1)
+[2016.03.19-16.48.55:335][656]LogTexture:Display: Building textures: ShadowMapTexture2D_0 (BGRA8)
+[2016.03.19-16.48.55:352][656]Lightmass on MERLIN: 856 ms total, 72 ms importing, 0 ms setup, 271 ms photons, 499 ms processing, 0 ms extra exporting [2/2 mappings]. Threads: 3.33 sec total, 611 ms processing.
+[2016.03.19-16.48.55:368][656]LogStaticLightingSystem: Illumination: 4.87 sec (28 ms encoding lightmaps)
+[2016.03.19-16.48.55:368][656]LogStaticLightingSystem: Lightmap texture memory:  0.1 MB (0.1 MB streaming, 0.0 MB non-streaming), 2 textures
+[2016.03.19-16.48.55:368][656]LogStaticLightingSystem: Shadowmap texture memory: 0.2 MB (0.2 MB streaming, 0.0 MB non-streaming), 1 textures
+[2016.03.19-16.48.55:969][657]Cmd: MAP CHECK NOTIFYRESULTS
+[2016.03.19-16.48.55:969][657]MapCheck: New page: Minimal_Default - Mar 19, 2016, 2:48:55 AM
+[2016.03.19-16.48.55:997][657]MapCheck: Info Map check complete: 0 Error(s), 0 Warning(s), took 28.353ms to complete.
+[2016.03.19-16.48.58:893][980]LogEditorViewport: Clicking Background
+[2016.03.19-16.49.00:117][125]LogBlueprintUserMessages: Early PlayInEditor Detection: Level '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default:PersistentLevel' has LevelScriptBlueprint '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default:PersistentLevel.Minimal_Default' with GeneratedClass '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default_C' with ClassGeneratedBy '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default:PersistentLevel.Minimal_Default'
+[2016.03.19-16.49.00:117][125]LogPlayLevel: PlayLevel: No blueprints needed recompiling
+[2016.03.19-16.49.00:117][125]PIE: New page: PIE session: Minimal_Default (Mar 19, 2016, 2:49:00 AM)
+[2016.03.19-16.49.00:117][125]LogPlayLevel: Creating play world package: /Game/StarterContent/Maps/UEDPIE_0_Minimal_Default
+[2016.03.19-16.49.00:119][125]LogPlayLevel: PIE: StaticDuplicateObject took: (0.001597s)
+[2016.03.19-16.49.00:119][125]LogAIModule: Creating AISystem for world Minimal_Default
+[2016.03.19-16.49.00:119][125]LogPlayLevel: PIE: World Init took: (0.000636s)
+[2016.03.19-16.49.00:119][125]LogPlayLevel: PIE: Created PIE world by copying editor world from /Game/StarterContent/Maps/Minimal_Default.Minimal_Default to /Game/StarterContent/Maps/UEDPIE_0_Minimal_Default.Minimal_Default (0.002398s)
+[2016.03.19-16.49.00:129][125]LogInit: XAudio2 using 'VS24A-4 (NVIDIA High Definition Audio)' : 2 channels at 48 kHz using 16 bits per sample (channel mask 0x3)
+[2016.03.19-16.49.00:132][125]LogInit: FAudioDevice initialized.
+[2016.03.19-16.49.00:164][125]LogWorld: Game class is 'CreatureDragon2DGameMode'
+[2016.03.19-16.49.00:168][125]LogWorld: Bringing World /Game/StarterContent/Maps/UEDPIE_0_Minimal_Default.Minimal_Default up for play (max tick rate 0) at 2016.03.19-09.49.00
+[2016.03.19-16.49.00:168][125]LogActor:Warning: GameSession /Game/StarterContent/Maps/UEDPIE_0_Minimal_Default.Minimal_Default:PersistentLevel.GameSession_4 has natively added scene component(s), but none of them were set as the actor's RootComponent - picking one arbitrarily
+[2016.03.19-16.49.00:168][125]LogActor:Warning: GameNetworkManager /Game/StarterContent/Maps/UEDPIE_0_Minimal_Default.Minimal_Default:PersistentLevel.GameNetworkManager_4 has natively added scene component(s), but none of them were set as the actor's RootComponent - picking one arbitrarily
+[2016.03.19-16.49.00:170][125]LogWorld: Bringing up level for play took: 0.004503
+[2016.03.19-16.49.00:171][125]PIE: Info Play in editor start time for /Game/StarterContent/Maps/UEDPIE_0_Minimal_Default 0.333
+[2016.03.19-16.49.00:171][125]LogBlueprintUserMessages: Late PlayInEditor Detection: Level '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default:PersistentLevel' has LevelScriptBlueprint '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default:PersistentLevel.Minimal_Default' with GeneratedClass '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default_C' with ClassGeneratedBy '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default:PersistentLevel.Minimal_Default'
+[2016.03.19-16.49.09:130][200]LogBlueprintUserMessages: Early EndPlayMap Detection: Level '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default:PersistentLevel' has LevelScriptBlueprint '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default:PersistentLevel.Minimal_Default' with GeneratedClass '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default_C' with ClassGeneratedBy '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default:PersistentLevel.Minimal_Default'
+[2016.03.19-16.49.09:155][200]LogBlueprintUserMessages: Late EndPlayMap Detection: Level '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default:PersistentLevel' has LevelScriptBlueprint '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default:PersistentLevel.Minimal_Default' with GeneratedClass '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default_C' with ClassGeneratedBy '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default:PersistentLevel.Minimal_Default'
+[2016.03.19-16.49.09:163][200]LogParticles: Destroying 0 GPU particle simulations for FXSystem 0x000001708B08A3E0
+[2016.03.19-16.49.10:612][374]LogEditorViewport: Clicking Background
+[2016.03.19-16.49.38:081][656]LogSavePackage: Save=34.073845ms
+[2016.03.19-16.49.38:081][656]LogSavePackage: Moving '../../../../../../Users/jychong/Documents/Work/Projects/UE4_Projects/CreatureDragon2D/Saved/Minimal_Default22867B42455E362A8FDE839529D956A6.tmp' to '../../../../../../Users/jychong/Documents/Work/Projects/UE4_Projects/CreatureDragon2D/Content/StarterContent/Maps/Minimal_Default.umap'
+[2016.03.19-16.49.38:084][656]LogSavePackage: Total save time: 39.753627ms
+[2016.03.19-16.49.38:084][656]LogSavePackage:Display: Finished SavePackage ../../../../../../Users/jychong/Documents/Work/Projects/UE4_Projects/CreatureDragon2D/Content/StarterContent/Maps/Minimal_Default.umap
+[2016.03.19-16.49.38:102][656]LogFileHelpers: Saving map 'Minimal_Default' took 0.095
+[2016.03.19-16.49.38:803][739]LogBlueprintUserMessages: Early PlayInEditor Detection: Level '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default:PersistentLevel' has LevelScriptBlueprint '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default:PersistentLevel.Minimal_Default' with GeneratedClass '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default_C' with ClassGeneratedBy '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default:PersistentLevel.Minimal_Default'
+[2016.03.19-16.49.38:803][739]LogPlayLevel: PlayLevel: No blueprints needed recompiling
+[2016.03.19-16.49.38:803][739]PIE: New page: PIE session: Minimal_Default (Mar 19, 2016, 2:49:38 AM)
+[2016.03.19-16.49.38:803][739]LogPlayLevel: Creating play world package: /Game/StarterContent/Maps/UEDPIE_0_Minimal_Default
+[2016.03.19-16.49.38:805][739]LogPlayLevel: PIE: StaticDuplicateObject took: (0.001810s)
+[2016.03.19-16.49.38:806][739]LogAIModule: Creating AISystem for world Minimal_Default
+[2016.03.19-16.49.38:806][739]LogPlayLevel: PIE: World Init took: (0.000637s)
+[2016.03.19-16.49.38:806][739]LogPlayLevel: PIE: Created PIE world by copying editor world from /Game/StarterContent/Maps/Minimal_Default.Minimal_Default to /Game/StarterContent/Maps/UEDPIE_0_Minimal_Default.Minimal_Default (0.002579s)
+[2016.03.19-16.49.38:817][739]LogInit: XAudio2 using 'VS24A-4 (NVIDIA High Definition Audio)' : 2 channels at 48 kHz using 16 bits per sample (channel mask 0x3)
+[2016.03.19-16.49.38:820][739]LogInit: FAudioDevice initialized.
+[2016.03.19-16.49.38:852][739]LogWorld: Game class is 'CreatureDragon2DGameMode'
+[2016.03.19-16.49.38:856][739]LogWorld: Bringing World /Game/StarterContent/Maps/UEDPIE_0_Minimal_Default.Minimal_Default up for play (max tick rate 0) at 2016.03.19-09.49.38
+[2016.03.19-16.49.38:856][739]LogActor:Warning: GameSession /Game/StarterContent/Maps/UEDPIE_0_Minimal_Default.Minimal_Default:PersistentLevel.GameSession_5 has natively added scene component(s), but none of them were set as the actor's RootComponent - picking one arbitrarily
+[2016.03.19-16.49.38:857][739]LogActor:Warning: GameNetworkManager /Game/StarterContent/Maps/UEDPIE_0_Minimal_Default.Minimal_Default:PersistentLevel.GameNetworkManager_5 has natively added scene component(s), but none of them were set as the actor's RootComponent - picking one arbitrarily
+[2016.03.19-16.49.38:858][739]LogWorld: Bringing up level for play took: 0.004798
+[2016.03.19-16.49.38:859][739]PIE: Info Play in editor start time for /Game/StarterContent/Maps/UEDPIE_0_Minimal_Default 1.021
+[2016.03.19-16.49.38:860][739]LogBlueprintUserMessages: Late PlayInEditor Detection: Level '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default:PersistentLevel' has LevelScriptBlueprint '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default:PersistentLevel.Minimal_Default' with GeneratedClass '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default_C' with ClassGeneratedBy '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default:PersistentLevel.Minimal_Default'
+[2016.03.19-16.50.02:519][578]LogBlueprintUserMessages: Early EndPlayMap Detection: Level '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default:PersistentLevel' has LevelScriptBlueprint '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default:PersistentLevel.Minimal_Default' with GeneratedClass '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default_C' with ClassGeneratedBy '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default:PersistentLevel.Minimal_Default'
+[2016.03.19-16.50.02:551][578]LogBlueprintUserMessages: Late EndPlayMap Detection: Level '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default:PersistentLevel' has LevelScriptBlueprint '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default:PersistentLevel.Minimal_Default' with GeneratedClass '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default_C' with ClassGeneratedBy '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default:PersistentLevel.Minimal_Default'
+[2016.03.19-16.50.02:559][578]LogParticles: Destroying 0 GPU particle simulations for FXSystem 0x00000170E5BED9E0
+[2016.03.19-16.50.04:076][759]LogEditorViewport: Clicking on Actor (LMB): StaticMeshActor (Floor)
+[2016.03.19-16.50.19:024][474]LogMaterial: Missing cached shader map for material GroundMaterial, compiling. 
+[2016.03.19-16.50.19:093][474]LogMaterial: Missing cached shader map for material GroundMaterial, compiling. 
+[2016.03.19-16.50.19:096][474]LogMaterial: 0.000128 seconds spent updating 1 materials, 1 interfaces, 0 instances, 0 with static permutations.
+[2016.03.19-16.50.19:922][542]MaterialEditorStats: Info Base pass shader with only dynamic lighting: 31 instructions
+[2016.03.19-16.50.19:922][542]MaterialEditorStats: Info Vertex shader: 31 instructions
+[2016.03.19-16.50.19:922][542]MaterialEditorStats: Info Texture samplers: 0/16
+[2016.03.19-16.50.29:916][497]LogMaterial: Missing cached shader map for material GroundMaterial, compiling. 
+[2016.03.19-16.50.29:918][497]LogMaterial: 0.000107 seconds spent updating 1 materials, 1 interfaces, 0 instances, 0 with static permutations.
+[2016.03.19-16.50.29:919][497]LogMaterial: Missing cached shader map for material FMatExpressionPreview MaterialExpressionConstant3Vector_0, compiling. 
+[2016.03.19-16.50.29:922][497]LogMaterial: Missing cached shader map for material GroundMaterial, compiling. 
+[2016.03.19-16.50.29:925][497]LogMaterial: 0.000082 seconds spent updating 1 materials, 1 interfaces, 0 instances, 0 with static permutations.
+[2016.03.19-16.50.29:951][497]LogMaterial: Missing cached shader map for material FMatExpressionPreview MaterialExpressionConstant3Vector_0, compiling. 
+[2016.03.19-16.50.30:475][549]MaterialEditorStats: Info Base pass shader with only dynamic lighting: 31 instructions
+[2016.03.19-16.50.30:475][549]MaterialEditorStats: Info Vertex shader: 31 instructions
+[2016.03.19-16.50.30:475][549]MaterialEditorStats: Info Texture samplers: 0/16
+[2016.03.19-16.50.39:376][388]LogMaterial: Missing cached shader map for material GroundMaterial, compiling. 
+[2016.03.19-16.50.39:379][388]LogMaterial: 0.000175 seconds spent updating 1 materials, 1 interfaces, 0 instances, 0 with static permutations.
+[2016.03.19-16.50.39:404][388]LogMaterial: Missing cached shader map for material FMatExpressionPreview MaterialExpressionConstant3Vector_0, compiling. 
+[2016.03.19-16.50.39:855][433]MaterialEditorStats: Info Base pass shader with only dynamic lighting: 31 instructions
+[2016.03.19-16.50.39:855][433]MaterialEditorStats: Info Vertex shader: 31 instructions
+[2016.03.19-16.50.39:855][433]MaterialEditorStats: Info Texture samplers: 0/16
+[2016.03.19-16.50.42:643][707]Cmd: OBJ SAVEPACKAGE PACKAGE="/Game/GroundMaterial" FILE="../../../../../../Users/jychong/Documents/Work/Projects/UE4_Projects/CreatureDragon2D/Content/GroundMaterial.uasset" SILENT=true
+[2016.03.19-16.50.42:656][707]LogSavePackage: Save=10.794934ms
+[2016.03.19-16.50.42:656][707]LogSavePackage: Moving '../../../../../../Users/jychong/Documents/Work/Projects/UE4_Projects/CreatureDragon2D/Saved/GroundMaterialA0EF28364BFDC5D7287C0B903355B3EE.tmp' to '../../../../../../Users/jychong/Documents/Work/Projects/UE4_Projects/CreatureDragon2D/Content/GroundMaterial.uasset'
+[2016.03.19-16.50.42:657][707]LogSavePackage: Total save time: 12.371559ms
+[2016.03.19-16.50.42:657][707]LogSavePackage:Display: Finished SavePackage ../../../../../../Users/jychong/Documents/Work/Projects/UE4_Projects/CreatureDragon2D/Content/GroundMaterial.uasset
+[2016.03.19-16.50.49:021][165]LogMaterial: Missing cached shader map for material GroundMaterial, compiling. 
+[2016.03.19-16.50.49:028][165]LogMaterial: 0.000137 seconds spent updating 1 materials, 1 interfaces, 0 instances, 0 with static permutations.
+[2016.03.19-16.50.49:044][165]LogMaterial: Missing cached shader map for material GroundMaterial, compiling. 
+[2016.03.19-16.50.49:051][165]LogMaterial: Missing cached shader map for material GroundMaterial, compiling. 
+[2016.03.19-16.50.49:057][165]LogMaterial: 0.000446 seconds spent updating 1 materials, 1 interfaces, 0 instances, 0 with static permutations.
+[2016.03.19-16.50.49:779][241]LogEditorViewport: Clicking on Actor (LMB): StaticMeshActor (Floor)
+[2016.03.19-16.50.54:073][656]LogMaterial:Warning: Material /Game/GroundMaterial.GroundMaterial needed to have new flag set bUsedWithStaticLighting !
+[2016.03.19-16.50.54:074][656]LogMaterial: Missing cached shader map for material GroundMaterial, compiling. 
+[2016.03.19-16.50.54:082][656]LogMaterial: 0.000114 seconds spent updating 1 materials, 1 interfaces, 0 instances, 0 with static permutations.
+[2016.03.19-16.50.55:378][778]LogEditorViewport: Clicking Background
+[2016.03.19-16.50.57:035][975]LogBlueprintUserMessages: Early PlayInEditor Detection: Level '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default:PersistentLevel' has LevelScriptBlueprint '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default:PersistentLevel.Minimal_Default' with GeneratedClass '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default_C' with ClassGeneratedBy '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default:PersistentLevel.Minimal_Default'
+[2016.03.19-16.50.57:035][975]LogPlayLevel: PlayLevel: No blueprints needed recompiling
+[2016.03.19-16.50.57:035][975]PIE: New page: PIE session: Minimal_Default (Mar 19, 2016, 2:50:57 AM)
+[2016.03.19-16.50.57:035][975]LogPlayLevel: Creating play world package: /Game/StarterContent/Maps/UEDPIE_0_Minimal_Default
+[2016.03.19-16.50.57:037][975]LogPlayLevel: PIE: StaticDuplicateObject took: (0.001657s)
+[2016.03.19-16.50.57:037][975]LogAIModule: Creating AISystem for world Minimal_Default
+[2016.03.19-16.50.57:037][975]LogPlayLevel: PIE: World Init took: (0.000497s)
+[2016.03.19-16.50.57:037][975]LogPlayLevel: PIE: Created PIE world by copying editor world from /Game/StarterContent/Maps/Minimal_Default.Minimal_Default to /Game/StarterContent/Maps/UEDPIE_0_Minimal_Default.Minimal_Default (0.002284s)
+[2016.03.19-16.50.57:049][975]LogParticles: Destroying 0 GPU particle simulations for FXSystem 0x000001708B08BD80
+[2016.03.19-16.50.57:049][975]LogInit: XAudio2 using 'VS24A-4 (NVIDIA High Definition Audio)' : 2 channels at 48 kHz using 16 bits per sample (channel mask 0x3)
+[2016.03.19-16.50.57:052][975]LogInit: FAudioDevice initialized.
+[2016.03.19-16.50.57:084][975]LogWorld: Game class is 'CreatureDragon2DGameMode'
+[2016.03.19-16.50.57:089][975]LogWorld: Bringing World /Game/StarterContent/Maps/UEDPIE_0_Minimal_Default.Minimal_Default up for play (max tick rate 0) at 2016.03.19-09.50.57
+[2016.03.19-16.50.57:089][975]LogActor:Warning: GameSession /Game/StarterContent/Maps/UEDPIE_0_Minimal_Default.Minimal_Default:PersistentLevel.GameSession_6 has natively added scene component(s), but none of them were set as the actor's RootComponent - picking one arbitrarily
+[2016.03.19-16.50.57:089][975]LogActor:Warning: GameNetworkManager /Game/StarterContent/Maps/UEDPIE_0_Minimal_Default.Minimal_Default:PersistentLevel.GameNetworkManager_6 has natively added scene component(s), but none of them were set as the actor's RootComponent - picking one arbitrarily
+[2016.03.19-16.50.57:090][975]LogWorld: Bringing up level for play took: 0.005002
+[2016.03.19-16.50.57:091][975]PIE: Info Play in editor start time for /Game/StarterContent/Maps/UEDPIE_0_Minimal_Default -0.747
+[2016.03.19-16.50.57:091][975]LogBlueprintUserMessages: Late PlayInEditor Detection: Level '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default:PersistentLevel' has LevelScriptBlueprint '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default:PersistentLevel.Minimal_Default' with GeneratedClass '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default_C' with ClassGeneratedBy '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default:PersistentLevel.Minimal_Default'
+[2016.03.19-16.51.00:751][414]LogBlueprintUserMessages: Early EndPlayMap Detection: Level '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default:PersistentLevel' has LevelScriptBlueprint '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default:PersistentLevel.Minimal_Default' with GeneratedClass '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default_C' with ClassGeneratedBy '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default:PersistentLevel.Minimal_Default'
+[2016.03.19-16.51.00:782][414]LogBlueprintUserMessages: Late EndPlayMap Detection: Level '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default:PersistentLevel' has LevelScriptBlueprint '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default:PersistentLevel.Minimal_Default' with GeneratedClass '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default_C' with ClassGeneratedBy '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default:PersistentLevel.Minimal_Default'
+[2016.03.19-16.51.00:791][414]LogParticles: Destroying 0 GPU particle simulations for FXSystem 0x000001709C0A0FE0
+[2016.03.19-16.51.05:453][972]LogEditorViewport: Clicking on Actor (LMB): StaticMeshActor (Floor)
+[2016.03.19-16.51.06:041][ 40]LogEditorViewport: Clicking on Actor (LMB): StaticMeshActor (Floor)
+[2016.03.19-16.51.11:663][711]Cmd: DELETE
+[2016.03.19-16.51.11:663][711]Cmd: ACTOR DELETE
+[2016.03.19-16.51.11:672][711]LogEditorActor: Deleted Actor: StaticMeshActor
+[2016.03.19-16.51.11:680][711]LogEditorActor: Deleted 1 Actors (0.008 secs)
+[2016.03.19-16.51.12:689][821]LogSavePackage: Save=34.247322ms
+[2016.03.19-16.51.12:689][821]LogSavePackage: Moving '../../../../../../Users/jychong/Documents/Work/Projects/UE4_Projects/CreatureDragon2D/Saved/Minimal_DefaultCC5EC2F24FA8060279184FA0D872ECD8.tmp' to '../../../../../../Users/jychong/Documents/Work/Projects/UE4_Projects/CreatureDragon2D/Content/StarterContent/Maps/Minimal_Default.umap'
+[2016.03.19-16.51.12:692][821]LogSavePackage: Total save time: 39.546169ms
+[2016.03.19-16.51.12:692][821]LogSavePackage:Display: Finished SavePackage ../../../../../../Users/jychong/Documents/Work/Projects/UE4_Projects/CreatureDragon2D/Content/StarterContent/Maps/Minimal_Default.umap
+[2016.03.19-16.51.12:710][821]LogFileHelpers: Saving map 'Minimal_Default' took 0.102
+[2016.03.19-16.51.12:724][821]Cmd: OBJ SAVEPACKAGE PACKAGE="/Game/GroundMaterial" FILE="../../../../../../Users/jychong/Documents/Work/Projects/UE4_Projects/CreatureDragon2D/Content/GroundMaterial.uasset" SILENT=true
+[2016.03.19-16.51.12:738][821]LogSavePackage: Save=9.699141ms
+[2016.03.19-16.51.12:738][821]LogSavePackage: Moving '../../../../../../Users/jychong/Documents/Work/Projects/UE4_Projects/CreatureDragon2D/Saved/GroundMaterial6692E5364C84F02F557CDF8FD0D8E1F1.tmp' to '../../../../../../Users/jychong/Documents/Work/Projects/UE4_Projects/CreatureDragon2D/Content/GroundMaterial.uasset'
+[2016.03.19-16.51.12:741][821]LogSavePackage: Total save time: 16.245034ms
+[2016.03.19-16.51.12:741][821]LogSavePackage:Display: Finished SavePackage ../../../../../../Users/jychong/Documents/Work/Projects/UE4_Projects/CreatureDragon2D/Content/GroundMaterial.uasset
+[2016.03.19-16.51.13:932][963]LogBlueprintUserMessages: Early PlayInEditor Detection: Level '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default:PersistentLevel' has LevelScriptBlueprint '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default:PersistentLevel.Minimal_Default' with GeneratedClass '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default_C' with ClassGeneratedBy '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default:PersistentLevel.Minimal_Default'
+[2016.03.19-16.51.13:932][963]LogPlayLevel: PlayLevel: No blueprints needed recompiling
+[2016.03.19-16.51.13:932][963]PIE: New page: PIE session: Minimal_Default (Mar 19, 2016, 2:51:13 AM)
+[2016.03.19-16.51.13:932][963]LogPlayLevel: Creating play world package: /Game/StarterContent/Maps/UEDPIE_0_Minimal_Default
+[2016.03.19-16.51.13:933][963]LogPlayLevel: PIE: StaticDuplicateObject took: (0.001550s)
+[2016.03.19-16.51.13:934][963]LogAIModule: Creating AISystem for world Minimal_Default
+[2016.03.19-16.51.13:934][963]LogPlayLevel: PIE: World Init took: (0.000528s)
+[2016.03.19-16.51.13:934][963]LogPlayLevel: PIE: Created PIE world by copying editor world from /Game/StarterContent/Maps/Minimal_Default.Minimal_Default to /Game/StarterContent/Maps/UEDPIE_0_Minimal_Default.Minimal_Default (0.002200s)
+[2016.03.19-16.51.13:947][963]LogInit: XAudio2 using 'VS24A-4 (NVIDIA High Definition Audio)' : 2 channels at 48 kHz using 16 bits per sample (channel mask 0x3)
+[2016.03.19-16.51.13:950][963]LogInit: FAudioDevice initialized.
+[2016.03.19-16.51.13:985][963]LogWorld: Game class is 'CreatureDragon2DGameMode'
+[2016.03.19-16.51.13:988][963]LogWorld: Bringing World /Game/StarterContent/Maps/UEDPIE_0_Minimal_Default.Minimal_Default up for play (max tick rate 0) at 2016.03.19-09.51.13
+[2016.03.19-16.51.13:988][963]LogActor:Warning: GameSession /Game/StarterContent/Maps/UEDPIE_0_Minimal_Default.Minimal_Default:PersistentLevel.GameSession_7 has natively added scene component(s), but none of them were set as the actor's RootComponent - picking one arbitrarily
+[2016.03.19-16.51.13:988][963]LogActor:Warning: GameNetworkManager /Game/StarterContent/Maps/UEDPIE_0_Minimal_Default.Minimal_Default:PersistentLevel.GameNetworkManager_7 has natively added scene component(s), but none of them were set as the actor's RootComponent - picking one arbitrarily
+[2016.03.19-16.51.13:991][963]LogWorld: Bringing up level for play took: 0.004966
+[2016.03.19-16.51.13:992][963]PIE: Info Play in editor start time for /Game/StarterContent/Maps/UEDPIE_0_Minimal_Default 0.154
+[2016.03.19-16.51.13:992][963]LogBlueprintUserMessages: Late PlayInEditor Detection: Level '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default:PersistentLevel' has LevelScriptBlueprint '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default:PersistentLevel.Minimal_Default' with GeneratedClass '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default_C' with ClassGeneratedBy '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default:PersistentLevel.Minimal_Default'
+[2016.03.19-16.51.17:801][420]LogBlueprintUserMessages: Early EndPlayMap Detection: Level '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default:PersistentLevel' has LevelScriptBlueprint '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default:PersistentLevel.Minimal_Default' with GeneratedClass '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default_C' with ClassGeneratedBy '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default:PersistentLevel.Minimal_Default'
+[2016.03.19-16.51.17:832][420]LogBlueprintUserMessages: Late EndPlayMap Detection: Level '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default:PersistentLevel' has LevelScriptBlueprint '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default:PersistentLevel.Minimal_Default' with GeneratedClass '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default_C' with ClassGeneratedBy '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default:PersistentLevel.Minimal_Default'
+[2016.03.19-16.51.17:847][420]LogParticles: Destroying 0 GPU particle simulations for FXSystem 0x00000170DCB6F740
+[2016.03.19-16.51.21:036][802]LogEditorViewport: Clicking Background
+[2016.03.19-16.51.25:952][389]Cmd: DELETE
+[2016.03.19-16.51.25:952][389]Cmd: ACTOR DELETE
+[2016.03.19-16.51.25:952][389]LogEditorActor: Deleted Actor: AtmosphericFog
+[2016.03.19-16.51.25:960][389]LogEditorActor: Deleted 1 Actors (0.008 secs)
+[2016.03.19-16.51.26:883][488]LogSavePackage: Save=33.587391ms
+[2016.03.19-16.51.26:883][488]LogSavePackage: Moving '../../../../../../Users/jychong/Documents/Work/Projects/UE4_Projects/CreatureDragon2D/Saved/Minimal_DefaultAC1116E4428FB93F16EEB8B77024D9B6.tmp' to '../../../../../../Users/jychong/Documents/Work/Projects/UE4_Projects/CreatureDragon2D/Content/StarterContent/Maps/Minimal_Default.umap'
+[2016.03.19-16.51.26:885][488]LogSavePackage: Total save time: 37.966993ms
+[2016.03.19-16.51.26:885][488]LogSavePackage:Display: Finished SavePackage ../../../../../../Users/jychong/Documents/Work/Projects/UE4_Projects/CreatureDragon2D/Content/StarterContent/Maps/Minimal_Default.umap
+[2016.03.19-16.51.26:903][488]LogFileHelpers: Saving map 'Minimal_Default' took 0.100
+[2016.03.19-16.51.28:055][625]LogBlueprintUserMessages: Early PlayInEditor Detection: Level '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default:PersistentLevel' has LevelScriptBlueprint '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default:PersistentLevel.Minimal_Default' with GeneratedClass '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default_C' with ClassGeneratedBy '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default:PersistentLevel.Minimal_Default'
+[2016.03.19-16.51.28:055][625]LogPlayLevel: PlayLevel: No blueprints needed recompiling
+[2016.03.19-16.51.28:055][625]PIE: New page: PIE session: Minimal_Default (Mar 19, 2016, 2:51:28 AM)
+[2016.03.19-16.51.28:055][625]LogPlayLevel: Creating play world package: /Game/StarterContent/Maps/UEDPIE_0_Minimal_Default
+[2016.03.19-16.51.28:056][625]LogPlayLevel: PIE: StaticDuplicateObject took: (0.001254s)
+[2016.03.19-16.51.28:056][625]LogAIModule: Creating AISystem for world Minimal_Default
+[2016.03.19-16.51.28:056][625]LogPlayLevel: PIE: World Init took: (0.000424s)
+[2016.03.19-16.51.28:057][625]LogPlayLevel: PIE: Created PIE world by copying editor world from /Game/StarterContent/Maps/Minimal_Default.Minimal_Default to /Game/StarterContent/Maps/UEDPIE_0_Minimal_Default.Minimal_Default (0.001796s)
+[2016.03.19-16.51.28:067][625]LogInit: XAudio2 using 'VS24A-4 (NVIDIA High Definition Audio)' : 2 channels at 48 kHz using 16 bits per sample (channel mask 0x3)
+[2016.03.19-16.51.28:069][625]LogInit: FAudioDevice initialized.
+[2016.03.19-16.51.28:100][625]LogWorld: Game class is 'CreatureDragon2DGameMode'
+[2016.03.19-16.51.28:104][625]LogWorld: Bringing World /Game/StarterContent/Maps/UEDPIE_0_Minimal_Default.Minimal_Default up for play (max tick rate 0) at 2016.03.19-09.51.28
+[2016.03.19-16.51.28:104][625]LogActor:Warning: GameSession /Game/StarterContent/Maps/UEDPIE_0_Minimal_Default.Minimal_Default:PersistentLevel.GameSession_8 has natively added scene component(s), but none of them were set as the actor's RootComponent - picking one arbitrarily
+[2016.03.19-16.51.28:104][625]LogActor:Warning: GameNetworkManager /Game/StarterContent/Maps/UEDPIE_0_Minimal_Default.Minimal_Default:PersistentLevel.GameNetworkManager_8 has natively added scene component(s), but none of them were set as the actor's RootComponent - picking one arbitrarily
+[2016.03.19-16.51.28:106][625]LogWorld: Bringing up level for play took: 0.004855
+[2016.03.19-16.51.28:107][625]PIE: Info Play in editor start time for /Game/StarterContent/Maps/UEDPIE_0_Minimal_Default 0.269
+[2016.03.19-16.51.28:107][625]LogBlueprintUserMessages: Late PlayInEditor Detection: Level '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default:PersistentLevel' has LevelScriptBlueprint '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default:PersistentLevel.Minimal_Default' with GeneratedClass '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default_C' with ClassGeneratedBy '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default:PersistentLevel.Minimal_Default'
+[2016.03.19-16.52.41:763][463]LogBlueprintUserMessages: Early EndPlayMap Detection: Level '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default:PersistentLevel' has LevelScriptBlueprint '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default:PersistentLevel.Minimal_Default' with GeneratedClass '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default_C' with ClassGeneratedBy '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default:PersistentLevel.Minimal_Default'
+[2016.03.19-16.52.41:790][463]LogBlueprintUserMessages: Late EndPlayMap Detection: Level '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default:PersistentLevel' has LevelScriptBlueprint '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default:PersistentLevel.Minimal_Default' with GeneratedClass '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default_C' with ClassGeneratedBy '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default:PersistentLevel.Minimal_Default'
+[2016.03.19-16.52.41:799][463]LogParticles: Destroying 0 GPU particle simulations for FXSystem 0x0000017085687E20
+[2016.03.19-16.52.45:599][879]LogMaterial: Missing cached shader map for material dragonMaterial, compiling. 
+[2016.03.19-16.52.45:652][879]LogMaterial: Missing cached shader map for material dragonMaterial, compiling. 
+[2016.03.19-16.52.45:656][879]LogMaterial: 0.000032 seconds spent updating 1 materials, 1 interfaces, 0 instances, 0 with static permutations.
+[2016.03.19-16.52.45:681][879]LogMaterial: Missing cached shader map for material FMatExpressionPreview MaterialExpressionTextureSample_1, compiling. 
+[2016.03.19-16.52.45:683][879]LogMaterial: Missing cached shader map for material FMatExpressionPreview MaterialExpressionTextureSample_0, compiling. 
+[2016.03.19-16.52.45:686][879]LogMaterial: Missing cached shader map for material FMatExpressionPreview MaterialExpressionTextureSample_2, compiling. 
+[2016.03.19-16.52.47:002][  7]MaterialEditorStats: Info Base pass shader with static lighting: 76 instructions
+[2016.03.19-16.52.47:002][  7]MaterialEditorStats: Info Base pass shader with only dynamic lighting: 41 instructions
+[2016.03.19-16.52.47:002][  7]MaterialEditorStats: Info Vertex shader: 33 instructions
+[2016.03.19-16.52.47:002][  7]MaterialEditorStats: Info Texture samplers: 5/16
+[2016.03.19-16.55.27:909][914]LogMaterial: Missing cached shader map for material PreviewMaterial_0, compiling. 
+[2016.03.19-16.55.27:958][914]LogMaterial: Missing cached shader map for material PreviewMaterial_0, compiling. 
+[2016.03.19-16.55.27:963][914]LogMaterial: 0.000038 seconds spent updating 1 materials, 1 interfaces, 0 instances, 0 with static permutations.
+[2016.03.19-16.55.27:988][914]LogMaterial: Missing cached shader map for material FMatExpressionPreview MaterialExpressionTextureSample_1, compiling. 
+[2016.03.19-16.55.27:990][914]LogMaterial: Missing cached shader map for material FMatExpressionPreview MaterialExpressionTextureSample_0, compiling. 
+[2016.03.19-16.55.27:992][914]LogMaterial: Missing cached shader map for material FMatExpressionPreview MaterialExpressionTextureSample_2, compiling. 
+[2016.03.19-16.55.29:153][ 33]MaterialEditorStats: Info Base pass shader with static lighting: 76 instructions
+[2016.03.19-16.55.29:153][ 33]MaterialEditorStats: Info Base pass shader with only dynamic lighting: 41 instructions
+[2016.03.19-16.55.29:153][ 33]MaterialEditorStats: Info Vertex shader: 33 instructions
+[2016.03.19-16.55.29:153][ 33]MaterialEditorStats: Info Texture samplers: 5/16
+[2016.03.19-16.55.49:159][ 34]LogMaterial: Missing cached shader map for material PreviewMaterial_0, compiling. 
+[2016.03.19-16.55.49:166][ 34]LogMaterial: Missing cached shader map for material PreviewMaterial_0, compiling. 
+[2016.03.19-16.55.49:171][ 34]LogMaterial: 0.000118 seconds spent updating 1 materials, 1 interfaces, 0 instances, 0 with static permutations.
+[2016.03.19-16.55.50:319][154]MaterialEditorStats: Info Base pass shader with static lighting: 85 instructions
+[2016.03.19-16.55.50:319][154]MaterialEditorStats: Info Base pass shader with only dynamic lighting: 50 instructions
+[2016.03.19-16.55.50:319][154]MaterialEditorStats: Info Vertex shader: 33 instructions
+[2016.03.19-16.55.50:319][154]MaterialEditorStats: Info Texture samplers: 5/16
+[2016.03.19-16.55.55:130][572]LogMaterial: Missing cached shader map for material PreviewMaterial_0, compiling. 
+[2016.03.19-16.55.55:143][572]LogMaterial: 0.000104 seconds spent updating 1 materials, 1 interfaces, 0 instances, 0 with static permutations.
+[2016.03.19-16.55.55:162][572]LogMaterial: Missing cached shader map for material dragonMaterial, compiling. 
+[2016.03.19-16.55.55:191][572]LogMaterial: Missing cached shader map for material dragonMaterial, compiling. 
+[2016.03.19-16.55.55:211][572]LogMaterial: 0.000331 seconds spent updating 1 materials, 1 interfaces, 0 instances, 0 with static permutations.
+[2016.03.19-16.56.01:187][257]LogBlueprintUserMessages: Early PlayInEditor Detection: Level '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default:PersistentLevel' has LevelScriptBlueprint '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default:PersistentLevel.Minimal_Default' with GeneratedClass '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default_C' with ClassGeneratedBy '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default:PersistentLevel.Minimal_Default'
+[2016.03.19-16.56.01:187][257]LogPlayLevel: PlayLevel: No blueprints needed recompiling
+[2016.03.19-16.56.01:187][257]PIE: New page: PIE session: Minimal_Default (Mar 19, 2016, 2:56:01 AM)
+[2016.03.19-16.56.01:187][257]LogPlayLevel: Creating play world package: /Game/StarterContent/Maps/UEDPIE_0_Minimal_Default
+[2016.03.19-16.56.01:189][257]LogPlayLevel: PIE: StaticDuplicateObject took: (0.001386s)
+[2016.03.19-16.56.01:189][257]LogAIModule: Creating AISystem for world Minimal_Default
+[2016.03.19-16.56.01:189][257]LogPlayLevel: PIE: World Init took: (0.000434s)
+[2016.03.19-16.56.01:189][257]LogPlayLevel: PIE: Created PIE world by copying editor world from /Game/StarterContent/Maps/Minimal_Default.Minimal_Default to /Game/StarterContent/Maps/UEDPIE_0_Minimal_Default.Minimal_Default (0.001947s)
+[2016.03.19-16.56.01:197][257]LogParticles: Destroying 0 GPU particle simulations for FXSystem 0x00000170991AD300
+[2016.03.19-16.56.01:198][257]LogParticles: Destroying 0 GPU particle simulations for FXSystem 0x000001708AEEC360
+[2016.03.19-16.56.01:202][257]LogInit: XAudio2 using 'VS24A-4 (NVIDIA High Definition Audio)' : 2 channels at 48 kHz using 16 bits per sample (channel mask 0x3)
+[2016.03.19-16.56.01:205][257]LogInit: FAudioDevice initialized.
+[2016.03.19-16.56.01:238][257]LogWorld: Game class is 'CreatureDragon2DGameMode'
+[2016.03.19-16.56.01:243][257]LogWorld: Bringing World /Game/StarterContent/Maps/UEDPIE_0_Minimal_Default.Minimal_Default up for play (max tick rate 0) at 2016.03.19-09.56.01
+[2016.03.19-16.56.01:243][257]LogActor:Warning: GameSession /Game/StarterContent/Maps/UEDPIE_0_Minimal_Default.Minimal_Default:PersistentLevel.GameSession_9 has natively added scene component(s), but none of them were set as the actor's RootComponent - picking one arbitrarily
+[2016.03.19-16.56.01:243][257]LogActor:Warning: GameNetworkManager /Game/StarterContent/Maps/UEDPIE_0_Minimal_Default.Minimal_Default:PersistentLevel.GameNetworkManager_9 has natively added scene component(s), but none of them were set as the actor's RootComponent - picking one arbitrarily
+[2016.03.19-16.56.01:244][257]LogWorld: Bringing up level for play took: 0.004827
+[2016.03.19-16.56.01:245][257]PIE: Info Play in editor start time for /Game/StarterContent/Maps/UEDPIE_0_Minimal_Default -0.592
+[2016.03.19-16.56.01:246][257]LogBlueprintUserMessages: Late PlayInEditor Detection: Level '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default:PersistentLevel' has LevelScriptBlueprint '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default:PersistentLevel.Minimal_Default' with GeneratedClass '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default_C' with ClassGeneratedBy '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default:PersistentLevel.Minimal_Default'
+[2016.03.19-16.56.07:789][ 42]LogBlueprintUserMessages: Early EndPlayMap Detection: Level '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default:PersistentLevel' has LevelScriptBlueprint '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default:PersistentLevel.Minimal_Default' with GeneratedClass '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default_C' with ClassGeneratedBy '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default:PersistentLevel.Minimal_Default'
+[2016.03.19-16.56.07:817][ 42]LogBlueprintUserMessages: Late EndPlayMap Detection: Level '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default:PersistentLevel' has LevelScriptBlueprint '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default:PersistentLevel.Minimal_Default' with GeneratedClass '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default_C' with ClassGeneratedBy '/Game/StarterContent/Maps/Minimal_Default.Minimal_Default:PersistentLevel.Minimal_Default'
+[2016.03.19-16.56.07:826][ 42]LogParticles: Destroying 0 GPU particle simulations for FXSystem 0x000001708B08B060
+[2016.03.19-16.56.09:060][176]LogMaterial: Missing cached shader map for material dragonMaterial, compiling. 
+[2016.03.19-16.56.09:112][176]LogMaterial: Missing cached shader map for material dragonMaterial, compiling. 
+[2016.03.19-16.56.09:116][176]LogMaterial: 0.000137 seconds spent updating 1 materials, 1 interfaces, 0 instances, 0 with static permutations.
+[2016.03.19-16.56.09:140][176]LogMaterial: Missing cached shader map for material FMatExpressionPreview MaterialExpressionTextureSample_1, compiling. 
+[2016.03.19-16.56.09:142][176]LogMaterial: Missing cached shader map for material FMatExpressionPreview MaterialExpressionTextureSample_0, compiling. 
+[2016.03.19-16.56.09:146][176]LogMaterial: Missing cached shader map for material FMatExpressionPreview MaterialExpressionTextureSample_2, compiling. 
+[2016.03.19-16.56.10:073][267]MaterialEditorStats: Info Base pass shader with static lighting: 85 instructions
+[2016.03.19-16.56.10:073][267]MaterialEditorStats: Info Base pass shader with only dynamic lighting: 50 instructions
+[2016.03.19-16.56.10:073][267]MaterialEditorStats: Info Vertex shader: 33 instructions
+[2016.03.19-16.56.10:073][267]MaterialEditorStats: Info Texture samplers: 5/16
+[2016.03.19-16.56.34:002][963]LogMaterial: Missing cached shader map for material dragonMaterial, compiling. 
+[2016.03.19-16.56.34:018][963]LogMaterial: Missing cached shader map for material dragonMaterial, compiling. 
+[2016.03.19-16.56.34:024][963]LogMaterial: 0.000148 seconds spent updating 1 materials, 1 interfaces, 0 instances, 0 with static permutations.
+[2016.03.19-16.56.36:026][169]MaterialEditorStats: Info Base pass shader with static lighting: 85 instructions
+[2016.03.19-16.56.36:026][169]MaterialEditorStats: Info Base pass shader with only dynamic lighting: 50 instructions
+[2016.03.19-16.56.36:026][169]MaterialEditorStats: Info Vertex shader: 28 instructions
+[2016.03.19-16.56.36:026][169]MaterialEditorStats: Info Texture samplers: 5/16
+[2016.03.19-16.56.42:094][814]Cmd: OBJ SAVEPACKAGE PACKAGE="/Game/dragonMaterial" FILE="../../../../../../Users/jychong/Documents/Work/Projects/UE4_Projects/CreatureDragon2D/Content/dragonMaterial.uasset" SILENT=true
+[2016.03.19-16.56.42:112][814]LogSavePackage: Save=11.161562ms
+[2016.03.19-16.56.42:112][814]LogSavePackage: Moving '../../../../../../Users/jychong/Documents/Work/Projects/UE4_Projects/CreatureDragon2D/Saved/dragonMaterial5705D852482A64F2FB5E9992F5E704EC.tmp' to '../../../../../../Users/jychong/Documents/Work/Projects/UE4_Projects/CreatureDragon2D/Content/dragonMaterial.uasset'
+[2016.03.19-16.56.42:114][814]LogSavePackage: Total save time: 18.911574ms
+[2016.03.19-16.56.42:114][814]LogSavePackage:Display: Finished SavePackage ../../../../../../Users/jychong/Documents/Work/Projects/UE4_Projects/CreatureDragon2D/Content/dragonMaterial.uasset
+[2016.03.19-16.58.11:655][387]LogMaterial: Missing cached shader map for material dragonMaterial, compiling. 
+[2016.03.19-16.58.11:660][387]LogMaterial: 0.000148 seconds spent updating 1 materials, 1 interfaces, 0 instances, 0 with static permutations.
+[2016.03.19-16.58.13:682][605]MaterialEditorStats: Info Base pass shader with static lighting: 85 instructions
+[2016.03.19-16.58.13:682][605]MaterialEditorStats: Info Base pass shader with only dynamic lighting: 50 instructions
+[2016.03.19-16.58.13:682][605]MaterialEditorStats: Info Vertex shader: 28 instructions
+[2016.03.19-16.58.13:682][605]MaterialEditorStats: Info Texture samplers: 5/16
+[2016.03.19-16.58.21:811][484]LogMaterial: Missing cached shader map for material dragonMaterial, compiling. 
+[2016.03.19-16.58.21:817][484]LogMaterial: 0.000195 seconds spent updating 1 materials, 1 interfaces, 0 instances, 0 with static permutations.
+[2016.03.19-16.58.23:605][677]MaterialEditorStats: Info Base pass shader with static lighting: 85 instructions
+[2016.03.19-16.58.23:605][677]MaterialEditorStats: Info Base pass shader with only dynamic lighting: 50 instructions
+[2016.03.19-16.58.23:605][677]MaterialEditorStats: Info Vertex shader: 28 instructions
+[2016.03.19-16.58.23:605][677]MaterialEditorStats: Info Texture samplers: 5/16
+[2016.03.19-16.58.25:996][930]LogMaterial: Missing cached shader map for material dragonMaterial, compiling. 
+[2016.03.19-16.58.26:002][930]LogMaterial: 0.000195 seconds spent updating 1 materials, 1 interfaces, 0 instances, 0 with static permutations.
+[2016.03.19-16.58.27:875][134]MaterialEditorStats: Info Base pass shader with static lighting: 85 instructions
+[2016.03.19-16.58.27:875][134]MaterialEditorStats: Info Base pass shader with only dynamic lighting: 50 instructions
+[2016.03.19-16.58.27:875][134]MaterialEditorStats: Info Vertex shader: 28 instructions
+[2016.03.19-16.58.27:875][134]MaterialEditorStats: Info Texture samplers: 5/16
+[2016.03.19-16.58.28:544][213]LogMaterial: Missing cached shader map for material dragonMaterial, compiling. 
+[2016.03.19-16.58.28:550][213]LogMaterial: 0.000150 seconds spent updating 1 materials, 1 interfaces, 0 instances, 0 with static permutations.
+[2016.03.19-16.58.28:577][213]LogMaterial: Missing cached shader map for material FMatExpressionPreview MaterialExpressionTextureSample_0, compiling. 
+[2016.03.19-16.58.30:385][409]MaterialEditorStats: Info Base pass shader with static lighting: 85 instructions
+[2016.03.19-16.58.30:385][409]MaterialEditorStats: Info Base pass shader with only dynamic lighting: 50 instructions
+[2016.03.19-16.58.30:385][409]MaterialEditorStats: Info Vertex shader: 28 instructions
+[2016.03.19-16.58.30:385][409]MaterialEditorStats: Info Texture samplers: 5/16
+[2016.03.19-17.01.33:913][ 44]LogFactory: FactoryCreateBinary: Texture with ReimportTextureFactory (0 0 C:\Users\jychong\Documents\Work\Projects\Temp\dragonMapExport\depth.png)
+[2016.03.19-17.01.33:946][ 44]LogTexture:Display: Building textures: depth (AutoDXT)
+[2016.03.19-17.01.44:872][874]Cmd: OBJ SAVEPACKAGE PACKAGE="/Game/dragonDepthTexture" FILE="../../../../../../Users/jychong/Documents/Work/Projects/UE4_Projects/CreatureDragon2D/Content/dragonDepthTexture.uasset" SILENT=true
+[2016.03.19-17.01.44:924][874]LogSavePackage: Save=50.337017ms
+[2016.03.19-17.01.44:924][874]LogSavePackage: Moving '../../../../../../Users/jychong/Documents/Work/Projects/UE4_Projects/CreatureDragon2D/Saved/dragonDepthTextureB704D9C2443C251B785DC88BC7FD79FE.tmp' to '../../../../../../Users/jychong/Documents/Work/Projects/UE4_Projects/CreatureDragon2D/Content/dragonDepthTexture.uasset'
+[2016.03.19-17.01.44:927][874]LogSavePackage: Total save time: 53.304780ms
+[2016.03.19-17.01.44:927][874]LogSavePackage:Display: Finished SavePackage ../../../../../../Users/jychong/Documents/Work/Projects/UE4_Projects/CreatureDragon2D/Content/dragonDepthTexture.uasset
+[2016.03.19-17.01.45:950][978]Cmd: OBJ SAVEPACKAGE PACKAGE="/Game/depth" FILE="../../../../../../Users/jychong/Documents/Work/Projects/UE4_Projects/CreatureDragon2D/Content/depth.uasset" SILENT=true
+[2016.03.19-17.01.45:954][978]LogSavePackage: Save=2.236553ms
+[2016.03.19-17.01.45:954][978]LogSavePackage: Moving '../../../../../../Users/jychong/Documents/Work/Projects/UE4_Projects/CreatureDragon2D/Saved/depth3C303B9E4ED183E881333AAF62E64759.tmp' to '../../../../../../Users/jychong/Documents/Work/Projects/UE4_Projects/CreatureDragon2D/Content/depth.uasset'
+[2016.03.19-17.01.45:955][978]LogSavePackage: Total save time: 3.809344ms
+[2016.03.19-17.01.45:955][978]LogSavePackage:Display: Finished SavePackage ../../../../../../Users/jychong/Documents/Work/Projects/UE4_Projects/CreatureDragon2D/Content/depth.uasset
+[2016.03.19-17.01.51:791][599]LogMaterial: Missing cached shader map for material dragonMaterial, compiling. 
+[2016.03.19-17.01.51:797][599]LogMaterial: 0.000197 seconds spent updating 1 materials, 1 interfaces, 0 instances, 0 with static permutations.
+[2016.03.19-17.01.51:799][599]LogMaterial: Missing cached shader map for material FMatExpressionPreview MaterialExpressionTextureSample_3, compiling. 
+[2016.03.19-17.01.51:829][599]LogMaterial: Missing cached shader map for material FMatExpressionPreview MaterialExpressionTextureSample_1, compiling. 
+[2016.03.19-17.01.51:831][599]LogMaterial: Missing cached shader map for material FMatExpressionPreview MaterialExpressionTextureSample_0, compiling. 
+[2016.03.19-17.01.51:833][599]LogMaterial: Missing cached shader map for material FMatExpressionPreview MaterialExpressionTextureSample_2, compiling. 
+[2016.03.19-17.01.51:835][599]LogMaterial: Missing cached shader map for material FMatExpressionPreview MaterialExpressionTextureSample_3, compiling. 
+[2016.03.19-17.01.53:831][816]MaterialEditorStats: Info Base pass shader with static lighting: 85 instructions
+[2016.03.19-17.01.53:831][816]MaterialEditorStats: Info Base pass shader with only dynamic lighting: 50 instructions
+[2016.03.19-17.01.53:831][816]MaterialEditorStats: Info Vertex shader: 28 instructions
+[2016.03.19-17.01.53:831][816]MaterialEditorStats: Info Texture samplers: 5/16
+[2016.03.19-17.02.03:408][867]LogMaterial: Missing cached shader map for material dragonMaterial, compiling. 
+[2016.03.19-17.02.03:413][867]LogMaterial: 0.000229 seconds spent updating 1 materials, 1 interfaces, 0 instances, 0 with static permutations.
+[2016.03.19-17.02.03:416][867]LogMaterial: Missing cached shader map for material dragonMaterial, compiling. 
+[2016.03.19-17.02.03:422][867]LogMaterial: 0.000155 seconds spent updating 1 materials, 1 interfaces, 0 instances, 0 with static permutations.
+[2016.03.19-17.02.03:446][867]LogMaterial: Missing cached shader map for material FMatExpressionPreview MaterialExpressionTextureSample_3, compiling. 
+[2016.03.19-17.02.05:240][ 60]MaterialEditorStats: Info Base pass shader with static lighting: 85 instructions
+[2016.03.19-17.02.05:240][ 60]MaterialEditorStats: Info Base pass shader with only dynamic lighting: 50 instructions
+[2016.03.19-17.02.05:240][ 60]MaterialEditorStats: Info Vertex shader: 28 instructions
+[2016.03.19-17.02.05:240][ 60]MaterialEditorStats: Info Texture samplers: 5/16
+[2016.03.19-17.02.06:424][197]LogMaterial: Missing cached shader map for material dragonMaterial, compiling. 
+[2016.03.19-17.02.06:429][197]LogMaterial: 0.000191 seconds spent updating 1 materials, 1 interfaces, 0 instances, 0 with static permutations.
+[2016.03.19-17.02.06:456][197]LogMaterial: Missing cached shader map for material FMatExpressionPreview MaterialExpressionTextureSample_3, compiling. 
+[2016.03.19-17.02.08:390][408]MaterialEditorStats: Info Base pass shader with static lighting: 85 instructions
+[2016.03.19-17.02.08:390][408]MaterialEditorStats: Info Base pass shader with only dynamic lighting: 50 instructions
+[2016.03.19-17.02.08:390][408]MaterialEditorStats: Info Vertex shader: 28 instructions
+[2016.03.19-17.02.08:390][408]MaterialEditorStats: Info Texture samplers: 5/16
+[2016.03.19-17.02.10:588][656]LogMaterial: Missing cached shader map for material dragonMaterial, compiling. 
+[2016.03.19-17.02.10:594][656]LogMaterial: 0.000182 seconds spent updating 1 materials, 1 interfaces, 0 instances, 0 with static permutations.
+[2016.03.19-17.02.10:597][656]LogMaterial: Missing cached shader map for material dragonMaterial, compiling. 
+[2016.03.19-17.02.10:602][656]LogMaterial: 0.000085 seconds spent updating 1 materials, 1 interfaces, 0 instances, 0 with static permutations.
+[2016.03.19-17.02.12:354][848]MaterialEditorStats: Info Base pass shader with static lighting: 85 instructions
+[2016.03.19-17.02.12:354][848]MaterialEditorStats: Info Base pass shader with only dynamic lighting: 50 instructions
+[2016.03.19-17.02.12:354][848]MaterialEditorStats: Info Vertex shader: 28 instructions
+[2016.03.19-17.02.12:354][848]MaterialEditorStats: Info Texture samplers: 5/16
+[2016.03.19-17.02.13:008][926]LogMaterial: Missing cached shader map for material dragonMaterial, compiling. 
+[2016.03.19-17.02.13:014][926]LogMaterial: 0.000104 seconds spent updating 1 materials, 1 interfaces, 0 instances, 0 with static permutations.
+[2016.03.19-17.02.13:042][926]LogMaterial: Missing cached shader map for material FMatExpressionPreview MaterialExpressionTextureSample_3, compiling. 
+[2016.03.19-17.02.14:785][119]MaterialEditorStats: Info Base pass shader with static lighting: 85 instructions
+[2016.03.19-17.02.14:785][119]MaterialEditorStats: Info Base pass shader with only dynamic lighting: 50 instructions
+[2016.03.19-17.02.14:785][119]MaterialEditorStats: Info Vertex shader: 28 instructions
+[2016.03.19-17.02.14:785][119]MaterialEditorStats: Info Texture samplers: 5/16
+[2016.03.19-17.02.21:243][833]LogMaterial: Missing cached shader map for material dragonMaterial, compiling. 
+[2016.03.19-17.02.21:249][833]LogMaterial: 0.000138 seconds spent updating 1 materials, 1 interfaces, 0 instances, 0 with static permutations.
+[2016.03.19-17.02.21:251][833]LogMaterial: Missing cached shader map for material dragonMaterial, compiling. 
+[2016.03.19-17.02.21:257][833]LogMaterial: 0.000097 seconds spent updating 1 materials, 1 interfaces, 0 instances, 0 with static permutations.
+[2016.03.19-17.02.22:996][ 23]MaterialEditorStats: Info Base pass shader with static lighting: 85 instructions
+[2016.03.19-17.02.22:996][ 23]MaterialEditorStats: Info Base pass shader with only dynamic lighting: 50 instructions
+[2016.03.19-17.02.22:997][ 23]MaterialEditorStats: Info Vertex shader: 28 instructions
+[2016.03.19-17.02.22:997][ 23]MaterialEditorStats: Info Texture samplers: 5/16
+[2016.03.19-17.02.23:729][110]LogMaterial: Missing cached shader map for material dragonMaterial, compiling. 
+[2016.03.19-17.02.23:735][110]LogMaterial: 0.000194 seconds spent updating 1 materials, 1 interfaces, 0 instances, 0 with static permutations.
+[2016.03.19-17.02.23:763][110]LogMaterial: Missing cached shader map for material FMatExpressionPreview MaterialExpressionTextureSample_3, compiling. 
+[2016.03.19-17.02.25:493][303]MaterialEditorStats: Info Base pass shader with static lighting: 85 instructions
+[2016.03.19-17.02.25:493][303]MaterialEditorStats: Info Base pass shader with only dynamic lighting: 50 instructions
+[2016.03.19-17.02.25:493][303]MaterialEditorStats: Info Vertex shader: 28 instructions
+[2016.03.19-17.02.25:493][303]MaterialEditorStats: Info Texture samplers: 5/16
+[2016.03.19-17.03.04:383][836]LogMaterial: Missing cached shader map for material dragonMaterial, compiling. 
+[2016.03.19-17.03.04:389][836]LogMaterial: 0.000220 seconds spent updating 1 materials, 1 interfaces, 0 instances, 0 with static permutations.
+[2016.03.19-17.03.06:366][ 50]MaterialEditorStats: Info Base pass shader with static lighting: 85 instructions
+[2016.03.19-17.03.06:366][ 50]MaterialEditorStats: Info Base pass shader with only dynamic lighting: 50 instructions
+[2016.03.19-17.03.06:366][ 50]MaterialEditorStats: Info Vertex shader: 28 instructions
+[2016.03.19-17.03.06:366][ 50]MaterialEditorStats: Info Texture samplers: 5/16
+[2016.03.19-17.03.22:925][ 26]LogMaterial: Missing cached shader map for material dragonMaterial, compiling. 
+[2016.03.19-17.03.22:931][ 26]LogMaterial: 0.000143 seconds spent updating 1 materials, 1 interfaces, 0 instances, 0 with static permutations.
+[2016.03.19-17.03.22:932][ 26]LogMaterial: Missing cached shader map for material FMatExpressionPreview MaterialExpressionConstant4Vector_0, compiling. 
+[2016.03.19-17.03.24:775][224]MaterialEditorStats: Info Base pass shader with static lighting: 85 instructions
+[2016.03.19-17.03.24:776][224]MaterialEditorStats: Info Base pass shader with only dynamic lighting: 50 instructions
+[2016.03.19-17.03.24:776][224]MaterialEditorStats: Info Vertex shader: 28 instructions
+[2016.03.19-17.03.24:776][224]MaterialEditorStats: Info Texture samplers: 5/16
+[2016.03.19-17.03.26:571][412]LogMaterial: Missing cached shader map for material dragonMaterial, compiling. 
+[2016.03.19-17.03.26:577][412]LogMaterial: 0.000193 seconds spent updating 1 materials, 1 interfaces, 0 instances, 0 with static permutations.
+[2016.03.19-17.03.28:326][607]MaterialEditorStats: Info Base pass shader with static lighting: 85 instructions
+[2016.03.19-17.03.28:326][607]MaterialEditorStats: Info Base pass shader with only dynamic lighting: 50 instructions
+[2016.03.19-17.03.28:326][607]MaterialEditorStats: Info Vertex shader: 28 instructions
+[2016.03.19-17.03.28:326][607]MaterialEditorStats: Info Texture samplers: 5/16
+[2016.03.19-17.03.53:812][655]LogMaterial: Missing cached shader map for material dragonMaterial, compiling. 
+[2016.03.19-17.03.53:818][655]LogMaterial: 0.000208 seconds spent updating 1 materials, 1 interfaces, 0 instances, 0 with static permutations.
+[2016.03.19-17.03.55:823][860]MaterialEditorStats: Info Base pass shader with static lighting: 85 instructions
+[2016.03.19-17.03.55:823][860]MaterialEditorStats: Info Base pass shader with only dynamic lighting: 50 instructions
+[2016.03.19-17.03.55:823][860]MaterialEditorStats: Info Vertex shader: 28 instructions
+[2016.03.19-17.03.55:823][860]MaterialEditorStats: Info Texture samplers: 5/16
+[2016.03.19-17.04.03:678][710]LogMaterial: Missing cached shader map for material dragonMaterial, compiling. 
+[2016.03.19-17.04.03:684][710]LogMaterial: 0.000165 seconds spent updating 1 materials, 1 interfaces, 0 instances, 0 with static permutations.
+[2016.03.19-17.04.03:710][710]LogMaterial: Missing cached shader map for material FMatExpressionPreview MaterialExpressionTextureSample_3, compiling. 
+[2016.03.19-17.04.05:432][891]MaterialEditorStats: Info Base pass shader with static lighting: 85 instructions
+[2016.03.19-17.04.05:432][891]MaterialEditorStats: Info Base pass shader with only dynamic lighting: 50 instructions
+[2016.03.19-17.04.05:432][891]MaterialEditorStats: Info Vertex shader: 28 instructions
+[2016.03.19-17.04.05:432][891]MaterialEditorStats: Info Texture samplers: 5/16
+[2016.03.19-17.04.08:431][239]LogMaterial: Missing cached shader map for material dragonMaterial, compiling. 
+[2016.03.19-17.04.08:441][239]LogMaterial: 0.000089 seconds spent updating 1 materials, 1 interfaces, 0 instances, 0 with static permutations.
+[2016.03.19-17.04.08:441][239]LogMaterial: Missing cached shader map for material FMatExpressionPreview MaterialExpressionConstant4Vector_1, compiling. 
+[2016.03.19-17.04.10:305][436]MaterialEditorStats: Info Base pass shader with static lighting: 85 instructions
+[2016.03.19-17.04.10:305][436]MaterialEditorStats: Info Base pass shader with only dynamic lighting: 50 instructions
+[2016.03.19-17.04.10:305][436]MaterialEditorStats: Info Vertex shader: 28 instructions
+[2016.03.19-17.04.10:305][436]MaterialEditorStats: Info Texture samplers: 5/16
+[2016.03.19-17.04.13:642][758]LogMaterial: Missing cached shader map for material dragonMaterial, compiling. 
+[2016.03.19-17.04.13:649][758]LogMaterial: 0.000192 seconds spent updating 1 materials, 1 interfaces, 0 instances, 0 with static permutations.
+[2016.03.19-17.04.13:678][758]LogMaterial: Missing cached shader map for material FMatExpressionPreview MaterialExpressionConstant4Vector_1, compiling. 
+[2016.03.19-17.04.15:393][921]MaterialEditorStats: Info Base pass shader with static lighting: 85 instructions
+[2016.03.19-17.04.15:393][921]MaterialEditorStats: Info Base pass shader with only dynamic lighting: 50 instructions
+[2016.03.19-17.04.15:393][921]MaterialEditorStats: Info Vertex shader: 28 instructions
+[2016.03.19-17.04.15:393][921]MaterialEditorStats: Info Texture samplers: 5/16
+[2016.03.19-17.04.44:618][767]LogMaterial: Missing cached shader map for material dragonMaterial, compiling. 
+[2016.03.19-17.04.44:624][767]LogMaterial: 0.000132 seconds spent updating 1 materials, 1 interfaces, 0 instances, 0 with static permutations.
+[2016.03.19-17.04.44:649][767]LogMaterial: Missing cached shader map for material FMatExpressionPreview MaterialExpressionConstant4Vector_1, compiling. 
+[2016.03.19-17.04.46:644][961]MaterialEditorStats: Info Base pass shader with static lighting: 85 instructions
+[2016.03.19-17.04.46:644][961]MaterialEditorStats: Info Base pass shader with only dynamic lighting: 50 instructions
+[2016.03.19-17.04.46:644][961]MaterialEditorStats: Info Vertex shader: 28 instructions
+[2016.03.19-17.04.46:644][961]MaterialEditorStats: Info Texture samplers: 5/16
+[2016.03.19-17.04.49:056][220]LogMaterial: Missing cached shader map for material dragonMaterial, compiling. 
+[2016.03.19-17.04.49:062][220]LogMaterial: 0.000112 seconds spent updating 1 materials, 1 interfaces, 0 instances, 0 with static permutations.
+[2016.03.19-17.04.49:091][220]LogMaterial: Missing cached shader map for material FMatExpressionPreview MaterialExpressionConstant4Vector_1, compiling. 
+[2016.03.19-17.04.50:838][412]MaterialEditorStats: Info Base pass shader with static lighting: 85 instructions
+[2016.03.19-17.04.50:838][412]MaterialEditorStats: Info Base pass shader with only dynamic lighting: 50 instructions
+[2016.03.19-17.04.50:838][412]MaterialEditorStats: Info Vertex shader: 28 instructions
+[2016.03.19-17.04.50:838][412]MaterialEditorStats: Info Texture samplers: 5/16
+[2016.03.19-17.05.00:911][989]LogMaterial: Missing cached shader map for material dragonMaterial, compiling. 
+[2016.03.19-17.05.00:917][989]LogMaterial: 0.000158 seconds spent updating 1 materials, 1 interfaces, 0 instances, 0 with static permutations.
+[2016.03.19-17.05.00:920][989]LogMaterial: Missing cached shader map for material dragonMaterial, compiling. 
+[2016.03.19-17.05.00:926][989]LogMaterial: 0.000020 seconds spent updating 1 materials, 1 interfaces, 0 instances, 0 with static permutations.
+[2016.03.19-17.05.02:689][178]MaterialEditorStats: Info Base pass shader with static lighting: 85 instructions
+[2016.03.19-17.05.02:689][178]MaterialEditorStats: Info Base pass shader with only dynamic lighting: 50 instructions
+[2016.03.19-17.05.02:689][178]MaterialEditorStats: Info Vertex shader: 28 instructions
+[2016.03.19-17.05.02:689][178]MaterialEditorStats: Info Texture samplers: 5/16
+[2016.03.19-17.05.16:525][625]LogMaterial: Missing cached shader map for material dragonMaterial, compiling. 
+[2016.03.19-17.05.16:531][625]LogMaterial: 0.000206 seconds spent updating 1 materials, 1 interfaces, 0 instances, 0 with static permutations.
+[2016.03.19-17.05.18:310][814]MaterialEditorStats: Info Base pass shader with static lighting: 85 instructions
+[2016.03.19-17.05.18:310][814]MaterialEditorStats: Info Base pass shader with only dynamic lighting: 50 instructions
+[2016.03.19-17.05.18:310][814]MaterialEditorStats: Info Vertex shader: 28 instructions
+[2016.03.19-17.05.18:310][814]MaterialEditorStats: Info Texture samplers: 5/16
+[2016.03.19-17.06.02:072][597]LogMaterial: Missing cached shader map for material dragonMaterial, compiling. 
+[2016.03.19-17.06.02:079][597]LogMaterial: 0.000220 seconds spent updating 1 materials, 1 interfaces, 0 instances, 0 with static permutations.
+[2016.03.19-17.06.04:055][812]MaterialEditorStats: Info Base pass shader with static lighting: 85 instructions
+[2016.03.19-17.06.04:055][812]MaterialEditorStats: Info Base pass shader with only dynamic lighting: 50 instructions
+[2016.03.19-17.06.04:055][812]MaterialEditorStats: Info Vertex shader: 28 instructions
+[2016.03.19-17.06.04:055][812]MaterialEditorStats: Info Texture samplers: 5/16
+[2016.03.19-17.06.24:069][191]LogMaterial: Missing cached shader map for material dragonMaterial, compiling. 
+[2016.03.19-17.06.24:075][191]LogMaterial: 0.000120 seconds spent updating 1 materials, 1 interfaces, 0 instances, 0 with static permutations.
+[2016.03.19-17.06.26:079][411]MaterialEditorStats: Info Base pass shader with static lighting: 85 instructions
+[2016.03.19-17.06.26:079][411]MaterialEditorStats: Info Base pass shader with only dynamic lighting: 50 instructions
+[2016.03.19-17.06.26:079][411]MaterialEditorStats: Info Vertex shader: 28 instructions
+[2016.03.19-17.06.26:079][411]MaterialEditorStats: Info Texture samplers: 5/16
+[2016.03.19-17.06.37:837][834]LogMaterial: Missing cached shader map for material dragonMaterial, compiling. 
+[2016.03.19-17.06.37:843][834]LogMaterial: 0.000121 seconds spent updating 1 materials, 1 interfaces, 0 instances, 0 with static permutations.
+[2016.03.19-17.06.37:845][834]LogMaterial: Missing cached shader map for material dragonMaterial, compiling. 
+[2016.03.19-17.06.37:851][834]LogMaterial: 0.000152 seconds spent updating 1 materials, 1 interfaces, 0 instances, 0 with static permutations.
+[2016.03.19-17.06.39:592][ 23]MaterialEditorStats: Info Base pass shader with static lighting: 85 instructions
+[2016.03.19-17.06.39:592][ 23]MaterialEditorStats: Info Base pass shader with only dynamic lighting: 50 instructions
+[2016.03.19-17.06.39:592][ 23]MaterialEditorStats: Info Vertex shader: 28 instructions
+[2016.03.19-17.06.39:592][ 23]MaterialEditorStats: Info Texture samplers: 5/16
+[2016.03.19-17.06.40:272][104]LogMaterial: Missing cached shader map for material dragonMaterial, compiling. 
+[2016.03.19-17.06.40:278][104]LogMaterial: 0.000148 seconds spent updating 1 materials, 1 interfaces, 0 instances, 0 with static permutations.
+[2016.03.19-17.06.42:017][297]MaterialEditorStats: Info Base pass shader with static lighting: 85 instructions
+[2016.03.19-17.06.42:017][297]MaterialEditorStats: Info Base pass shader with only dynamic lighting: 50 instructions
+[2016.03.19-17.06.42:017][297]MaterialEditorStats: Info Vertex shader: 28 instructions
+[2016.03.19-17.06.42:017][297]MaterialEditorStats: Info Texture samplers: 5/16
+[2016.03.19-17.06.56:763][790]LogMaterial: Missing cached shader map for material dragonMaterial, compiling. 
+[2016.03.19-17.06.56:763][790]LogMaterial:Warning: Failed to compile Material /Engine/Transient.dragonMaterial for platform PCD3D_SM5, Default Material will be used in game.
+[2016.03.19-17.06.56:763][790]LogMaterial:Warning: 	(Node DotProduct) Coercion failed: MaterialFloat4(1.00000000,1.00000000,1.00000000,1.00000000): float4 -> float3
+[2016.03.19-17.06.56:764][790]LogMaterial: 0.000172 seconds spent updating 1 materials, 1 interfaces, 0 instances, 0 with static permutations.
+[2016.03.19-17.06.56:765][790]MaterialEditorStats:Error: Error [SM5] (Node DotProduct) Coercion failed: MaterialFloat4(1.00000000,1.00000000,1.00000000,1.00000000): float4 -> float3
+[2016.03.19-17.07.26:045][706]LogMaterial: Missing cached shader map for material dragonMaterial, compiling. 
+[2016.03.19-17.07.26:051][706]LogMaterial: 0.000042 seconds spent updating 1 materials, 1 interfaces, 0 instances, 0 with static permutations.
+[2016.03.19-17.07.28:183][934]MaterialEditorStats: Info Base pass shader with static lighting: 85 instructions
+[2016.03.19-17.07.28:183][934]MaterialEditorStats: Info Base pass shader with only dynamic lighting: 50 instructions
+[2016.03.19-17.07.28:183][934]MaterialEditorStats: Info Vertex shader: 28 instructions
+[2016.03.19-17.07.28:183][934]MaterialEditorStats: Info Texture samplers: 5/16
+[2016.03.19-17.08.12:932][844]LogMaterial: Missing cached shader map for material dragonMaterial, compiling. 
+[2016.03.19-17.08.12:932][844]LogMaterial:Warning: Failed to compile Material /Engine/Transient.dragonMaterial for platform PCD3D_SM5, Default Material will be used in game.
+[2016.03.19-17.08.12:932][844]LogMaterial:Warning: 	(Node DotProduct) Coercion failed: MaterialFloat4(1.00000000,1.00000000,1.00000000,1.00000000): float4 -> float3
+[2016.03.19-17.08.12:932][844]LogMaterial: 0.000194 seconds spent updating 1 materials, 1 interfaces, 0 instances, 0 with static permutations.
+[2016.03.19-17.08.12:933][844]MaterialEditorStats:Error: Error [SM5] (Node DotProduct) Coercion failed: MaterialFloat4(1.00000000,1.00000000,1.00000000,1.00000000): float4 -> float3
+[2016.03.19-17.09.09:051][363]LogMaterial: Missing cached shader map for material dragonMaterial, compiling. 
+[2016.03.19-17.09.09:057][363]LogMaterial: 0.000044 seconds spent updating 1 materials, 1 interfaces, 0 instances, 0 with static permutations.
+[2016.03.19-17.09.11:056][578]MaterialEditorStats: Info Base pass shader with static lighting: 85 instructions
+[2016.03.19-17.09.11:056][578]MaterialEditorStats: Info Base pass shader with only dynamic lighting: 50 instructions
+[2016.03.19-17.09.11:056][578]MaterialEditorStats: Info Vertex shader: 28 instructions
+[2016.03.19-17.09.11:056][578]MaterialEditorStats: Info Texture samplers: 5/16
+[2016.03.19-17.09.20:863][617]LogMaterial: Missing cached shader map for material FMatExpressionPreview MaterialExpressionVertexNormalWS_1, compiling. 
+[2016.03.19-17.09.52:421][ 85]LogMaterial: Missing cached shader map for material dragonMaterial, compiling. 
+[2016.03.19-17.09.52:427][ 85]LogMaterial: 0.000097 seconds spent updating 1 materials, 1 interfaces, 0 instances, 0 with static permutations.
+[2016.03.19-17.09.52:428][ 85]LogMaterial: Missing cached shader map for material FMatExpressionPreview MaterialExpressionConstant3Vector_1, compiling. 
+[2016.03.19-17.09.54:463][297]MaterialEditorStats: Info Base pass shader with static lighting: 85 instructions
+[2016.03.19-17.09.54:463][297]MaterialEditorStats: Info Base pass shader with only dynamic lighting: 50 instructions
+[2016.03.19-17.09.54:463][297]MaterialEditorStats: Info Vertex shader: 28 instructions
+[2016.03.19-17.09.54:463][297]MaterialEditorStats: Info Texture samplers: 5/16
+[2016.03.19-17.10.08:277][741]LogMaterial: Missing cached shader map for material dragonMaterial, compiling. 
+[2016.03.19-17.10.08:283][741]LogMaterial: 0.000153 seconds spent updating 1 materials, 1 interfaces, 0 instances, 0 with static permutations.
+[2016.03.19-17.10.08:312][741]LogMaterial: Missing cached shader map for material FMatExpressionPreview MaterialExpressionConstant3Vector_1, compiling. 
+[2016.03.19-17.10.10:035][924]MaterialEditorStats: Info Base pass shader with static lighting: 85 instructions
+[2016.03.19-17.10.10:035][924]MaterialEditorStats: Info Base pass shader with only dynamic lighting: 50 instructions
+[2016.03.19-17.10.10:035][924]MaterialEditorStats: Info Vertex shader: 28 instructions
+[2016.03.19-17.10.10:035][924]MaterialEditorStats: Info Texture samplers: 5/16
+[2016.03.19-17.10.12:475][188]LogMaterial: Missing cached shader map for material dragonMaterial, compiling. 
+[2016.03.19-17.10.12:476][188]LogMaterial:Warning: Failed to compile Material /Engine/Transient.dragonMaterial for platform PCD3D_SM5, Default Material will be used in game.
+[2016.03.19-17.10.12:476][188]LogMaterial:Warning: 	(Node DotProduct) Coercion failed: MaterialFloat4(1.00000000,1.00000000,1.00000000,1.00000000): float4 -> float3
+[2016.03.19-17.10.12:476][188]LogMaterial: 0.000205 seconds spent updating 1 materials, 1 interfaces, 0 instances, 0 with static permutations.
+[2016.03.19-17.10.12:477][188]MaterialEditorStats:Error: Error [SM5] (Node DotProduct) Coercion failed: MaterialFloat4(1.00000000,1.00000000,1.00000000,1.00000000): float4 -> float3
+[2016.03.19-17.10.16:420][601]LogMaterial: Missing cached shader map for material dragonMaterial, compiling. 
+[2016.03.19-17.10.16:426][601]LogMaterial: 0.000151 seconds spent updating 1 materials, 1 interfaces, 0 instances, 0 with static permutations.
+[2016.03.19-17.10.18:159][794]MaterialEditorStats: Info Base pass shader with static lighting: 85 instructions
+[2016.03.19-17.10.18:159][794]MaterialEditorStats: Info Base pass shader with only dynamic lighting: 50 instructions
+[2016.03.19-17.10.18:159][794]MaterialEditorStats: Info Vertex shader: 28 instructions
+[2016.03.19-17.10.18:159][794]MaterialEditorStats: Info Texture samplers: 5/16
+[2016.03.19-17.10.18:619][841]LogMaterial: Missing cached shader map for material dragonMaterial, compiling. 
+[2016.03.19-17.10.18:625][841]LogMaterial: 0.000121 seconds spent updating 1 materials, 1 interfaces, 0 instances, 0 with static permutations.
+[2016.03.19-17.10.20:325][ 27]MaterialEditorStats: Info Base pass shader with static lighting: 85 instructions
+[2016.03.19-17.10.20:325][ 27]MaterialEditorStats: Info Base pass shader with only dynamic lighting: 50 instructions
+[2016.03.19-17.10.20:325][ 27]MaterialEditorStats: Info Vertex shader: 28 instructions
+[2016.03.19-17.10.20:325][ 27]MaterialEditorStats: Info Texture samplers: 5/16
+[2016.03.19-17.10.22:018][227]LogMaterial: Missing cached shader map for material dragonMaterial, compiling. 
+[2016.03.19-17.10.22:024][227]LogMaterial: 0.000213 seconds spent updating 1 materials, 1 interfaces, 0 instances, 0 with static permutations.
+[2016.03.19-17.10.22:027][227]LogMaterial: Missing cached shader map for material FMatExpressionPreview MaterialExpressionConstant4Vector_2, compiling. 
+[2016.03.19-17.10.23:763][415]MaterialEditorStats: Info Base pass shader with static lighting: 85 instructions
+[2016.03.19-17.10.23:763][415]MaterialEditorStats: Info Base pass shader with only dynamic lighting: 50 instructions
+[2016.03.19-17.10.23:763][415]MaterialEditorStats: Info Vertex shader: 28 instructions
+[2016.03.19-17.10.23:763][415]MaterialEditorStats: Info Texture samplers: 5/16
+[2016.03.19-17.10.24:356][486]LogMaterial: Missing cached shader map for material dragonMaterial, compiling. 
+[2016.03.19-17.10.24:362][486]LogMaterial: 0.000195 seconds spent updating 1 materials, 1 interfaces, 0 instances, 0 with static permutations.
+[2016.03.19-17.10.24:389][486]LogMaterial: Missing cached shader map for material FMatExpressionPreview MaterialExpressionConstant4Vector_2, compiling. 
+[2016.03.19-17.10.26:185][686]MaterialEditorStats: Info Base pass shader with static lighting: 85 instructions
+[2016.03.19-17.10.26:185][686]MaterialEditorStats: Info Base pass shader with only dynamic lighting: 50 instructions
+[2016.03.19-17.10.26:185][686]MaterialEditorStats: Info Vertex shader: 28 instructions
+[2016.03.19-17.10.26:185][686]MaterialEditorStats: Info Texture samplers: 5/16
+[2016.03.19-17.10.27:231][811]LogMaterial: Missing cached shader map for material dragonMaterial, compiling. 
+[2016.03.19-17.10.27:232][811]LogMaterial:Warning: Failed to compile Material /Engine/Transient.dragonMaterial for platform PCD3D_SM5, Default Material will be used in game.
+[2016.03.19-17.10.27:232][811]LogMaterial:Warning: 	(Node DotProduct) Coercion failed: MaterialFloat4(1.00000000,1.00000000,1.00000000,1.00000000): float4 -> float3
+[2016.03.19-17.10.27:232][811]LogMaterial:Warning: 	(Node Multiply) Arithmetic between types float3 and float4 are undefined
+[2016.03.19-17.10.27:232][811]LogMaterial: 0.000223 seconds spent updating 1 materials, 1 interfaces, 0 instances, 0 with static permutations.
+[2016.03.19-17.10.27:233][811]MaterialEditorStats:Error: Error [SM5] (Node DotProduct) Coercion failed: MaterialFloat4(1.00000000,1.00000000,1.00000000,1.00000000): float4 -> float3
+[2016.03.19-17.10.27:233][811]MaterialEditorStats:Error: Error [SM5] (Node Multiply) Arithmetic between types float3 and float4 are undefined
+[2016.03.19-17.10.37:675][938]LogMaterial: Missing cached shader map for material dragonMaterial, compiling. 
+[2016.03.19-17.10.37:675][938]LogMaterial:Warning: Failed to compile Material /Engine/Transient.dragonMaterial for platform PCD3D_SM5, Default Material will be used in game.
+[2016.03.19-17.10.37:675][938]LogMaterial:Warning: 	(Node DotProduct) Coercion failed: MaterialFloat4(1.00000000,1.00000000,1.00000000,1.00000000): float4 -> float3
+[2016.03.19-17.10.37:675][938]LogMaterial: 0.000198 seconds spent updating 1 materials, 1 interfaces, 0 instances, 0 with static permutations.
+[2016.03.19-17.10.37:676][938]MaterialEditorStats:Error: Error [SM5] (Node DotProduct) Coercion failed: MaterialFloat4(1.00000000,1.00000000,1.00000000,1.00000000): float4 -> float3
+[2016.03.19-17.11.04:919][888]LogMaterial: Missing cached shader map for material dragonMaterial, compiling. 
+[2016.03.19-17.11.04:925][888]LogMaterial: 0.000152 seconds spent updating 1 materials, 1 interfaces, 0 instances, 0 with static permutations.
+[2016.03.19-17.11.06:898][103]MaterialEditorStats: Info Base pass shader with static lighting: 85 instructions
+[2016.03.19-17.11.06:898][103]MaterialEditorStats: Info Base pass shader with only dynamic lighting: 50 instructions
+[2016.03.19-17.11.06:898][103]MaterialEditorStats: Info Vertex shader: 28 instructions
+[2016.03.19-17.11.06:898][103]MaterialEditorStats: Info Texture samplers: 5/16
+[2016.03.19-17.11.11:174][561]LogMaterial: Missing cached shader map for material dragonMaterial, compiling. 
+[2016.03.19-17.11.11:180][561]LogMaterial: 0.000136 seconds spent updating 1 materials, 1 interfaces, 0 instances, 0 with static permutations.
+[2016.03.19-17.11.11:183][561]LogMaterial: Missing cached shader map for material dragonMaterial, compiling. 
+[2016.03.19-17.11.11:189][561]LogMaterial: 0.000042 seconds spent updating 1 materials, 1 interfaces, 0 instances, 0 with static permutations.
+[2016.03.19-17.11.11:215][561]LogMaterial: Missing cached shader map for material FMatExpressionPreview MaterialExpressionTextureSample_3, compiling. 
+[2016.03.19-17.11.12:967][747]MaterialEditorStats: Info Base pass shader with static lighting: 85 instructions
+[2016.03.19-17.11.12:967][747]MaterialEditorStats: Info Base pass shader with only dynamic lighting: 50 instructions
+[2016.03.19-17.11.12:967][747]MaterialEditorStats: Info Vertex shader: 28 instructions
+[2016.03.19-17.11.12:967][747]MaterialEditorStats: Info Texture samplers: 5/16
+[2016.03.19-17.11.14:020][873]LogMaterial: Missing cached shader map for material dragonMaterial, compiling. 
+[2016.03.19-17.11.14:026][873]LogMaterial: 0.000191 seconds spent updating 1 materials, 1 interfaces, 0 instances, 0 with static permutations.
+[2016.03.19-17.11.14:051][873]LogMaterial: Missing cached shader map for material FMatExpressionPreview MaterialExpressionTextureSample_3, compiling. 
+[2016.03.19-17.11.15:808][ 61]MaterialEditorStats: Info Base pass shader with static lighting: 85 instructions
+[2016.03.19-17.11.15:808][ 61]MaterialEditorStats: Info Base pass shader with only dynamic lighting: 50 instructions
+[2016.03.19-17.11.15:808][ 61]MaterialEditorStats: Info Vertex shader: 28 instructions
+[2016.03.19-17.11.15:808][ 61]MaterialEditorStats: Info Texture samplers: 5/16
+[2016.03.19-17.11.18:092][313]LogMaterial: Missing cached shader map for material dragonMaterial, compiling. 
+[2016.03.19-17.11.18:098][313]LogMaterial: 0.000195 seconds spent updating 1 materials, 1 interfaces, 0 instances, 0 with static permutations.
+[2016.03.19-17.11.18:101][313]LogMaterial: Missing cached shader map for material dragonMaterial, compiling. 
+[2016.03.19-17.11.18:107][313]LogMaterial: 0.000154 seconds spent updating 1 materials, 1 interfaces, 0 instances, 0 with static permutations.
+[2016.03.19-17.11.19:848][503]MaterialEditorStats: Info Base pass shader with static lighting: 85 instructions
+[2016.03.19-17.11.19:848][503]MaterialEditorStats: Info Base pass shader with only dynamic lighting: 50 instructions
+[2016.03.19-17.11.19:848][503]MaterialEditorStats: Info Vertex shader: 28 instructions
+[2016.03.19-17.11.19:848][503]MaterialEditorStats: Info Texture samplers: 5/16
+[2016.03.19-17.11.20:600][592]LogMaterial: Missing cached shader map for material dragonMaterial, compiling. 
+[2016.03.19-17.11.20:606][592]LogMaterial: 0.000153 seconds spent updating 1 materials, 1 interfaces, 0 instances, 0 with static permutations.
+[2016.03.19-17.11.20:634][592]LogMaterial: Missing cached shader map for material FMatExpressionPreview MaterialExpressionTextureSample_3, compiling. 
+[2016.03.19-17.11.22:416][789]MaterialEditorStats: Info Base pass shader with static lighting: 85 instructions
+[2016.03.19-17.11.22:416][789]MaterialEditorStats: Info Base pass shader with only dynamic lighting: 50 instructions
+[2016.03.19-17.11.22:416][789]MaterialEditorStats: Info Vertex shader: 28 instructions
+[2016.03.19-17.11.22:416][789]MaterialEditorStats: Info Texture samplers: 5/16
+[2016.03.19-17.11.22:676][819]LogMaterial: Missing cached shader map for material dragonMaterial, compiling. 
+[2016.03.19-17.11.22:681][819]LogMaterial: 0.000107 seconds spent updating 1 materials, 1 interfaces, 0 instances, 0 with static permutations.
+[2016.03.19-17.11.22:684][819]LogMaterial: Missing cached shader map for material dragonMaterial, compiling. 
+[2016.03.19-17.11.22:689][819]LogMaterial: 0.000076 seconds spent updating 1 materials, 1 interfaces, 0 instances, 0 with static permutations.
+[2016.03.19-17.11.24:435][  9]MaterialEditorStats: Info Base pass shader with static lighting: 85 instructions
+[2016.03.19-17.11.24:435][  9]MaterialEditorStats: Info Base pass shader with only dynamic lighting: 50 instructions
+[2016.03.19-17.11.24:435][  9]MaterialEditorStats: Info Vertex shader: 28 instructions
+[2016.03.19-17.11.24:435][  9]MaterialEditorStats: Info Texture samplers: 5/16
+[2016.03.19-17.11.25:590][146]LogMaterial: Missing cached shader map for material dragonMaterial, compiling. 
+[2016.03.19-17.11.25:596][146]LogMaterial: 0.000185 seconds spent updating 1 materials, 1 interfaces, 0 instances, 0 with static permutations.
+[2016.03.19-17.11.25:622][146]LogMaterial: Missing cached shader map for material FMatExpressionPreview MaterialExpressionTextureSample_3, compiling. 
+[2016.03.19-17.11.27:352][337]MaterialEditorStats: Info Base pass shader with static lighting: 85 instructions
+[2016.03.19-17.11.27:352][337]MaterialEditorStats: Info Base pass shader with only dynamic lighting: 50 instructions
+[2016.03.19-17.11.27:352][337]MaterialEditorStats: Info Vertex shader: 28 instructions
+[2016.03.19-17.11.27:352][337]MaterialEditorStats: Info Texture samplers: 5/16
+[2016.03.19-17.11.29:569][595]LogMaterial: Missing cached shader map for material dragonMaterial, compiling. 
+[2016.03.19-17.11.29:575][595]LogMaterial: 0.000194 seconds spent updating 1 materials, 1 interfaces, 0 instances, 0 with static permutations.
+[2016.03.19-17.11.31:334][786]MaterialEditorStats: Info Base pass shader with static lighting: 85 instructions
+[2016.03.19-17.11.31:334][786]MaterialEditorStats: Info Base pass shader with only dynamic lighting: 50 instructions
+[2016.03.19-17.11.31:334][786]MaterialEditorStats: Info Vertex shader: 28 instructions
+[2016.03.19-17.11.31:334][786]MaterialEditorStats: Info Texture samplers: 5/16
+[2016.03.19-17.11.47:118][498]LogMaterial: Missing cached shader map for material dragonMaterial, compiling. 
+[2016.03.19-17.11.47:124][498]LogMaterial: 0.000187 seconds spent updating 1 materials, 1 interfaces, 0 instances, 0 with static permutations.
+[2016.03.19-17.11.48:911][691]MaterialEditorStats: Info Base pass shader with static lighting: 85 instructions
+[2016.03.19-17.11.48:911][691]MaterialEditorStats: Info Base pass shader with only dynamic lighting: 50 instructions
+[2016.03.19-17.11.48:911][691]MaterialEditorStats: Info Vertex shader: 28 instructions
+[2016.03.19-17.11.48:911][691]MaterialEditorStats: Info Texture samplers: 5/16
+[2016.03.19-17.11.57:345][446]LogMaterial: Missing cached shader map for material dragonMaterial, compiling. 
+[2016.03.19-17.11.57:364][446]LogMaterial: 0.000138 seconds spent updating 1 materials, 1 interfaces, 0 instances, 0 with static permutations.
+[2016.03.19-17.11.57:399][446]LogMaterial: Missing cached shader map for material dragonMaterial, compiling. 
+[2016.03.19-17.11.57:450][446]LogMaterial: Missing cached shader map for material dragonMaterial, compiling. 
+[2016.03.19-17.11.57:478][446]LogMaterial: 0.000461 seconds spent updating 1 materials, 1 interfaces, 0 instances, 0 with static permutations.
+[2016.03.19-17.12.05:073][446]Cmd: OBJ SAVEPACKAGE PACKAGE="/Game/dragonMaterial" FILE="../../../../../../Users/jychong/Documents/Work/Projects/UE4_Projects/CreatureDragon2D/Content/dragonMaterial.uasset" SILENT=true
+[2016.03.19-17.12.05:092][446]LogSavePackage: Save=11.806161ms
+[2016.03.19-17.12.05:092][446]LogSavePackage: Moving '../../../../../../Users/jychong/Documents/Work/Projects/UE4_Projects/CreatureDragon2D/Saved/dragonMaterialEFB8DC5749815E387457418FCFCD1D9A.tmp' to '../../../../../../Users/jychong/Documents/Work/Projects/UE4_Projects/CreatureDragon2D/Content/dragonMaterial.uasset'
+[2016.03.19-17.12.05:095][446]LogSavePackage: Total save time: 20.766683ms
+[2016.03.19-17.12.05:095][446]LogSavePackage:Display: Finished SavePackage ../../../../../../Users/jychong/Documents/Work/Projects/UE4_Projects/CreatureDragon2D/Content/dragonMaterial.uasset
+[2016.03.19-17.12.05:215][446]LogWindowsTextInputMethodSystem:Display: IME system now deactivated.
+[2016.03.19-17.12.05:423][447]Cmd: QUIT_EDITOR
+[2016.03.19-17.12.06:216][447]LogExit: Preparing to exit.
+[2016.03.19-17.12.07:101][447]LogExit: Editor shut down
+[2016.03.19-17.12.07:102][447]LogExit: Transaction tracking system shut down
+[2016.03.19-17.12.07:114][447]LogParticles: Destroying 0 GPU particle simulations for FXSystem 0x00000170B987B9C0
+[2016.03.19-17.12.07:119][447]LogParticles: Destroying 0 GPU particle simulations for FXSystem 0x00000170E1E81DA0
+[2016.03.19-17.12.07:119][447]LogParticles: Destroying 0 GPU particle simulations for FXSystem 0x00000170E2B73060
+[2016.03.19-17.12.07:119][447]LogParticles: Destroying 0 GPU particle simulations for FXSystem 0x00000170E5C9EE80
+[2016.03.19-17.12.07:119][447]LogParticles: Destroying 0 GPU particle simulations for FXSystem 0x00000170E5C9ED40
+[2016.03.19-17.12.07:120][447]LogParticles: Destroying 0 GPU particle simulations for FXSystem 0x00000170944E2020
+[2016.03.19-17.12.07:232][447]LogExit: Object subsystem successfully closed.
+[2016.03.19-17.12.07:247][447]LogD3D11RHI: Shutdown
+[2016.03.19-17.12.07:247][447]LogD3D11RHI: CleanupD3DDevice
+[2016.03.19-17.12.07:305][447]LogD3D11RHI: ~FD3D11DynamicRHI
+[2016.03.19-17.12.07:323][447]LogModuleManager: Shutting down and abandoning module MaterialEditor (203)
+[2016.03.19-17.12.07:323][447]LogModuleManager: Shutting down and abandoning module CookingStats (202)
+[2016.03.19-17.12.07:323][447]LogModuleManager: Shutting down and abandoning module CrashTracker (201)
+[2016.03.19-17.12.07:323][447]LogModuleManager: Shutting down and abandoning module SceneOutliner (200)
+[2016.03.19-17.12.07:323][447]LogModuleManager: Shutting down and abandoning module SuperSearch (199)
+[2016.03.19-17.12.07:323][447]LogModuleManager: Shutting down and abandoning module WidgetCarousel (198)
+[2016.03.19-17.12.07:324][447]LogModuleManager: Shutting down and abandoning module AddContentDialog (197)
+[2016.03.19-17.12.07:324][447]LogModuleManager: Shutting down and abandoning module EditorWidgets (196)
+[2016.03.19-17.12.07:324][447]LogModuleManager: Shutting down and abandoning module CollectionManager (195)
+[2016.03.19-17.12.07:324][447]LogModuleManager: Shutting down and abandoning module StatsViewer (194)
+[2016.03.19-17.12.07:324][447]LogModuleManager: Shutting down and abandoning module FoliageEdit (193)
+[2016.03.19-17.12.07:324][447]LogModuleManager: Shutting down and abandoning module LandscapeEditor (192)
+[2016.03.19-17.12.07:325][447]LogModuleManager: Shutting down and abandoning module ActorPickerMode (191)
+[2016.03.19-17.12.07:325][447]LogModuleManager: Shutting down and abandoning module GeometryMode (190)
+[2016.03.19-17.12.07:325][447]LogModuleManager: Shutting down and abandoning module TextureAlignMode (189)
+[2016.03.19-17.12.07:325][447]LogModuleManager: Shutting down and abandoning module BspMode (188)
+[2016.03.19-17.12.07:325][447]LogModuleManager: Shutting down and abandoning module PlacementMode (187)
+[2016.03.19-17.12.07:325][447]LogModuleManager: Shutting down and abandoning module AutomationWorker (186)
+[2016.03.19-17.12.07:325][447]LogModuleManager: Shutting down and abandoning module CharacterAI (185)
+[2016.03.19-17.12.07:325][447]LogModuleManager: Shutting down and abandoning module SmartSnapping (184)
+[2016.03.19-17.12.07:325][447]LogModuleManager: Shutting down and abandoning module ViewportSnapping (183)
+[2016.03.19-17.12.07:325][447]LogModuleManager: Shutting down and abandoning module LogVisualizer (182)
+[2016.03.19-17.12.07:326][447]LogModuleManager: Shutting down and abandoning module GameProjectGeneration (181)
+[2016.03.19-17.12.07:327][447]LogModuleManager: Shutting down and abandoning module IntroTutorials (180)
+[2016.03.19-17.12.07:327][447]LogModuleManager: Shutting down and abandoning module EditorLiveStreaming (179)
+[2016.03.19-17.12.07:327][447]LogModuleManager: Shutting down and abandoning module IOSPlatformEditor (178)
+[2016.03.19-17.12.07:327][447]LogModuleManager: Shutting down and abandoning module HTML5PlatformEditor (177)
+[2016.03.19-17.12.07:327][447]LogModuleManager: Shutting down and abandoning module AndroidDeviceDetection (176)
+[2016.03.19-17.12.07:428][447]LogModuleManager: Shutting down and abandoning module AndroidPlatformEditor (175)
+[2016.03.19-17.12.07:428][447]LogModuleManager: Shutting down and abandoning module IOSRuntimeSettings (174)
+[2016.03.19-17.12.07:428][447]LogModuleManager: Shutting down and abandoning module AndroidRuntimeSettings (173)
+[2016.03.19-17.12.07:428][447]LogModuleManager: Shutting down and abandoning module MergeActors (172)
+[2016.03.19-17.12.07:428][447]LogModuleManager: Shutting down and abandoning module SizeMap (171)
+[2016.03.19-17.12.07:428][447]LogModuleManager: Shutting down and abandoning module TreeMap (170)
+[2016.03.19-17.12.07:428][447]LogModuleManager: Shutting down and abandoning module ReferenceViewer (169)
+[2016.03.19-17.12.07:428][447]LogModuleManager: Shutting down and abandoning module LocalizationService (168)
+[2016.03.19-17.12.07:428][447]LogModuleManager: Shutting down and abandoning module LocalizationDashboard (167)
+[2016.03.19-17.12.07:429][447]LogModuleManager: Shutting down and abandoning module HardwareTargeting (166)
+[2016.03.19-17.12.07:429][447]LogModuleManager: Shutting down and abandoning module DeviceProfileEditor (165)
+[2016.03.19-17.12.07:429][447]LogModuleManager: Shutting down and abandoning module UndoHistory (164)
+[2016.03.19-17.12.07:429][447]LogModuleManager: Shutting down and abandoning module GameplayTagsEditor (163)
+[2016.03.19-17.12.07:429][447]LogModuleManager: Shutting down and abandoning module UserFeedback (162)
+[2016.03.19-17.12.07:429][447]LogModuleManager: Shutting down and abandoning module XmlParser (161)
+[2016.03.19-17.12.07:429][447]LogModuleManager: Shutting down and abandoning module Blutility (160)
+[2016.03.19-17.12.07:429][447]LogModuleManager: Shutting down and abandoning module ProjectTargetPlatformEditor (159)
+[2016.03.19-17.12.07:429][447]LogModuleManager: Shutting down and abandoning module ProjectSettingsViewer (158)
+[2016.03.19-17.12.07:429][447]LogModuleManager: Shutting down and abandoning module InputBindingEditor (157)
+[2016.03.19-17.12.07:429][447]LogModuleManager: Shutting down and abandoning module EditorSettingsViewer (156)
+[2016.03.19-17.12.07:429][447]LogModuleManager: Shutting down and abandoning module SettingsEditor (155)
+[2016.03.19-17.12.07:429][447]LogModuleManager: Shutting down and abandoning module ProjectLauncher (154)
+[2016.03.19-17.12.07:430][447]LogModuleManager: Shutting down and abandoning module SessionFrontend (153)
+[2016.03.19-17.12.07:430][447]LogModuleManager: Shutting down and abandoning module ProfilerClient (152)
+[2016.03.19-17.12.07:431][447]LogModuleManager: Shutting down and abandoning module TargetDeviceServices (151)
+[2016.03.19-17.12.07:431][447]LogModuleManager: Shutting down and abandoning module DeviceManager (150)
+[2016.03.19-17.12.07:431][447]LogModuleManager: Shutting down and abandoning module AutomationController (149)
+[2016.03.19-17.12.07:431][447]LogModuleManager: Shutting down and abandoning module AutomationWindow (148)
+[2016.03.19-17.12.07:432][447]LogModuleManager: Shutting down and abandoning module Layers (147)
+[2016.03.19-17.12.07:433][447]LogModuleManager: Shutting down and abandoning module ComponentVisualizers (146)
+[2016.03.19-17.12.07:433][447]LogModuleManager: Shutting down and abandoning module DetailCustomizations (145)
+[2016.03.19-17.12.07:433][447]LogModuleManager: Shutting down and abandoning module PackagesDialog (144)
+[2016.03.19-17.12.07:433][447]LogModuleManager: Shutting down and abandoning module Persona (143)
+[2016.03.19-17.12.07:434][447]LogModuleManager: Shutting down and abandoning module Kismet (142)
+[2016.03.19-17.12.07:434][447]LogModuleManager: Shutting down and abandoning module GraphEditor (141)
+[2016.03.19-17.12.07:434][447]LogModuleManager: Shutting down and abandoning module ClassViewer (140)
+[2016.03.19-17.12.07:434][447]LogModuleManager: Shutting down and abandoning module Toolbox (139)
+[2016.03.19-17.12.07:434][447]LogModuleManager: Shutting down and abandoning module ModuleUI (138)
+[2016.03.19-17.12.07:435][447]LogModuleManager: Shutting down and abandoning module MovieSceneTools (137)
+[2016.03.19-17.12.07:435][447]LogModuleManager: Shutting down and abandoning module OutputLog (136)
+[2016.03.19-17.12.07:435][447]LogModuleManager: Shutting down and abandoning module GammaUI (135)
+[2016.03.19-17.12.07:436][447]LogModuleManager: Shutting down and abandoning module Documentation (134)
+[2016.03.19-17.12.07:436][447]LogModuleManager: Shutting down and abandoning module GameLiveStreaming (133)
+[2016.03.19-17.12.07:436][447]LogModuleManager: Shutting down and abandoning module StreamingPauseRendering (132)
+[2016.03.19-17.12.07:436][447]LogModuleManager: Shutting down and abandoning module AnalyticsET (131)
+[2016.03.19-17.12.07:436][447]LogModuleManager: Shutting down and abandoning module Analytics (130)
+[2016.03.19-17.12.07:436][447]LogModuleManager: Shutting down and abandoning module AITestSuite (129)
+[2016.03.19-17.12.07:436][447]LogModuleManager: Shutting down and abandoning module GameplayDebugger (128)
+[2016.03.19-17.12.07:436][447]LogModuleManager: Shutting down and abandoning module AIModule (127)
+[2016.03.19-17.12.07:436][447]LogModuleManager: Shutting down and abandoning module ProfilerService (126)
+[2016.03.19-17.12.07:604][447]LogModuleManager: Shutting down and abandoning module TaskGraph (125)
+[2016.03.19-17.12.07:606][447]LogModuleManager: Shutting down and abandoning module CreatureEditor (124)
+[2016.03.19-17.12.07:606][447]LogModuleManager: Shutting down and abandoning module SlateRemote (123)
+[2016.03.19-17.12.07:606][447]LogModuleManager: Shutting down and abandoning module SteamVRController (122)
+[2016.03.19-17.12.07:606][447]LogModuleManager: Shutting down and abandoning module SteamVR (121)
+[2016.03.19-17.12.07:606][447]LogModuleManager: Shutting down and abandoning module ProceduralMeshComponent (120)
+[2016.03.19-17.12.07:606][447]LogModuleManager: Shutting down and abandoning module OculusLibrary (119)
+[2016.03.19-17.12.07:606][447]LogModuleManager: Shutting down and abandoning module OculusInput (118)
+[2016.03.19-17.12.07:606][447]LogModuleManager: Shutting down and abandoning module LeapMotionController (117)
+[2016.03.19-17.12.07:637][447]LogModuleManager: Shutting down and abandoning module CustomMeshComponent (116)
+[2016.03.19-17.12.07:637][447]LogModuleManager: Shutting down and abandoning module CableComponent (115)
+[2016.03.19-17.12.07:637][447]LogModuleManager: Shutting down and abandoning module ArchVisCharacter (114)
+[2016.03.19-17.12.07:637][447]LogModuleManager: Shutting down and abandoning module MessagingDebugger (113)
+[2016.03.19-17.12.07:638][447]LogModuleManager: Shutting down and abandoning module MediaPlayerEditor (112)
+[2016.03.19-17.12.07:639][447]LogModuleManager: Shutting down and abandoning module HTML5Networking (111)
+[2016.03.19-17.12.07:639][447]LogModuleManager: Shutting down and abandoning module SpeedTreeImporter (110)
+[2016.03.19-17.12.07:639][447]LogModuleManager: Shutting down and abandoning module PluginBrowser (109)
+[2016.03.19-17.12.07:639][447]LogModuleManager: Shutting down and abandoning module EpicSurvey (108)
+[2016.03.19-17.12.07:639][447]LogModuleManager: Shutting down and abandoning module DesktopPlatform (107)
+[2016.03.19-17.12.07:639][447]LogModuleManager: Shutting down and abandoning module VisualStudioSourceCodeAccess (106)
+[2016.03.19-17.12.07:639][447]LogModuleManager: Shutting down and abandoning module UObjectPlugin (105)
+[2016.03.19-17.12.07:639][447]LogModuleManager: Shutting down and abandoning module SubversionSourceControl (104)
+[2016.03.19-17.12.07:639][447]LogModuleManager: Shutting down and abandoning module PerforceSourceControl (103)
+[2016.03.19-17.12.07:639][447]LogModuleManager: Shutting down and abandoning module SourceControl (102)
+[2016.03.19-17.12.07:639][447]LogModuleManager: Shutting down and abandoning module GitSourceControl (101)
+[2016.03.19-17.12.07:639][447]LogModuleManager: Shutting down and abandoning module LightPropagationVolumeEditor (100)
+[2016.03.19-17.12.07:639][447]LogModuleManager: Shutting down and abandoning module PaperTiledImporter (99)
+[2016.03.19-17.12.07:640][447]LogModuleManager: Shutting down and abandoning module PaperSpriteSheetImporter (98)
+[2016.03.19-17.12.07:640][447]LogModuleManager: Shutting down and abandoning module MeshPaint (97)
+[2016.03.19-17.12.07:640][447]LogModuleManager: Shutting down and abandoning module SlateReflector (96)
+[2016.03.19-17.12.07:640][447]LogModuleManager: Shutting down and abandoning module HotReload (95)
+[2016.03.19-17.12.07:640][447]LogModuleManager: Shutting down and abandoning module MainFrame (94)
+[2016.03.19-17.12.07:640][447]LogModuleManager: Shutting down and abandoning module LevelEditor (93)
+[2016.03.19-17.12.07:642][447]LogModuleManager: Shutting down and abandoning module DirectoryWatcher (92)
+[2016.03.19-17.12.07:643][447]LogModuleManager: Shutting down and abandoning module AssetRegistry (91)
+[2016.03.19-17.12.07:669][447]LogModuleManager: Shutting down and abandoning module ContentBrowser (90)
+[2016.03.19-17.12.07:669][447]LogModuleManager: Shutting down and abandoning module Paper2DEditor (89)
+[2016.03.19-17.12.07:670][447]LogModuleManager: Shutting down and abandoning module CreatureDragon2D (88)
+[2016.03.19-17.12.07:670][447]LogModuleManager: Shutting down and abandoning module CreaturePlugin (87)
+[2016.03.19-17.12.07:670][447]LogModuleManager: Shutting down and abandoning module UdpMessaging (86)
+[2016.03.19-17.12.07:770][447]LogModuleManager: Shutting down and abandoning module LightPropagationVolumeRuntime (85)
+[2016.03.19-17.12.07:770][447]LogModuleManager: Shutting down and abandoning module Paper2D (84)
+[2016.03.19-17.12.07:770][447]LogModuleManager: Shutting down and abandoning module WindowsMoviePlayer (83)
+[2016.03.19-17.12.07:770][447]LogModuleManager: Shutting down and abandoning module Media (82)
+[2016.03.19-17.12.07:770][447]LogModuleManager: Shutting down and abandoning module WmfMedia (81)
+[2016.03.19-17.12.07:770][447]LogModuleManager: Shutting down and abandoning module OnlineBlueprintSupport (80)
+[2016.03.19-17.12.07:770][447]LogModuleManager: Shutting down and abandoning module GameplayTasksEditor (79)
+[2016.03.19-17.12.07:770][447]LogModuleManager: Shutting down and abandoning module PropertyEditor (78)
+[2016.03.19-17.12.07:770][447]LogModuleManager: Shutting down and abandoning module BehaviorTreeEditor (77)
+[2016.03.19-17.12.07:772][447]LogModuleManager: Shutting down and abandoning module FunctionalTesting (76)
+[2016.03.19-17.12.07:773][447]LogModuleManager: Shutting down and abandoning module CollisionAnalyzer (75)
+[2016.03.19-17.12.07:773][447]LogModuleManager: Shutting down and abandoning module WorkspaceMenuStructure (74)
+[2016.03.19-17.12.07:773][447]LogModuleManager: Shutting down and abandoning module MessageLog (73)
+[2016.03.19-17.12.07:773][447]LogModuleManager: Shutting down and abandoning module Sequencer (72)
+[2016.03.19-17.12.07:774][447]LogModuleManager: Shutting down and abandoning module AssetTools (71)
+[2016.03.19-17.12.07:775][447]LogModuleManager: Shutting down and abandoning module UMGEditor (70)
+[2016.03.19-17.12.07:777][447]LogModuleManager: Shutting down and abandoning module UMG (69)
+[2016.03.19-17.12.07:778][447]LogModuleManager: Shutting down and abandoning module Slate (68)
+[2016.03.19-17.12.07:778][447]LogModuleManager: Shutting down and abandoning module EditorStyle (67)
+[2016.03.19-17.12.07:784][447]LogModuleManager: Shutting down and abandoning module SessionServices (66)
+[2016.03.19-17.12.07:784][447]LogModuleManager: Shutting down and abandoning module SourceCodeAccess (65)
+[2016.03.19-17.12.07:784][447]LogModuleManager: Shutting down and abandoning module HeadMountedDisplay (64)
+[2016.03.19-17.12.07:784][447]LogModuleManager: Shutting down and abandoning module XAudio2 (63)
+[2016.03.19-17.12.07:784][447]LogModuleManager: Shutting down and abandoning module Networking (61)
+[2016.03.19-17.12.07:785][447]LogModuleManager: Shutting down and abandoning module Core (60)
+[2016.03.19-17.12.07:785][447]LogModuleManager: Shutting down and abandoning module KismetCompiler (59)
+[2016.03.19-17.12.07:785][447]LogModuleManager: Shutting down and abandoning module PhysXFormats (58)
+[2016.03.19-17.12.07:785][447]LogModuleManager: Shutting down and abandoning module MeshUtilities (57)
+[2016.03.19-17.12.07:786][447]LogModuleManager: Shutting down and abandoning module DerivedDataCache (56)
+[2016.03.19-17.12.07:810][447]LogDerivedDataCache: Shutdown
+[2016.03.19-17.12.07:810][447]LogModuleManager: Shutting down and abandoning module ShaderFormatOpenGL (55)
+[2016.03.19-17.12.07:811][447]LogModuleManager: Shutting down and abandoning module ShaderFormatD3D (54)
+[2016.03.19-17.12.07:811][447]LogModuleManager: Shutting down and abandoning module MetalShaderFormat (53)
+[2016.03.19-17.12.07:812][447]LogModuleManager: Shutting down and abandoning module TextureFormatUncompressed (52)
+[2016.03.19-17.12.07:812][447]LogModuleManager: Shutting down and abandoning module TextureFormatPVR (51)
+[2016.03.19-17.12.07:812][447]LogModuleManager: Shutting down and abandoning module TextureFormatIntelISPCTexComp (50)
+[2016.03.19-17.12.07:812][447]LogModuleManager: Shutting down and abandoning module TextureFormatDXT (49)
+[2016.03.19-17.12.07:812][447]LogModuleManager: Shutting down and abandoning module ImageWrapper (48)
+[2016.03.19-17.12.07:812][447]LogModuleManager: Shutting down and abandoning module TextureFormatASTC (47)
+[2016.03.19-17.12.07:812][447]LogModuleManager: Shutting down and abandoning module TextureFormatAndroid (46)
+[2016.03.19-17.12.07:812][447]LogModuleManager: Shutting down and abandoning module AudioFormatOpus (45)
+[2016.03.19-17.12.07:812][447]LogModuleManager: Shutting down and abandoning module AudioFormatOgg (44)
+[2016.03.19-17.12.07:812][447]LogModuleManager: Shutting down and abandoning module AudioFormatADPCM (43)
+[2016.03.19-17.12.07:812][447]LogModuleManager: Shutting down and abandoning module LinuxTargetPlatform (42)
+[2016.03.19-17.12.07:812][447]LogModuleManager: Shutting down and abandoning module LinuxServerTargetPlatform (41)
+[2016.03.19-17.12.07:812][447]LogModuleManager: Shutting down and abandoning module LinuxNoEditorTargetPlatform (40)
+[2016.03.19-17.12.07:812][447]LogModuleManager: Shutting down and abandoning module Messaging (39)
+[2016.03.19-17.12.07:812][447]LogModuleManager: Shutting down and abandoning module IOSTargetPlatform (38)
+[2016.03.19-17.12.07:813][447]LogModuleManager: Shutting down and abandoning module HTML5TargetPlatform (37)
+[2016.03.19-17.12.07:813][447]LogModuleManager: Shutting down and abandoning module Android_PVRTCTargetPlatform (36)
+[2016.03.19-17.12.07:813][447]LogModuleManager: Shutting down and abandoning module Android_MultiTargetPlatform (35)
+[2016.03.19-17.12.07:813][447]LogModuleManager: Shutting down and abandoning module Android_ETC2TargetPlatform (34)
+[2016.03.19-17.12.07:813][447]LogModuleManager: Shutting down and abandoning module Android_ETC1TargetPlatform (33)
+[2016.03.19-17.12.07:813][447]LogModuleManager: Shutting down and abandoning module Android_DXTTargetPlatform (32)
+[2016.03.19-17.12.07:813][447]LogModuleManager: Shutting down and abandoning module Android_ATCTargetPlatform (31)
+[2016.03.19-17.12.07:813][447]LogModuleManager: Shutting down and abandoning module Android_ASTCTargetPlatform (30)
+[2016.03.19-17.12.07:813][447]LogModuleManager: Shutting down and abandoning module AndroidTargetPlatform (29)
+[2016.03.19-17.12.07:813][447]LogModuleManager: Shutting down and abandoning module WindowsTargetPlatform (28)
+[2016.03.19-17.12.07:813][447]LogModuleManager: Shutting down and abandoning module WindowsServerTargetPlatform (27)
+[2016.03.19-17.12.07:813][447]LogModuleManager: Shutting down and abandoning module WindowsNoEditorTargetPlatform (26)
+[2016.03.19-17.12.07:813][447]LogModuleManager: Shutting down and abandoning module WindowsClientTargetPlatform (25)
+[2016.03.19-17.12.07:813][447]LogModuleManager: Shutting down and abandoning module AllDesktopTargetPlatform (24)
+[2016.03.19-17.12.07:813][447]LogModuleManager: Shutting down and abandoning module TargetPlatform (23)
+[2016.03.19-17.12.07:813][447]LogModuleManager: Shutting down and abandoning module InputCore (22)
+[2016.03.19-17.12.07:813][447]LogModuleManager: Shutting down and abandoning module Settings (21)
+[2016.03.19-17.12.07:813][447]LogModuleManager: Shutting down and abandoning module OnlineSubsystem (19)
+[2016.03.19-17.12.07:813][447]LogModuleManager: Shutting down and abandoning module HTTP (18)
+[2016.03.19-17.12.09:818][447]LogModuleManager: Shutting down and abandoning module XMPP (17)
+[2016.03.19-17.12.09:820][447]LogModuleManager: Shutting down and abandoning module OculusRift (16)
+[2016.03.19-17.12.09:821][447]LogModuleManager: Shutting down and abandoning module ExampleDeviceProfileSelector (15)
+[2016.03.19-17.12.09:821][447]LogModuleManager: Shutting down and abandoning module TextureCompressor (14)
+[2016.03.19-17.12.09:821][447]LogModuleManager: Shutting down and abandoning module ShaderCore (13)
+[2016.03.19-17.12.09:821][447]LogModuleManager: Shutting down and abandoning module Landscape (12)
+[2016.03.19-17.12.09:822][447]LogModuleManager: Shutting down and abandoning module SlateRHIRenderer (11)
+[2016.03.19-17.12.09:835][447]LogModuleManager: Shutting down and abandoning module OpenGLDrv (10)
+[2016.03.19-17.12.09:836][447]LogModuleManager: Shutting down and abandoning module D3D11RHI (9)
+[2016.03.19-17.12.09:836][447]LogModuleManager: Shutting down and abandoning module AnimGraphRuntime (8)
+[2016.03.19-17.12.09:837][447]LogModuleManager: Shutting down and abandoning module Renderer (7)
+[2016.03.19-17.12.09:837][447]LogModuleManager: Shutting down and abandoning module Engine (6)
+[2016.03.19-17.12.09:837][447]LogModuleManager: Shutting down and abandoning module CoreUObject (5)
+[2016.03.19-17.12.09:837][447]LogModuleManager: Shutting down and abandoning module NetworkFile (4)
+[2016.03.19-17.12.09:837][447]LogModuleManager: Shutting down and abandoning module StreamingFile (3)
+[2016.03.19-17.12.09:837][447]LogModuleManager: Shutting down and abandoning module SandboxFile (2)
+[2016.03.19-17.12.09:837][447]LogModuleManager: Shutting down and abandoning module PakFile (1)
+[2016.03.19-17.12.09:842][447]LogExit: Exiting.
+[2016.03.19-17.12.09:845][447]Log file closed, 03/19/16 10:12:09
