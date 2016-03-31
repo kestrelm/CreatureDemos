@@ -1,7 +1,8 @@
-#include "CustomProceduralMesh.h"
+
+#include "CreaturePluginPCH.h"
 #include "CreatureCollectionActor.h"
 
-static std::string ConvertToString(FString str)
+static std::string ConvertFStringToString(FString str)
 {
 	std::string t = TCHAR_TO_UTF8(*str);
 	return t;
@@ -55,8 +56,8 @@ void ACreatureCollectionActor::AddBluePrintCollectionClipData(FString clipName, 
 		return;
 	}
 
-	std::string new_clip_name = ConvertToString(clipName);
-	std::string real_actor_clip_name = ConvertToString(creatureActorClipName);
+	std::string new_clip_name = ConvertFStringToString(clipName);
+	std::string real_actor_clip_name = ConvertFStringToString(creatureActorClipName);
 
 	if (collection_clips.count(new_clip_name) < 0)
 	{
@@ -90,11 +91,11 @@ void ACreatureCollectionActor::SetBluePrintActiveClip(FString clipName)
 {
 	if (AreAllActorsReady() == false)
 	{
-		delay_set_clip_name = ConvertToString(clipName);
+		delay_set_clip_name = ConvertFStringToString(clipName);
 		return;
 	}
 
-	active_clip_name = ConvertToString(clipName);
+	active_clip_name = ConvertFStringToString(clipName);
 
 	if (collection_clips.count(active_clip_name))
 	{

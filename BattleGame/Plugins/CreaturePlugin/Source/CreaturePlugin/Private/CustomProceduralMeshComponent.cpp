@@ -2,7 +2,7 @@
 //
 // forked from "Engine/Plugins/Runtime/CustomMeshComponent/Source/CustomMeshComponent/Private/CustomMeshComponent.cpp"
 
-#include "CustomProceduralMesh.h"
+#include "CreaturePluginPCH.h"
 #include "DynamicMeshBuilder.h"
 #include "CustomProceduralMeshComponent.h"
 #include "Runtime/Launch/Resources/Version.h"
@@ -39,7 +39,7 @@ public:
 	virtual void InitRHI() override
 	{
 		FRHIResourceCreateInfo CreateInfo;
-		IndexBufferRHI = RHICreateIndexBuffer(sizeof(int32), Indices.Num() * sizeof(int32), BUF_Static, CreateInfo);
+		IndexBufferRHI = RHICreateIndexBuffer(sizeof(int32), Indices.Num() * sizeof(int32), BUF_Dynamic, CreateInfo);
 		UpdateRenderData();
 	}
 
@@ -143,9 +143,21 @@ public:
 
 			int uv_idx = i * 2;
 			curVert->TextureCoordinate.Set(this->uvs[uv_idx], this->uvs[uv_idx + 1]);
+
+			curVert->SetTangents(FVector(1, 0, 0), FVector(0, 1, 0), FVector(0, 0, 1));
 		}
 
 		RHIUnlockVertexBuffer(VertexBuffer.VertexBufferRHI);
+	}
+
+	void UpdateDirectIndexData() const
+	{
+		std::lock_guard<std::mutex> scope_lock(*update_lock);
+		void* Buffer = RHILockIndexBuffer(IndexBuffer.IndexBufferRHI, 0, indices_num * sizeof(int32), RLM_WriteOnly);
+
+		FMemory::Memcpy(Buffer, indices, indices_num * sizeof(int32));
+
+		RHIUnlockIndexBuffer(IndexBuffer.IndexBufferRHI);
 	}
 
 	FProceduralMeshVertexBuffer VertexBuffer;
@@ -189,7 +201,7 @@ FCProceduralMeshSceneProxy::~FCProceduralMeshSceneProxy()
 FProceduralMeshRenderPacket * 
 FCProceduralMeshSceneProxy::GetActiveRenderPacket()
 {
-	if (active_render_packet_idx < 0)
+	if (!renderPackets.IsValidIndex(active_render_packet_idx))
 	{
 		return nullptr;
 	}
@@ -334,6 +346,11 @@ void FCProceduralMeshSceneProxy::SetNeedsMaterialUpdate(bool flag_in)
 	needs_material_updating = flag_in;
 }
 
+void FCProceduralMeshSceneProxy::SetNeedsIndexUpdate(bool flag_in)
+{
+	needs_index_updating = flag_in;
+}
+
 void FCProceduralMeshSceneProxy::GetDynamicMeshElements(const TArray<const FSceneView*>& Views,
 	const FSceneViewFamily& ViewFamily,
 	uint32 VisibilityMap,
@@ -355,8 +372,10 @@ void FCProceduralMeshSceneProxy::GetDynamicMeshElements(const TArray<const FScen
 	}
 
 	if (needs_updating) {
-		//VertexBuffer.UpdateRenderData();
 		cur_packet.UpdateDirectVertexData();
+		if (needs_index_updating) {
+			cur_packet.UpdateDirectIndexData();
+		}
 	}
 
 	(const_cast<FCProceduralMeshSceneProxy*>(this))->DoneUpdating();
@@ -409,7 +428,7 @@ void FCProceduralMeshSceneProxy::GetDynamicMeshElements(const TArray<const FScen
 	}
 }
 
-FPrimitiveViewRelevance FCProceduralMeshSceneProxy::GetViewRelevance(const FSceneView* View)
+FPrimitiveViewRelevance FCProceduralMeshSceneProxy::GetViewRelevance(const FSceneView* View) const
 {
 	FPrimitiveViewRelevance Result;
 	Result.bDrawRelevance = true; // IsShown(View);
@@ -444,10 +463,10 @@ UCustomProceduralMeshComponent::UCustomProceduralMeshComponent(const FObjectInit
 	PrimaryComponentTick.bCanEverTick = false;
 	bounds_scale = 15.0f;
 	bounds_offset = FVector(0, 0, 0);
-	localRenderProxy = NULL;
 	render_proxy_ready = false;
 	calc_local_vec_min = FVector(FLT_MIN, FLT_MIN, FLT_MIN);
-	calc_local_vec_min = FVector(FLT_MAX, FLT_MAX, FLT_MAX);
+	calc_local_vec_max = FVector(FLT_MAX, FLT_MAX, FLT_MAX);
+	bWantsInitializeComponent = true;
 
 //	SetCollisionProfileName(UCollisionProfile::BlockAllDynamic_ProfileName);
 	SetCollisionProfileName(UCollisionProfile::NoCollision_ProfileName);
@@ -481,6 +500,7 @@ void UCustomProceduralMeshComponent::ForceAnUpdate(int render_packet_idx)
 	}
 
 	std::lock_guard<std::mutex> cur_lock(local_lock);
+	FCProceduralMeshSceneProxy *localRenderProxy = GetLocalRenderProxy();
 	if (render_proxy_ready && localRenderProxy) {
 		if (render_packet_idx >= 0)
 		{
@@ -488,7 +508,7 @@ void UCustomProceduralMeshComponent::ForceAnUpdate(int render_packet_idx)
 		}
 
 		localRenderProxy->UpdateDynamicComponentData();
-		ProcessCalcBounds();
+		ProcessCalcBounds(localRenderProxy);
 		MarkRenderTransformDirty();
 	}
 }
@@ -503,14 +523,13 @@ FPrimitiveSceneProxy* UCustomProceduralMeshComponent::CreateSceneProxy()
 {
 	std::lock_guard<std::mutex> cur_lock(local_lock);
 
-	FPrimitiveSceneProxy* Proxy = NULL;
+	FCProceduralMeshSceneProxy* Proxy = NULL;
 	// Only if have enough triangles
 	if(defaultTriData.point_num > 0)
 	{
-		localRenderProxy = new FCProceduralMeshSceneProxy(this, &defaultTriData);
-		Proxy = localRenderProxy;
+		Proxy = new FCProceduralMeshSceneProxy(this, &defaultTriData);
 		render_proxy_ready = true;
-		ProcessCalcBounds();
+		ProcessCalcBounds(Proxy);
 	}
 
 	return Proxy;
@@ -521,11 +540,11 @@ int32 UCustomProceduralMeshComponent::GetNumMaterials() const
 	return 1;
 }
 
-void UCustomProceduralMeshComponent::ProcessCalcBounds()
+void UCustomProceduralMeshComponent::ProcessCalcBounds(FCProceduralMeshSceneProxy *localRenderProxy)
 {
 	FProceduralMeshRenderPacket * cur_packet = nullptr;
 	bool can_calc = false;
-	if (render_proxy_ready)
+	if (render_proxy_ready && localRenderProxy)
 	{
 		cur_packet = localRenderProxy->GetActiveRenderPacket();
 		if (cur_packet)
@@ -536,7 +555,7 @@ void UCustomProceduralMeshComponent::ProcessCalcBounds()
 
 	const float bounds_max_scalar = 100000.0f;
 	calc_local_vec_min = FVector(-bounds_max_scalar, -bounds_max_scalar, -bounds_max_scalar);
-	calc_local_vec_min = FVector(bounds_max_scalar, bounds_max_scalar, bounds_max_scalar);
+	calc_local_vec_max = FVector(bounds_max_scalar, bounds_max_scalar, bounds_max_scalar);
 
 	// Only if have enough triangles
 	if (can_calc)
@@ -616,7 +635,14 @@ void UCustomProceduralMeshComponent::ProcessCalcBounds()
 
 FBoxSphereBounds UCustomProceduralMeshComponent::CalcBounds(const FTransform & LocalToWorld) const
 {
-	return FBoxSphereBounds(FBox(calc_local_vec_min, calc_local_vec_max));
+	auto ret_bounds = FBoxSphereBounds(FBox(calc_local_vec_min, calc_local_vec_max));
+	if (ret_bounds.ContainsNaN())
+	{
+		ret_bounds = FBoxSphereBounds(FBox(FVector(-10000, -10000, -10000),
+			FVector(10000, 10000, 10000)));
+	}
+
+	return ret_bounds;
 }
 
 void UCustomProceduralMeshComponent::SetBoundsScale(float value_in)
@@ -701,4 +727,11 @@ UBodySetup* UCustomProceduralMeshComponent::GetBodySetup()
 {
 	UpdateBodySetup();
 	return ModelBodySetup;
+}
+
+void UCustomProceduralMeshComponent::InitializeComponent()
+{
+	UMeshComponent::InitializeComponent();
+	render_proxy_ready = false;
+	MarkRenderStateDirty();
 }

@@ -65,6 +65,8 @@ public:
 
 	void SetNeedsMaterialUpdate(bool flag_in);
 
+	void SetNeedsIndexUpdate(bool flag_in);
+
 	void UpdateMaterial();
 
 	void DoneUpdating();
@@ -75,7 +77,7 @@ public:
 		FMeshElementCollector& Collector) const override;
 
 
-	virtual FPrimitiveViewRelevance GetViewRelevance(const FSceneView* View);
+	virtual FPrimitiveViewRelevance GetViewRelevance(const FSceneView* View) const override;
 
 	virtual bool CanBeOccluded() const override;
 
@@ -157,6 +159,8 @@ public:
 	virtual class UBodySetup* GetBodySetup() override;
 	// End UPrimitiveComponent interface.
 
+	virtual void InitializeComponent();
+
 	// Begin UMeshComponent interface.
 	virtual int32 GetNumMaterials() const override;
 	// End UMeshComponent interface.
@@ -184,7 +188,7 @@ protected:
 	FTransform extraXForm;
 	FString tagStr;
 
-	void ProcessCalcBounds();
+	void ProcessCalcBounds(FCProceduralMeshSceneProxy *localRenderProxy);
 
 	// Begin USceneComponent interface.
 	virtual FBoxSphereBounds CalcBounds(const FTransform & LocalToWorld) const override;
@@ -198,7 +202,10 @@ protected:
 	FVector bounds_offset;
 	mutable FSphere debugSphere;
 	FVector calc_local_vec_min, calc_local_vec_max;
-	FCProceduralMeshSceneProxy * localRenderProxy;
+	FCProceduralMeshSceneProxy * GetLocalRenderProxy()
+	{
+		return (FCProceduralMeshSceneProxy*)SceneProxy;
+	}
 	bool render_proxy_ready;
 	std::mutex local_lock;
 	bool recreate_render_proxy;

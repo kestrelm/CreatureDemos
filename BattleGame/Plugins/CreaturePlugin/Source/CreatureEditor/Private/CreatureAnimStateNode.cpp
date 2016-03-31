@@ -3,6 +3,7 @@
 #include "SGraphNode.h"
 #include "CreatureAnimTransitionNode.h"
 #include "CreatureAnimStateMachine.h"
+#include "CreatureAnimStateMachineInstance.h"
 
 void UCreatureAnimStateNode::OnRenameNode(const FString& NewName)
 {
@@ -49,13 +50,12 @@ void UCreatureAnimStateNode::Compile()
 					UCreatureAnimTransition* Tran = NewObject<UCreatureAnimTransition>(CompiledState->GetOuter());
 					FCreatureTransitionCondition TranCondition = FCreatureTransitionCondition(TargetNode->TransitionCondition, TargetNode->TransitionFlag);
 					Tran->TargetState = TargetNode->TransitionTargetNode->CompiledState;
-					INT16 Index= Tran->TransitionConditions.AddUnique(TranCondition);
+					unsigned short Index= Tran->TransitionConditions.AddUnique(TranCondition);
 					//再次填充一遍变换Condition避免出现修改了TranCondition但是无效的情况
 					Tran->TransitionConditions[Index].TransitionFlag = TranCondition.TransitionFlag;
 					Tran->AnimStateMachine = CompiledState->AnimStateMachine;
 
 					//向状态机注册当前状态转换信息
-					Tran->AnimStateMachine->TransitionConditionList.AddUnique(TranCondition);
 					CompiledState->TransitionList.Add(Tran);
 				}
 				
@@ -83,14 +83,23 @@ FLinearColor UCreatureAnimStateNode::GetNodeTitleColor() const
 	{
 		return FLinearColor::Gray;
 	}
-	if (CompiledState->bIsCurrentState)
+
+	if (CompiledState->AnimStateMachine && CompiledState->AnimStateMachine->InstanceBeingDebugged)
 	{
-		return FLinearColor::Yellow;
+		// debugging is occurring for this statemachine
+		bool isCurrentState = CompiledState->AnimStateMachine->InstanceBeingDebugged->GetCurrentState() == CompiledState;
+		if (isCurrentState)
+		{
+			return FLinearColor::Yellow;
+		}
+		else
+		{
+			return FLinearColor::Gray;
+		}
 	}
 	else
+	{
 		return FLinearColor::Gray;
+	}
 }
-
-
-
 

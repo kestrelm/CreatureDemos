@@ -81,6 +81,14 @@ struct FCreatureMeshCollection
 {
 	GENERATED_USTRUCT_BODY()
 
+	FCreatureMeshCollection() :
+		animation_speed(1.0f),
+		collection_material(nullptr),
+		source_asset(nullptr)
+	{
+
+	}
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components|Creature")
 	FString creature_filename;
 
@@ -89,6 +97,9 @@ struct FCreatureMeshCollection
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components|Creature")
 	UMaterialInterface * collection_material;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Components|Creature")
+	class UCreatureAnimationAsset *source_asset;
 
 	CreatureCore creature_core;
 	TArray<FProceduralMeshTriangle> ProceduralMeshTris;
@@ -123,7 +134,7 @@ public:
 	/** Points to a Creature Animation Asset containing the JSON filename of the character. Use this instead of creature_filename if you want to use an asset based system. */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Components|Creature")
 	UCreatureAnimationAsset * creature_animation_asset;
-
+	
 	/** Playback speed of the animation, 2.0 is the default */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components|Creature")
 	float animation_speed;
@@ -162,6 +173,10 @@ public:
 	/** Current frame of the animation during playback */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Components|Creature")
 	float animation_frame;
+
+	/** Decides whether this component can use point caching or not */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Components|Creature")
+	bool can_use_point_cache;
 
 	/** A collection of Creature JSONs to load when the game starts, you should fill in this information if you want to playback a collection of Creature JSONs as a single animation clip */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components|Creature")
@@ -209,6 +224,14 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Components|Creature")
 	void ClearBluePrintPointCache(FString name_in, int32 approximation_level);
 
+	// Blueprint function to enable/disable the use of all point caching on this mesh
+	UFUNCTION(BlueprintCallable, Category = "Components|Creature")
+	void SetBluePrintUsePointCache(bool flag_in);
+
+	// Blueprint function that returns whether this mesh can use point caching or not
+	UFUNCTION(BlueprintCallable, Category = "Components|Creature")
+	bool GetBluePrintUsePointCache();
+
 	// Blueprint function that returns the transform given a bone name, position_slide_factor
 	// determines how far left or right the transform is placed. The default value of 0 places it
 	// in the center of the bone, positve values places it to the right, negative to the left
@@ -218,6 +241,10 @@ public:
 	// Blueprint function that decides whether the animation will loop or not
 	UFUNCTION(BlueprintCallable, Category = "Components|Creature")
 	void SetBluePrintAnimationLoop(bool flag_in);
+
+	// Blueprint function that returns whether the animation is looping or not
+	UFUNCTION(BlueprintCallable, Category = "Components|Creature")
+	bool GetBluePrintAnimationLoop() const;
 
 	// Blueprint function that decides whether to play the animation or not
 	UFUNCTION(BlueprintCallable, Category = "Components|Creature")
@@ -239,6 +266,10 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Components|Creature")
 	void SetBluePrintRegionAlpha(FString region_name_in, uint8 alpha_in);
 
+	// Blueprint function that removes the custom override alpha(opacity value) of a region
+	UFUNCTION(BlueprintCallable, Category = "Components|Creature")
+	void RemoveBluePrintRegionAlpha(FString region_name_in);
+
 	// Blueprint function that sets up a custom z order for the various regions
 	UFUNCTION(BlueprintCallable, Category = "Components|Creature")
 	void SetBluePrintRegionCustomOrder(TArray<FString> order_in);
@@ -253,7 +284,24 @@ public:
 
 	// Blueprint function that sets the active collection clip
 	UFUNCTION(BlueprintCallable, Category = "Components|Creature")
+	void SetBluePrintRegionItemSwap(FString region_name_in, int32 tag);
+
+	// Blueprint function that sets the active collection clip
+	UFUNCTION(BlueprintCallable, Category = "Components|Creature")
+	void RemoveBluePrintRegionItemSwap(FString region_name_in);
+
+	// Blueprint function that sets the active collection clip
+	UFUNCTION(BlueprintCallable, Category = "Components|Creature")
 	void SetBluePrintActiveCollectionClip(FString name_in);
+
+	// Blueprint function that activates/deactivates the usage of anchor points exported into the asset. If active, the character will be translated relative to the anchor point defined for it.
+	UFUNCTION(BlueprintCallable, Category = "Components|Creature")
+	void SetBluePrintUseAnchorPoints(bool flag_in);
+
+	// Blueprint function that returns whether anchor points are active for the character
+	UFUNCTION(BlueprintCallable, Category = "Components|Creature")
+	bool GetBluePrintUseAnchorPoints() const;
+
 
 	CreatureCore& GetCore();
 
@@ -264,18 +312,25 @@ public:
 	virtual void InitializeComponent() override;
 
 	virtual FPrimitiveSceneProxy* CreateSceneProxy() override;
+	
 	//////////////////////////////////////////////////////////////////////////
 	///ChangedBy God Of Pen
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Components|Creature")
-	class UCreatureAnimStateMachine* StateMachineAsset;
-
 	///存储一系列Clip的数据结构
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Components|Creature")
 	class UCreatureAnimationClipsStore* ClipStore;
+
 	virtual void BeginPlay() override;
+	
+	UPROPERTY(EditAnywhere, Category = "Components|Creature")
+	class UCreatureAnimStateMachine* StateMachineAsset;
+
+	UPROPERTY(Transient, BlueprintReadOnly)
+	class UCreatureAnimStateMachineInstance* StateMachineInstance;
+
 	//////////////////////////////////////////////////////////////////////////
 
 protected:
+
 	CreatureCore creature_core;
 	FString active_collection_clip_name;
 	FCreatureMeshCollectionClip * active_collection_clip;

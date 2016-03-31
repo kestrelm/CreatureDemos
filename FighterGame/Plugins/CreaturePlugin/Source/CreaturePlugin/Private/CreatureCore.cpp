@@ -1,6 +1,12 @@
 
 #include "CreaturePluginPCH.h"
 
+DECLARE_CYCLE_STAT(TEXT("CreatureCore_RunTick"), STAT_CreatureCore_RunTick, STATGROUP_Creature);
+DECLARE_CYCLE_STAT(TEXT("CreatureCore_UpdateCreatureRender"), STAT_CreatureCore_UpdateCreatureRender, STATGROUP_Creature);
+DECLARE_CYCLE_STAT(TEXT("CreatureCore_FillBoneData"), STAT_CreatureCore_FillBoneData, STATGROUP_Creature);
+DECLARE_CYCLE_STAT(TEXT("CreatureCore_ParseEvents"), STAT_CreatureCore_ParseEvents, STATGROUP_Creature);
+DECLARE_CYCLE_STAT(TEXT("CreatureCore_UpdateManager"), STAT_CreatureCore_UpdateManager, STATGROUP_Creature);
+
 static std::map<std::string, std::shared_ptr<CreatureModule::CreatureAnimation> > global_animations;
 static std::map<std::string, std::shared_ptr<CreatureModule::CreatureLoadDataPacket> > global_load_data_packets;
 
@@ -9,7 +15,7 @@ static std::string GetAnimationToken(const std::string& filename_in, const std::
 	return filename_in + std::string("_") + name_in;
 }
 
-static std::string ConvertToString(FString str)
+std::string ConvertToString(FString str)
 {
 	std::string t = TCHAR_TO_UTF8(*str);
 	return t;
@@ -57,6 +63,7 @@ CreatureCore::CreatureCore()
 	do_file_warning = true;
 	should_process_animation_start = false;
 	should_process_animation_end = false;
+	should_update_render_indices = false;
 	update_lock = new std::mutex();
 }
 
@@ -99,12 +106,15 @@ CreatureCore::GetProcMeshData()
 	glm::float32 * cur_pts = cur_creature->GetRenderPts();
 	glm::float32 * cur_uvs = cur_creature->GetGlobalUvs();
 
+	glm::uint32 * copy_indices = GetIndicesCopy(num_indices);
+	std::memcpy(copy_indices, cur_idx, sizeof(glm::uint32) * num_indices);
+
 	if (region_alphas.Num() != num_points)
 	{
 		region_alphas.SetNum(num_points);
 	}
 
-	FProceduralMeshTriData ret_data(cur_idx,
+	FProceduralMeshTriData ret_data(copy_indices,
 		cur_pts, cur_uvs,
 		num_points, num_indices,
 		&region_alphas,
@@ -115,12 +125,15 @@ CreatureCore::GetProcMeshData()
 
 void CreatureCore::UpdateCreatureRender()
 {
+	SCOPE_CYCLE_COUNTER(STAT_CreatureCore_UpdateCreatureRender);
 
 	auto cur_creature = creature_manager->GetCreature();
 	int num_triangles = cur_creature->GetTotalNumIndices() / 3;
 	glm::uint32 * cur_idx = cur_creature->GetGlobalIndices();
+	auto cur_num_indices = cur_creature->GetTotalNumIndices();
 	glm::float32 * cur_pts = cur_creature->GetRenderPts();
 	glm::float32 * cur_uvs = cur_creature->GetGlobalUvs();
+	should_update_render_indices = false;
 
 	// Update depth per region
 	std::vector<meshRenderRegion *>& cur_regions =
@@ -145,6 +158,9 @@ void CreatureCore::UpdateCreatureRender()
 	else {
 		// Custom order update
 		auto& regions_map = cur_creature->GetRenderComposition()->getRegionsMap();
+		int32 indice_idx = 0;
+		auto dst_indices = GetIndicesCopy(cur_num_indices);
+
 		for (auto& custom_region_name : region_custom_order)
 		{
 			auto real_name = ConvertToString(custom_region_name);
@@ -159,8 +175,21 @@ void CreatureCore::UpdateCreatureRender()
 				}
 
 				region_z += delta_z;
+
+				// Reorder indices
+				auto copy_start_idx = single_region->getStartIndex();
+				auto copy_end_idx = single_region->getEndIndex();
+				auto copy_num_indices = copy_end_idx - copy_start_idx + 1;
+
+				FMemory::Memcpy(dst_indices + indice_idx, 
+					cur_idx + copy_start_idx, 
+					sizeof(glm::uint32) * copy_num_indices);
+
+				indice_idx += copy_num_indices;
 			}
 		}
+
+		should_update_render_indices = true;
 	}
 
 	// Build render triangles
@@ -300,6 +329,8 @@ bool CreatureCore::InitCreatureRender()
 
 void CreatureCore::FillBoneData()
 {
+	SCOPE_CYCLE_COUNTER(STAT_CreatureCore_FillBoneData);
+
 	auto  render_composition = creature_manager->GetCreature()->GetRenderComposition();
 	auto& bones_map = render_composition->getBonesMap();
 
@@ -373,6 +404,8 @@ void CreatureCore::FillBoneData()
 
 void CreatureCore::ParseEvents(float deltaTime)
 {
+	SCOPE_CYCLE_COUNTER(STAT_CreatureCore_ParseEvents);
+
 	float cur_runtime = (creature_manager->getActualRunTime());
 	animation_frame = cur_runtime;
 
@@ -763,6 +796,8 @@ CreatureCore::IsBluePrintBonesCollide(FVector test_point, float bone_size, FTran
 bool 
 CreatureCore::RunTick(float delta_time)
 {
+	SCOPE_CYCLE_COUNTER(STAT_CreatureCore_RunTick);
+
 	std::lock_guard<std::mutex> scope_lock(*update_lock);
 
 	if (is_driven)
@@ -783,6 +818,7 @@ CreatureCore::RunTick(float delta_time)
 		ParseEvents(delta_time);
 
 		if (should_play) {
+			SCOPE_CYCLE_COUNTER(STAT_CreatureCore_UpdateManager);
 			creature_manager->Update(delta_time);
 		}
 
@@ -851,6 +887,11 @@ CreatureCore::SetBluePrintRegionAlpha(FString region_name_in, uint8 alpha_in)
 	region_alpha_map.Add(region_name_in, alpha_in);
 }
 
+void CreatureCore::RemoveBluePrintRegionAlpha(FString region_name_in)
+{
+	region_alpha_map.Remove(region_name_in);
+}
+
 void 
 CreatureCore::SetBluePrintRegionCustomOrder(TArray<FString> order_in)
 {
@@ -861,6 +902,26 @@ void
 CreatureCore::ClearBluePrintRegionCustomOrder()
 {
 	region_custom_order.Empty();
+}
+
+void CreatureCore::SetBluePrintRegionItemSwap(FString region_name_in, int32 tag)
+{
+	creature_manager->GetCreature()->SetActiveItemSwap(ConvertToString(region_name_in), tag);
+}
+
+void CreatureCore::RemoveBluePrintRegionItemSwap(FString region_name_in)
+{
+	creature_manager->GetCreature()->RemoveActiveItemSwap(ConvertToString(region_name_in));
+}
+
+void CreatureCore::SetUseAnchorPoints(bool flag_in)
+{
+	creature_manager->GetCreature()->SetAnchorPointsActive(flag_in);
+}
+
+bool CreatureCore::GetUseAnchorPoints() const
+{
+	return creature_manager->GetCreature()->GetAnchorPointsActive();
 }
 
 void 
@@ -913,6 +974,29 @@ bool
 CreatureCore::GetIsReadyPlay() const
 {
 	return is_ready_play;
+}
+
+void CreatureCore::SetGlobalEnablePointCache(bool flag_in)
+{
+	auto cur_creature_manager = GetCreatureManager();
+	cur_creature_manager->SetDoPointCache(flag_in);
+}
+
+bool CreatureCore::GetGlobalEnablePointCache()
+{
+	auto cur_creature_manager = GetCreatureManager();
+	return cur_creature_manager->GetDoPointCache();
+}
+
+glm::uint32 * CreatureCore::GetIndicesCopy(int init_size)
+{
+	if (!global_indices_copy)
+	{
+		global_indices_copy = std::shared_ptr<glm::uint32>(new glm::uint32[init_size],
+			std::default_delete<glm::uint32[]>());
+	}
+
+	return global_indices_copy.get();
 }
 
 void 

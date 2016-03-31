@@ -1,7 +1,8 @@
-#include "CustomProceduralMesh.h"
+
+#include "CreaturePluginPCH.h"
 #include "CreatureSwitchItemActor.h"
 
-static std::string ConvertToString(FString str)
+static std::string ConvertToString1(FString str)
 {
 	std::string t = TCHAR_TO_UTF8(*str);
 	return t;
@@ -36,7 +37,7 @@ ACreatureSwitchItemActor::AddBluePrintSwitchData(FString name_in,
 	int32 canvas_width_in,
 	int32 canvas_height_in)
 {
-	switch_table[ConvertToString(name_in)] = ACreatureSwitchData(x_in, y_in, width_in, height_in, canvas_width_in, canvas_height_in);
+	switch_table[ConvertToString1(name_in)] = ACreatureSwitchData(x_in, y_in, width_in, height_in, canvas_width_in, canvas_height_in);
 }
 
 void ACreatureSwitchItemActor::OnConstruction(const FTransform & Transform)
