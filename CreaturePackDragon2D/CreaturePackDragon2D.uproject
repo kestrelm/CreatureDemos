@@ -1,0 +1,13 @@
+{
+	"FileVersion": 3,
+	"EngineAssociation": "4.11",
+	"Category": "",
+	"Description": "",
+	"Modules": [
+		{
+			"Name": "CreaturePackDragon2D",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		}
+	]
+}
