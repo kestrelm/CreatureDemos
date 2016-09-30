@@ -77,7 +77,15 @@ public class HummerScript : MonoBehaviour {
         var cur_pos = transform.parent.transform.position;
         var diff_pos = target_pos - cur_pos;
 
-        var new_pos = move_ratio * diff_pos + cur_pos;
+        var move_delta = move_ratio * diff_pos;
+        var max_delta = 2.5f;
+        if(move_delta.magnitude > max_delta)
+        {
+            move_delta = move_delta.normalized;
+            move_delta *= max_delta;
+        }
+
+        var new_pos = move_delta + cur_pos;
         new_pos.z = cur_pos.z;
 
         transform.parent.position = new_pos;
