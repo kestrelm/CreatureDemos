@@ -7,7 +7,7 @@
 
 void UCreatureAnimStateNode::OnRenameNode(const FString& NewName)
 {
-	AnimName = NewName;
+	AnimName = FName(*NewName);
 }
 
 bool UCreatureAnimStateNode::CanUserDeleteNode() const
@@ -17,7 +17,7 @@ bool UCreatureAnimStateNode::CanUserDeleteNode() const
 
 FText UCreatureAnimStateNode::GetNodeTitle(ENodeTitleType::Type TitleType) const
 {
-	return FText::FromString(AnimName);
+	return FText::FromName(AnimName);
 }
 #ifdef WITH_EDITOR
 void UCreatureAnimStateNode::PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent)
@@ -58,14 +58,12 @@ void UCreatureAnimStateNode::Compile()
 					//向状态机注册当前状态转换信息
 					CompiledState->TransitionList.Add(Tran);
 				}
-				
-
 			}
 		}
-
 	}
+
 	//如果是根节点,通知状态机
-	if (AnimName==FString(TEXT("Default")))
+	if (AnimName == FName(TEXT("Default")))
 	{
 		CompiledState->AnimStateMachine->RootState = CompiledState;
 	}

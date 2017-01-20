@@ -12,12 +12,12 @@ void UCreatureAnimState::BeginState(UCreatureAnimStateMachineInstance *forInstan
 	check(targetMeshComp);
 	if (targetMeshComp->enable_collection_playback)
 	{
-		targetMeshComp->SetBluePrintActiveCollectionClip(AnimStateName);
+		targetMeshComp->SetBluePrintActiveCollectionClip_Name(AnimStateName);
 	}
 	else
 	{
 		static const float blendFactor = 0.1f;	// TODO: consider making a tunable UPROPERTY
-		targetMeshComp->SetBluePrintBlendActiveAnimation(AnimStateName, blendFactor);
+		targetMeshComp->SetBluePrintBlendActiveAnimation_Name(AnimStateName, blendFactor);
 	}
 }
 
@@ -30,7 +30,6 @@ void UCreatureAnimState::CheckCondition(UCreatureAnimStateMachineInstance *forIn
 {
 	for (UCreatureAnimTransition* Tran:TransitionList)
 	{
-
 		if (Tran->Translate(forInstance)==true)
 		{
 			return;
@@ -42,7 +41,7 @@ void UCreatureAnimState::AnimationEnd(UCreatureAnimStateMachineInstance *forInst
 {
 	for (UCreatureAnimTransition* Tran : TransitionList)
 	{
-		if (Tran->TransitionConditions[0].TransitionName==FString(TEXT("AnimationEnd")))
+		if (Tran->TransitionConditions[0].TransitionName==FName(TEXT("AnimationEnd")))
 		{
 			//当前有一个转换的名称为AnimationEnd
 			Tran->AnimationEndTranslate(forInstance);

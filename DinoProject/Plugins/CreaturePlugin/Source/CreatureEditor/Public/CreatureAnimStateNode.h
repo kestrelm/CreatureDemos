@@ -17,13 +17,13 @@ class CREATUREEDITOR_API UCreatureAnimStateNode :public UEdGraphNode
 public:
 
 	UPROPERTY()
-	TArray<UEdGraphPin*> InputPins;
+	TArray<FEdGraphPinReference> InputPins;
 
 	UPROPERTY()
-	TArray<UEdGraphPin*> OutputPins;
+	TArray<FEdGraphPinReference> OutputPins;
 
 	UPROPERTY(EditAnyWhere, Category = "CreaturePlugin")
-	FString AnimName;
+	FName AnimName;
 
 	UPROPERTY()
 	UCreatureAnimState* CompiledState;

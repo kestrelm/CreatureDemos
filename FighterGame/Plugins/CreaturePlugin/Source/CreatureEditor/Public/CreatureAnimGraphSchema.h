@@ -6,7 +6,6 @@
 
 #include "Engine.h"
 #include "EdGraph/EdGraphSchema.h"
-#include "AnimationStateMachineSchema.h"
 #include "CreatureAnimGraphSchema.generated.h"
 #pragma  once
 
@@ -36,9 +35,13 @@ struct FEdGraphSchemaAction_NewCreatureAnimationEndTransition : public FEdGraphS
 	}
 	virtual UEdGraphNode* PerformAction(class UEdGraph* ParentGraph, UEdGraphPin* FromPin, const FVector2D Location, bool bSelectNewNode = true) override;
 };
+
 UCLASS()
-class UCreatureAnimGraphSchema :public UEdGraphSchema{
+class CREATUREEDITOR_API  UCreatureAnimGraphSchema :public UEdGraphSchema{
 	GENERATED_BODY()
+
+protected:
+
 	// Begin UEdGraphSchema interface
 	virtual void CreateDefaultNodesForGraph(UEdGraph& Graph) const override;
 	virtual const FPinConnectionResponse CanCreateConnection(const UEdGraphPin* A, const UEdGraphPin* B) const override;
@@ -55,4 +58,6 @@ class UCreatureAnimGraphSchema :public UEdGraphSchema{
 	virtual void GetAssetsNodeHoverMessage(const TArray<FAssetData>& Assets, const UEdGraphNode* HoverNode, FString& OutTooltipText, bool& OutOkIcon) const override;
 	virtual void GetAssetsPinHoverMessage(const TArray<FAssetData>& Assets, const UEdGraphPin* HoverPin, FString& OutTooltipText, bool& OutOkIcon) const override;
 	// End UEdGraphSchema interface
+
+public:
 };

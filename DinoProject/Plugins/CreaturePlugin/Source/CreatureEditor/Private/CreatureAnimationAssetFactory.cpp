@@ -33,7 +33,7 @@ UObject* UCreatureAnimationAssetFactory::FactoryCreateNew(UClass* Class, UObject
 		OpenFilenames,
 		FilterIndex))
 	{
-		Asset->SetCreatureFilename(OpenFilenames[0]);
+		Asset->SetCreatureFilename(FName(*OpenFilenames[0]));
 
 		ImportSourceFile(Asset);
 	}
@@ -43,7 +43,7 @@ UObject* UCreatureAnimationAssetFactory::FactoryCreateNew(UClass* Class, UObject
 
 bool UCreatureAnimationAssetFactory::ImportSourceFile(UCreatureAnimationAsset *forAsset) const
 {
-	const FString &creatureFilename = forAsset->GetCreatureFilename();
+	FString creatureFilename = forAsset->UpdateAndGetCreatureFilename().ToString();
 	if (forAsset == nullptr || creatureFilename.IsEmpty())
 	{
 		return false;
@@ -55,6 +55,8 @@ bool UCreatureAnimationAssetFactory::ImportSourceFile(UCreatureAnimationAsset *f
 		return false;
 	}
 
+#ifdef CREATURE_USE_COMPRESS_JSON
+	// Run compression routine
 	std::string saveString(TCHAR_TO_UTF8(*readString));
 
 	forAsset->CreatureZipBinary.Reset();
@@ -71,6 +73,10 @@ bool UCreatureAnimationAssetFactory::ImportSourceFile(UCreatureAnimationAsset *f
 
 	Compressor << writeData;
 	Compressor.Flush();
+#else
+	// Just use the uncompressed string
+	forAsset->CreatureRawJSONString = readString;
+#endif
 
 	forAsset->GatherAnimationData();
 
@@ -87,7 +93,7 @@ bool UCreatureAnimationAssetFactory::CanReimport(UObject* Obj, TArray<FString>& 
 	UCreatureAnimationAsset* asset = Cast<UCreatureAnimationAsset>(Obj);
 	if (asset)
 	{
-		const FString &filename = asset->GetCreatureFilename();
+		FString filename = asset->UpdateAndGetCreatureFilename().ToString();
 		if (!filename.IsEmpty())
 		{
 			OutFilenames.Add(filename);
@@ -103,7 +109,7 @@ void UCreatureAnimationAssetFactory::SetReimportPaths(UObject* Obj, const TArray
 	UCreatureAnimationAsset* asset = Cast<UCreatureAnimationAsset>(Obj);
 	if (asset && ensure(NewReimportPaths.Num() == 1))
 	{
-		asset->SetCreatureFilename(NewReimportPaths[0]);
+		asset->SetCreatureFilename(FName(*NewReimportPaths[0]));
 	}
 }
 

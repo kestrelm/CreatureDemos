@@ -31,7 +31,7 @@ class CREATUREPLUGIN_API UCreatureAnimationAsset :public UObject{
 	GENERATED_BODY()
 public:
 
-	FString GetCreatureFilename() const;
+	FName GetCreatureFilename() const;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Creature")
 	float animation_speed = 1.0f;
@@ -42,6 +42,10 @@ public:
 	// Zip Binary Data
 	UPROPERTY()
 	TArray<uint8> CreatureZipBinary;
+
+	// Uncompressed String
+	UPROPERTY()
+	FString CreatureRawJSONString;
 
 	FString& GetJsonString();
 	
@@ -55,13 +59,16 @@ public:
 	void LoadPointCacheForAllClips(class CreatureCore *forCore) const;
 	void LoadPointCacheForClip(const FName &animName, class CreatureCore *forCore) const;
 
+	bool UseCompressedData() const;
+
 	virtual void Serialize(FArchive& Ar) override;
 
 #if WITH_EDITORONLY_DATA
-	void SetCreatureFilename(const FString &newFilename);
+	FName UpdateAndGetCreatureFilename();
+	void SetCreatureFilename(const FName &newFilename);
 	void GetAssetRegistryTags(TArray<FAssetRegistryTag>& OutTags) const override;
 	void PostLoad() override;
-	void PreSave() override;
+	void PreSave(const class ITargetPlatform* TargetPlatform) override;
 	void PostInitProperties() override;
 	
 	void GatherAnimationData();
@@ -80,7 +87,7 @@ protected:
 	// Denoting creature filename: stored as the creature runtime uses this in packaged builds
 	// kept in sync with AssetImportData
 	UPROPERTY()
-	FString creature_filename;
+	FName creature_filename;
 	
 	/** Cache of useful data, including point cache, for the animation clips, to improve runtime performance */
 	UPROPERTY(VisibleAnywhere, Category = Creature)

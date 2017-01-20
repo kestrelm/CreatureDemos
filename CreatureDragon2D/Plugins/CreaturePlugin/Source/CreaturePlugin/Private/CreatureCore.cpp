@@ -1,49 +1,31 @@
 
 #include "CreaturePluginPCH.h"
+#include "CreatureMetaAsset.h"
 
 DECLARE_CYCLE_STAT(TEXT("CreatureCore_RunTick"), STAT_CreatureCore_RunTick, STATGROUP_Creature);
 DECLARE_CYCLE_STAT(TEXT("CreatureCore_UpdateCreatureRender"), STAT_CreatureCore_UpdateCreatureRender, STATGROUP_Creature);
 DECLARE_CYCLE_STAT(TEXT("CreatureCore_FillBoneData"), STAT_CreatureCore_FillBoneData, STATGROUP_Creature);
 DECLARE_CYCLE_STAT(TEXT("CreatureCore_ParseEvents"), STAT_CreatureCore_ParseEvents, STATGROUP_Creature);
 DECLARE_CYCLE_STAT(TEXT("CreatureCore_UpdateManager"), STAT_CreatureCore_UpdateManager, STATGROUP_Creature);
+DECLARE_CYCLE_STAT(TEXT("CreatureCore_SetActiveAnimation"), STAT_CreatureCore_SetActiveAnimation, STATGROUP_Creature);
 
-static std::map<std::string, std::shared_ptr<CreatureModule::CreatureAnimation> > global_animations;
-static std::map<std::string, std::shared_ptr<CreatureModule::CreatureLoadDataPacket> > global_load_data_packets;
+static TMap<FName, TSharedPtr<CreatureModule::CreatureAnimation> > global_animations;
+static TMap<FName, TSharedPtr<CreatureModule::CreatureLoadDataPacket> > global_load_data_packets;
 
-static std::string GetAnimationToken(const std::string& filename_in, const std::string& name_in)
+static FName GetAnimationToken(const FName& filename_in, const FName& name_in)
 {
-	return filename_in + std::string("_") + name_in;
+	return FName(*FString::Printf(TEXT("%s_%s"), *filename_in.ToString(), *name_in.ToString()));
 }
 
-std::string ConvertToString(FString str)
+std::string ConvertToString(const FString &str)
 {
 	std::string t = TCHAR_TO_UTF8(*str);
 	return t;
 }
-
-typedef std::chrono::high_resolution_clock Time;
-static auto profileTimeStart = Time::now();
-static auto profileTimeEnd = Time::now();
-
-static void StartProfileTimer()
+std::string ConvertToString(FName name)
 {
-	typedef std::chrono::milliseconds ms;
-	typedef std::chrono::duration<float> fsec;
-
-	profileTimeStart = Time::now();
-}
-
-static float StopProfileTimer()
-{
-	typedef std::chrono::milliseconds ms;
-	typedef std::chrono::duration<float> fsec;
-
-	profileTimeEnd = Time::now();
-
-	fsec fs = profileTimeEnd - profileTimeStart;
-	ms d = std::chrono::duration_cast<ms>(fs);
-	auto time_passed_fs = fs.count();
-	return time_passed_fs * 1000.0f;
+	std::string t = TCHAR_TO_UTF8(*name.ToString());
+	return t;
 }
 
 CreatureCore::CreatureCore()
@@ -64,7 +46,24 @@ CreatureCore::CreatureCore()
 	should_process_animation_start = false;
 	should_process_animation_end = false;
 	should_update_render_indices = false;
-	update_lock = new std::mutex();
+	meta_data = nullptr;
+	global_indices_copy = nullptr;
+	update_lock = TSharedPtr<FCriticalSection, ESPMode::ThreadSafe>(new FCriticalSection());
+}
+
+CreatureCore::~CreatureCore()
+{
+	ClearMemory();
+}
+
+void 
+CreatureCore::ClearMemory()
+{
+	if (global_indices_copy)
+	{
+		delete[] global_indices_copy;
+		global_indices_copy = nullptr;
+	}
 }
 
 bool 
@@ -86,9 +85,9 @@ CreatureCore::GetAndClearShouldAnimEnd()
 }
 
 FProceduralMeshTriData 
-CreatureCore::GetProcMeshData()
+CreatureCore::GetProcMeshData(EWorldType::Type world_type)
 {
-	if (!creature_manager)
+	if (!creature_manager.Get())
 	{
 		FProceduralMeshTriData ret_data(nullptr,
 			nullptr, nullptr,
@@ -114,6 +113,14 @@ CreatureCore::GetProcMeshData()
 		region_alphas.SetNum(num_points);
 	}
 
+	if ((world_type == EWorldType::Type::Editor) || (world_type == EWorldType::Type::EditorPreview))
+	{
+		for (auto i = 0; i < region_alphas.Num(); i++)
+		{
+			region_alphas[i] = 255;
+		}
+	}
+
 	FProceduralMeshTriData ret_data(copy_indices,
 		cur_pts, cur_uvs,
 		num_points, num_indices,
@@ -136,11 +143,11 @@ void CreatureCore::UpdateCreatureRender()
 	should_update_render_indices = false;
 
 	// Update depth per region
-	std::vector<meshRenderRegion *>& cur_regions =
+	TArray<meshRenderRegion *>& cur_regions =
 		cur_creature->GetRenderComposition()->getRegions();
 	float region_z = 0.0f, delta_z = region_overlap_z_delta;
 
-	if (region_custom_order.Num() != cur_regions.size())
+	if (region_custom_order.Num() != cur_regions.Num())
 	{
 		// Normal update in default order
 		for (auto& single_region : cur_regions)
@@ -154,6 +161,22 @@ void CreatureCore::UpdateCreatureRender()
 
 			region_z += delta_z;
 		}
+
+		// Grab Animated Region Order Indices if meta data is available
+		if (meta_data)
+		{
+			auto dst_indices = GetIndicesCopy(cur_num_indices);
+			int cur_runtime = (int)(creature_manager->getActualRunTime());
+			meta_data->updateIndicesAndPoints(dst_indices,
+				cur_creature->GetGlobalIndices(),
+				cur_pts,
+				delta_z,
+				cur_creature->GetTotalNumIndices(),
+				cur_creature->GetTotalNumPoints(),
+				creature_manager->GetActiveAnimationName().ToString(),
+				cur_runtime);
+			should_update_render_indices = true;
+		}
 	}
 	else {
 		// Custom order update
@@ -163,8 +186,8 @@ void CreatureCore::UpdateCreatureRender()
 
 		for (auto& custom_region_name : region_custom_order)
 		{
-			auto real_name = ConvertToString(custom_region_name);
-			if (regions_map.count(real_name) > 0)
+			auto real_name = custom_region_name;
+			if (regions_map.Contains(real_name))
 			{
 				auto single_region = regions_map[real_name];
 				glm::float32 * region_pts = cur_pts + (single_region->getStartPtIndex() * 3);
@@ -243,39 +266,40 @@ void CreatureCore::UpdateCreatureRender()
 
 bool CreatureCore::InitCreatureRender()
 {
-	FString cur_creature_filename = creature_filename;
+	FName cur_creature_filename = creature_filename;
 	bool init_success = false;
-	std::string load_filename;
+	FName load_filename;
 
 	//////////////////////////////////////////////////////////////////////////
 	//Changed by God of Pen
 	//////////////////////////////////////////////////////////////////////////
 	if (pJsonData != nullptr)
 	{
-		if (cur_creature_filename.IsEmpty())
+		if (cur_creature_filename.IsNone())
 		{
 			cur_creature_filename = creature_asset_filename;
 		}
 
 		absolute_creature_filename = cur_creature_filename;
-		load_filename = ConvertToString(cur_creature_filename);
+		load_filename = cur_creature_filename;
 
 		// try to load creature
-		init_success = CreatureCore::LoadDataPacket(load_filename, pJsonData);;
+		init_success = CreatureCore::LoadDataPacket(load_filename, pJsonData);
 	}
 	else{
-		bool does_exist = FPlatformFileManager::Get().GetPlatformFile().FileExists(*cur_creature_filename);
+		FString curCreatureFilenameString = cur_creature_filename.ToString();
+		bool does_exist = FPlatformFileManager::Get().GetPlatformFile().FileExists(*curCreatureFilenameString);
 		if (!does_exist)
 		{
 			// see if it is in the content directory
-			cur_creature_filename = FPaths::GameContentDir() + FString(TEXT("/")) + cur_creature_filename;
-			does_exist = FPlatformFileManager::Get().GetPlatformFile().FileExists(*cur_creature_filename);
+			cur_creature_filename = FName(*(FPaths::GameContentDir() + FString(TEXT("/")) + curCreatureFilenameString));
+			does_exist = FPlatformFileManager::Get().GetPlatformFile().FileExists(*curCreatureFilenameString);
 		}
 
 		if (does_exist)
 		{
 			absolute_creature_filename = cur_creature_filename;
-			load_filename = ConvertToString(cur_creature_filename);
+			load_filename = cur_creature_filename;
 
 			// try to load creature
 			CreatureCore::LoadDataPacket(load_filename);
@@ -283,9 +307,9 @@ bool CreatureCore::InitCreatureRender()
 		}
 		else {
 
-			if (do_file_warning && (!load_filename.empty())) {
-				UE_LOG(LogTemp, Warning, TEXT("ACreatureActor::BeginPlay() - ERROR! Could not load creature file: %s"), *creature_filename);
-				GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("ACreatureActor::BeginPlay() - ERROR! Could not load creature file: %s"), *creature_filename));
+			if (do_file_warning && (!load_filename.IsNone())) {
+				UE_LOG(LogTemp, Warning, TEXT("ACreatureActor::BeginPlay() - ERROR! Could not load creature file: %s"), *creature_filename.ToString());
+				GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("ACreatureActor::BeginPlay() - ERROR! Could not load creature file: %s"), *creature_filename.ToString()));
 			}
 		}
 	}
@@ -303,7 +327,7 @@ bool CreatureCore::InitCreatureRender()
 			AddLoadedAnimation(load_filename, cur_name);
 		}
 
-		auto cur_str = ConvertToString(start_animation_name);
+		auto cur_str = start_animation_name;
 		for (auto& cur_name : all_animation_names)
 		{
 			if (cur_name == cur_str)
@@ -327,6 +351,12 @@ bool CreatureCore::InitCreatureRender()
 	return init_success;
 }
 
+void CreatureCore::InitValues()
+{
+	region_alpha_map.Empty();
+	meta_data = nullptr;
+}
+
 void CreatureCore::FillBoneData()
 {
 	SCOPE_CYCLE_COUNTER(STAT_CreatureCore_FillBoneData);
@@ -336,16 +366,16 @@ void CreatureCore::FillBoneData()
 
 	if (bone_data.Num() == 0)
 	{
-		bone_data.SetNum(bones_map.size());
+		bone_data.SetNum(bones_map.Num());
 	}
 
 	int i = 0;
 	for (auto& cur_data : bones_map)
 	{
-		bone_data[i].name = FString(cur_data.first.c_str());
+		bone_data[i].name = cur_data.Key;
 
-		auto pt1 = cur_data.second->getWorldStartPt();
-		auto pt2 = cur_data.second->getWorldEndPt();
+		auto pt1 = cur_data.Value->getWorldStartPt();
+		auto pt2 = cur_data.Value->getWorldEndPt();
 
 		/* Id References
 		const int x_id = 0;
@@ -357,7 +387,7 @@ void CreatureCore::FillBoneData()
 		bone_data[i].point2 = FVector(pt2.x, pt2.y, pt2.z);
 
 		// figure out bone transform
-		auto cur_bone = cur_data.second;
+		auto cur_bone = cur_data.Value;
 		auto bone_start_pt = pt1;
 		auto bone_end_pt = pt2;
 
@@ -409,15 +439,15 @@ void CreatureCore::ParseEvents(float deltaTime)
 	float cur_runtime = (creature_manager->getActualRunTime());
 	animation_frame = cur_runtime;
 
-	auto load_filename = ConvertToString(absolute_creature_filename);
+	auto load_filename = absolute_creature_filename;
 
 	auto cur_animation_name = creature_manager->GetActiveAnimationName();
 
 	auto cur_token = GetAnimationToken(load_filename, cur_animation_name);
 	CreatureModule::CreatureAnimation * cur_animation = NULL;
-	if (global_animations.count(cur_token) > 0)
+	if (global_animations.Contains(cur_token))
 	{
-		cur_animation = global_animations[cur_token].get();
+		cur_animation = global_animations[cur_token].Get();
 	}
 
 
@@ -466,7 +496,7 @@ void CreatureCore::ProcessRenderRegions()
 	// fill up animation alphas
 	for (auto& cur_region_pair : regions_map)
 	{
-		auto cur_region = cur_region_pair.second;
+		auto cur_region = cur_region_pair.Value;
 		auto start_pt_index = cur_region->getStartPtIndex();
 		auto end_pt_index = cur_region->getEndPtIndex();
 		auto cur_alpha = FMath::Clamp(cur_region->getOpacity() / 100.0f, 0.0f, 1.0f) * 255.0f;
@@ -484,10 +514,10 @@ void CreatureCore::ProcessRenderRegions()
 		// fill up the alphas for specific regions with alpha overwrites
 		for (auto cur_iter : region_alpha_map)
 		{
-			auto cur_name = ConvertToString(cur_iter.Key);
+			auto cur_name = cur_iter.Key;
 			auto cur_alpha = cur_iter.Value;
 
-			if (regions_map.count(cur_name) > 0)
+			if (regions_map.Contains(cur_name))
 			{
 				meshRenderRegion * cur_region = regions_map[cur_name];
 				auto start_pt_index = cur_region->getStartPtIndex();
@@ -525,9 +555,9 @@ void CreatureCore::ProcessRenderRegions()
 }
 
 bool 
-CreatureCore::LoadDataPacket(const std::string& filename_in)
+CreatureCore::LoadDataPacket(const FName& filename_in)
 {
-	if (global_load_data_packets.count(filename_in) > 0)
+	if (global_load_data_packets.Contains(filename_in))
 	{
 		// file already loaded, just return
 		return true;
@@ -535,31 +565,17 @@ CreatureCore::LoadDataPacket(const std::string& filename_in)
 	//////////////////////////////////////////////////////////////////////////
 	//Changed!
 	//////////////////////////////////////////////////////////////////////////
-		std::shared_ptr<CreatureModule::CreatureLoadDataPacket> new_packet =
-			std::make_shared<CreatureModule::CreatureLoadDataPacket>();
+	TSharedPtr<CreatureModule::CreatureLoadDataPacket> new_packet =
+		TSharedPtr<CreatureModule::CreatureLoadDataPacket>(new CreatureModule::CreatureLoadDataPacket());
 
-		bool is_zip = false;
-		if (filename_in.substr(filename_in.find_last_of(".") + 1) == "zip") {
-			is_zip = true;
-		}
+	// load regular JSON
+	CreatureModule::LoadCreatureJSONData(filename_in, *new_packet);
+	global_load_data_packets[filename_in] = new_packet;
 
-		if (is_zip)
-		{
-			// load zip archive
-			CreatureModule::LoadCreatureZipJSONData(filename_in, *new_packet);
-		}
-		else {
-			// load regular JSON
-			CreatureModule::LoadCreatureJSONData(filename_in, *new_packet);
-		}
-		global_load_data_packets[filename_in] = new_packet;
-	
-	
-
-		return true;
+	return true;
 }
 
-bool CreatureCore::LoadDataPacket(const std::string& filename_in, FString* pSourceData)
+bool CreatureCore::LoadDataPacket(const FName& filename_in, FString* pSourceData)
 {
 	//////////////////////////////////////////////////////////////////////////
 	//直接从Data中载入
@@ -567,7 +583,7 @@ bool CreatureCore::LoadDataPacket(const std::string& filename_in, FString* pSour
 	{
 		return false;
 	}
-	if (global_load_data_packets.count(filename_in) > 0)
+	if (global_load_data_packets.Contains(filename_in))
 	{
 		// file already loaded, just return
 		return true;
@@ -579,44 +595,62 @@ bool CreatureCore::LoadDataPacket(const std::string& filename_in, FString* pSour
 			return false;
 		}
 
-		std::shared_ptr<CreatureModule::CreatureLoadDataPacket> new_packet =
-			std::make_shared<CreatureModule::CreatureLoadDataPacket>();
+		TSharedPtr<CreatureModule::CreatureLoadDataPacket> new_packet =
+			TSharedPtr<CreatureModule::CreatureLoadDataPacket>(new CreatureModule::CreatureLoadDataPacket);
 
-		CreatureModule::LoadCreatureJSONDataFromString(std::string(TCHAR_TO_UTF8(*(*pSourceData))), *new_packet);
-		global_load_data_packets[filename_in] = new_packet;
+		CreatureModule::LoadCreatureJSONDataFromString(*pSourceData, *new_packet);
+		global_load_data_packets.Add(filename_in, new_packet);
 	}
 
 	return true;
 }
 
 void 
-CreatureCore::LoadAnimation(const std::string& filename_in, const std::string& name_in)
+CreatureCore::ClearAllDataPackets()
+{
+	for (auto& cur_packet : global_load_data_packets)
+	{
+		cur_packet.Value->allocator.deallocate();
+	}
+
+	global_load_data_packets.Empty();
+}
+
+void 
+CreatureCore::LoadAnimation(const FName& filename_in, const FName& name_in)
 {
 	auto cur_token = GetAnimationToken(filename_in, name_in);
-	if (global_animations.count(cur_token) > 0)
+	if (global_animations.Contains(cur_token))
 	{
 		// animation already exists, just return
 		return;
 	}
 
+	if (global_load_data_packets.Contains(filename_in) == false)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("CreatureCore::LoadAnimation() - Loading animation but %s was not loaded!"), *filename_in.ToString());
+		return;
+	}
+
 	auto load_data = global_load_data_packets[filename_in];
 
-	std::shared_ptr<CreatureModule::CreatureAnimation> new_animation =
-		std::make_shared<CreatureModule::CreatureAnimation>(*load_data, name_in);
+	TSharedPtr<CreatureModule::CreatureAnimation> new_animation =
+		TSharedPtr<CreatureModule::CreatureAnimation>(
+			new CreatureModule::CreatureAnimation(*load_data, name_in));
 
-	global_animations[cur_token] = new_animation;
-
+	global_animations.Add(cur_token, new_animation);
 }
 
 TArray<FProceduralMeshTriangle>&
-CreatureCore::LoadCreature(const std::string& filename_in)
+CreatureCore::LoadCreature(const FName& filename_in)
 {
 	auto load_data = global_load_data_packets[filename_in];
 
-	std::shared_ptr<CreatureModule::Creature> new_creature =
-		std::make_shared<CreatureModule::Creature>(*load_data);
+	TSharedPtr<CreatureModule::Creature> new_creature =
+		TSharedPtr<CreatureModule::Creature>(new CreatureModule::Creature(*load_data));
 
-	creature_manager = std::make_shared<CreatureModule::CreatureManager>(new_creature);
+	creature_manager = TSharedPtr<CreatureModule::CreatureManager>(
+		new CreatureModule::CreatureManager(new_creature));
 
 	draw_triangles.SetNum(creature_manager->GetCreature()->GetTotalNumIndices() / 3, true);
 
@@ -624,18 +658,15 @@ CreatureCore::LoadCreature(const std::string& filename_in)
 }
 
 bool 
-CreatureCore::AddLoadedAnimation(const std::string& filename_in, const std::string& name_in)
+CreatureCore::AddLoadedAnimation(const FName& filename_in, const FName& name_in)
 {
 	auto cur_token = GetAnimationToken(filename_in, name_in);
-	if (global_animations.count(cur_token) > 0)
+	if (global_animations.Contains(cur_token))
 	{
 		creature_manager->AddAnimation(global_animations[cur_token]);
 		creature_manager->SetIsPlaying(true);
 		creature_manager->SetShouldLoop(is_looping);
 		return true;
-	}
-	else {
-		std::cout << "ERROR! ACreatureActor::AddLoadedAnimation() Animation with filename: " << filename_in << " and name: " << name_in << " not loaded!" << std::endl;
 	}
 
 	return false;
@@ -644,29 +675,34 @@ CreatureCore::AddLoadedAnimation(const std::string& filename_in, const std::stri
 CreatureModule::CreatureManager * 
 CreatureCore::GetCreatureManager()
 {
-	return creature_manager.get();
+	return creature_manager.Get();
 }
 
 void 
-CreatureCore::SetBluePrintActiveAnimation(FString name_in)
+CreatureCore::SetBluePrintActiveAnimation(FName name_in)
 {
-	auto cur_str = ConvertToString(name_in);
-	SetActiveAnimation(cur_str);
+	SetActiveAnimation(name_in);
 }
 
 void 
-CreatureCore::SetBluePrintBlendActiveAnimation(FString name_in, float factor)
+CreatureCore::SetBluePrintBlendActiveAnimation(FName name_in, float factor)
 {
-	auto cur_str = ConvertToString(name_in);
-	SetAutoBlendActiveAnimation(cur_str, factor);
+	SetAutoBlendActiveAnimation(name_in, factor);
 }
 
 void 
-CreatureCore::SetBluePrintAnimationCustomTimeRange(FString name_in, int32 start_time, int32 end_time)
+CreatureCore::SetBluePrintAnimationCustomTimeRange(FName name_in, int32 start_time, int32 end_time)
 {
-	auto cur_str = ConvertToString(name_in);
+	auto cur_creature_manager = GetCreatureManager();
+	if (!cur_creature_manager)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("CreatureCore::SetBluePrintAnimationCustomTimeRange() - ERROR! no CreatureManager"), *name_in.ToString());
+		return;
+	}
+
+	auto cur_str = name_in;
 	auto all_animations = creature_manager->GetAllAnimations();
-	if (all_animations.count(cur_str) > 0)
+	if (all_animations.Contains(cur_str))
 	{
 		all_animations[cur_str]->setStartTime(start_time);
 		all_animations[cur_str]->setEndTime(end_time);
@@ -674,12 +710,12 @@ CreatureCore::SetBluePrintAnimationCustomTimeRange(FString name_in, int32 start_
 }
 
 void 
-CreatureCore::MakeBluePrintPointCache(FString name_in, int32 approximation_level)
+CreatureCore::MakeBluePrintPointCache(FName name_in, int32 approximation_level)
 {
 	auto cur_creature_manager = GetCreatureManager();
 	if (!cur_creature_manager)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("ACreatureActor::MakeBluePrintPointCache() - ERROR! Could not generate point cache for %s"), *name_in);
+		UE_LOG(LogTemp, Warning, TEXT("CreatureCore::MakeBluePrintPointCache - ERROR! Could not generate point cache for %s"), *name_in.ToString());
 		return;
 	}
 
@@ -693,24 +729,24 @@ CreatureCore::MakeBluePrintPointCache(FString name_in, int32 approximation_level
 		real_approximation_level = 10;
 	}
 
-	cur_creature_manager->MakePointCache(ConvertToString(name_in), real_approximation_level);
+	cur_creature_manager->MakePointCache(name_in, real_approximation_level);
 }
 
 void 
-CreatureCore::ClearBluePrintPointCache(FString name_in, int32 approximation_level)
+CreatureCore::ClearBluePrintPointCache(FName name_in, int32 approximation_level)
 {
 	auto cur_creature_manager = GetCreatureManager();
 	if (!cur_creature_manager)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("ACreatureActor::MakeBluePrintPointCache() - ERROR! Could not generate point cache for %s"), *name_in);
+		UE_LOG(LogTemp, Warning, TEXT("ACreatureActor::MakeBluePrintPointCache() - ERROR! Could not generate point cache for %s"), *name_in.ToString());
 		return;
 	}
 
-	cur_creature_manager->ClearPointCache(ConvertToString(name_in));
+	cur_creature_manager->ClearPointCache(name_in);
 }
 
 FTransform 
-CreatureCore::GetBluePrintBoneXform(FString name_in, bool world_transform, float position_slide_factor, FTransform base_transform)
+CreatureCore::GetBluePrintBoneXform(FName name_in, bool world_transform, float position_slide_factor, FTransform base_transform) const
 {
 	FTransform ret_xform;
 	for (size_t i = 0; i < bone_data.Num(); i++)
@@ -763,7 +799,7 @@ CreatureCore::IsBluePrintBonesCollide(FVector test_point, float bone_size, FTran
 	glm::vec4 real_test_pt(local_test_point.X, local_test_point.Y, local_test_point.Z, 1.0f);
 	for (auto cur_data : bones_map)
 	{
-		auto cur_bone = cur_data.second;
+		auto cur_bone = cur_data.Value;
 		auto bone_start_pt = cur_bone->getWorldStartPt();
 		auto bone_end_pt = cur_bone->getWorldEndPt();
 
@@ -798,7 +834,7 @@ CreatureCore::RunTick(float delta_time)
 {
 	SCOPE_CYCLE_COUNTER(STAT_CreatureCore_RunTick);
 
-	std::lock_guard<std::mutex> scope_lock(*update_lock);
+	FScopeLock scope_lock(update_lock.Get());
 
 	if (is_driven)
 	{
@@ -813,7 +849,7 @@ CreatureCore::RunTick(float delta_time)
 		return false;
 	}
 
-	if (creature_manager)
+	if (creature_manager.Get())
 	{
 		ParseEvents(delta_time);
 
@@ -835,7 +871,7 @@ void
 CreatureCore::SetBluePrintAnimationLoop(bool flag_in)
 {
 	is_looping = flag_in;
-	if (creature_manager) {
+	if (creature_manager.Get()) {
 		creature_manager->SetShouldLoop(is_looping);
 	}
 }
@@ -851,6 +887,8 @@ CreatureCore::SetBluePrintAnimationPlay(bool flag_in)
 void 
 CreatureCore::SetBluePrintAnimationPlayFromStart()
 {
+	FScopeLock scope_lock(update_lock.Get());
+
 	SetBluePrintAnimationResetToStart();
 	SetBluePrintAnimationPlay(true);
 }
@@ -858,28 +896,52 @@ CreatureCore::SetBluePrintAnimationPlayFromStart()
 void 
 CreatureCore::SetBluePrintAnimationResetToStart()
 {
-	if (creature_manager) {
+	FScopeLock scope_lock(update_lock.Get());
+
+	if (creature_manager.Get()) {
 		creature_manager->ResetToStartTimes();
 		float cur_runtime = (creature_manager->getActualRunTime());
 		animation_frame = cur_runtime;
 
-		creature_manager->Update(0.001f);
+		creature_manager->Update(0.0f);
 	}
 
 	play_start_done = false;
 	play_end_done = false;
 }
 
-float 
+void CreatureCore::SetBluePrintAnimationResetToEnd()
+{
+	if (creature_manager.Get()) {
+		auto *anim = creature_manager->GetAnimation(creature_manager->GetActiveAnimationName());
+
+		float cur_runtime = anim->getEndTime();
+		creature_manager->setRunTime(cur_runtime);
+		animation_frame = cur_runtime;
+
+		creature_manager->Update(0.0f);
+	}
+
+	play_start_done = false;
+	play_end_done = false;
+}
+
+float
 CreatureCore::GetBluePrintAnimationFrame()
 {
 	return animation_frame;
 }
 
-void 
-CreatureCore::SetBluePrintRegionAlpha(FString region_name_in, uint8 alpha_in)
+void CreatureCore::SetBluePrintAnimationFrame(float time_in)
 {
-	if (region_name_in.IsEmpty())
+	auto cur_delta = (time_in - creature_manager->getActualRunTime()) / 30.0f;
+	creature_manager->Update(cur_delta);
+}
+
+void 
+CreatureCore::SetBluePrintRegionAlpha(FName region_name_in, uint8 alpha_in)
+{
+	if (region_name_in.IsNone())
 	{
 		return;
 	}
@@ -887,13 +949,13 @@ CreatureCore::SetBluePrintRegionAlpha(FString region_name_in, uint8 alpha_in)
 	region_alpha_map.Add(region_name_in, alpha_in);
 }
 
-void CreatureCore::RemoveBluePrintRegionAlpha(FString region_name_in)
+void CreatureCore::RemoveBluePrintRegionAlpha(FName region_name_in)
 {
 	region_alpha_map.Remove(region_name_in);
 }
 
 void 
-CreatureCore::SetBluePrintRegionCustomOrder(TArray<FString> order_in)
+CreatureCore::SetBluePrintRegionCustomOrder(TArray<FName> order_in)
 {
 	region_custom_order = order_in;
 }
@@ -904,14 +966,14 @@ CreatureCore::ClearBluePrintRegionCustomOrder()
 	region_custom_order.Empty();
 }
 
-void CreatureCore::SetBluePrintRegionItemSwap(FString region_name_in, int32 tag)
+void CreatureCore::SetBluePrintRegionItemSwap(FName region_name_in, int32 tag)
 {
-	creature_manager->GetCreature()->SetActiveItemSwap(ConvertToString(region_name_in), tag);
+	creature_manager->GetCreature()->SetActiveItemSwap(region_name_in, tag);
 }
 
-void CreatureCore::RemoveBluePrintRegionItemSwap(FString region_name_in)
+void CreatureCore::RemoveBluePrintRegionItemSwap(FName region_name_in)
 {
-	creature_manager->GetCreature()->RemoveActiveItemSwap(ConvertToString(region_name_in));
+	creature_manager->GetCreature()->RemoveActiveItemSwap(region_name_in);
 }
 
 void CreatureCore::SetUseAnchorPoints(bool flag_in)
@@ -924,18 +986,20 @@ bool CreatureCore::GetUseAnchorPoints() const
 	return creature_manager->GetCreature()->GetAnchorPointsActive();
 }
 
-void 
-CreatureCore::SetActiveAnimation(const std::string& name_in)
+void
+CreatureCore::SetActiveAnimation(const FName& name_in)
 {
+	SCOPE_CYCLE_COUNTER(STAT_CreatureCore_SetActiveAnimation);
 	creature_manager->SetActiveAnimationName(name_in);
+	creature_manager->SetAutoBlending(false);
 }
 
 void 
-CreatureCore::SetAutoBlendActiveAnimation(const std::string& name_in, float factor)
+CreatureCore::SetAutoBlendActiveAnimation(const FName& name_in, float factor)
 {
 	auto all_animations = creature_manager->GetAllAnimations();
 
-	if (all_animations.count(name_in) <= 0)
+	if (all_animations.Contains(name_in) == false)
 	{
 		return;
 	}
@@ -952,9 +1016,9 @@ CreatureCore::SetAutoBlendActiveAnimation(const std::string& name_in, float fact
 	if (smooth_transitions == false)
 	{
 		smooth_transitions = true;
-		creature_manager->SetAutoBlending(true);
 	}
 
+	creature_manager->SetAutoBlending(true);
 	creature_manager->AutoBlendTo(name_in, factor);
 }
 
@@ -995,11 +1059,34 @@ glm::uint32 * CreatureCore::GetIndicesCopy(int init_size)
 {
 	if (!global_indices_copy)
 	{
-		global_indices_copy = std::shared_ptr<glm::uint32>(new glm::uint32[init_size],
-			std::default_delete<glm::uint32[]>());
+		global_indices_copy = new glm::uint32[init_size];
 	}
 
-	return global_indices_copy.get();
+	return global_indices_copy;
+}
+
+std::vector<meshBone *> 
+CreatureCore::getAllChildrenWithIgnore(const FName& ignore_name, meshBone * base_bone)
+{
+	if (base_bone == nullptr)
+	{
+		base_bone = GetCreatureManager()->GetCreature()->GetRenderComposition()->getRootBone();
+	}
+
+	std::vector<meshBone *> ret_data;
+	if (base_bone->getKey() == ignore_name)
+	{
+		return ret_data;
+	}
+
+	ret_data.push_back(base_bone);
+	for (auto cur_child : base_bone->getChildren())
+	{
+		std::vector<meshBone *> append_data = getAllChildrenWithIgnore(ignore_name, cur_child);
+		ret_data.insert(ret_data.end(), append_data.begin(), append_data.end());
+	}
+
+	return ret_data;
 }
 
 void 

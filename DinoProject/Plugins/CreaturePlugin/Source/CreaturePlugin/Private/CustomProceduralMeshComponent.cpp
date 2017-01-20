@@ -7,6 +7,22 @@
 #include "CustomProceduralMeshComponent.h"
 #include "Runtime/Launch/Resources/Version.h"
 
+DECLARE_DWORD_COUNTER_STAT(TEXT("Creature Mesh Tris"), STAT_CreatureMeshTriangles, STATGROUP_Creature);
+DECLARE_CYCLE_STAT(TEXT("ProceduralMeshSceneProxy_GetDynamicMeshElements"), STAT_ProceduralMeshSceneProxy_GetDynamicMeshElements, STATGROUP_Creature);
+DECLARE_CYCLE_STAT(TEXT("ProceduralMeshSceneProxy_SetDynamicData"), STAT_ProceduralMeshSceneProxy_SetDynamicData, STATGROUP_Creature);
+
+DECLARE_CYCLE_STAT(TEXT("Creature CreateDirectVertexData"), STAT_CreateDirectVertexData, STATGROUP_Creature);
+DECLARE_CYCLE_STAT(TEXT("Creature UpdateDirectVertexData"), STAT_UpdateDirectVertexData, STATGROUP_Creature);
+DECLARE_CYCLE_STAT(TEXT("Creature UpdateDirectIndexData"), STAT_UpdateDirectIndexData, STATGROUP_Creature);
+
+static TAutoConsoleVariable<int32> CVarShowCreatureMeshes(
+	TEXT("creature.ShowMeshes"),
+	1,
+	TEXT("Toggles a 'ShowFlag' for creature meshes.\n")
+	TEXT("0: hidden\n")
+	TEXT("1: rendered"),
+	ECVF_RenderThreadSafe);
+
 /** Vertex Buffer */
 class FProceduralMeshVertexBuffer : public FVertexBuffer
 {
@@ -72,7 +88,7 @@ public:
 			const FProceduralMeshVertexBuffer*, VertexBuffer, VertexBuffer,
 		{
 			// Initialize the vertex factory's stream components.
-			DataType NewData;
+			FDataType NewData;
 			NewData.PositionComponent = STRUCTMEMBER_VERTEXSTREAMCOMPONENT(VertexBuffer,FDynamicMeshVertex,Position,VET_Float3);
 			NewData.TextureCoordinates.Add(
 				FVertexStreamComponent(VertexBuffer,STRUCT_OFFSET(FDynamicMeshVertex,TextureCoordinate),sizeof(FDynamicMeshVertex),VET_Float2)
@@ -99,6 +115,9 @@ public:
 		region_alphas = data_in->region_alphas;
 		update_lock = data_in->update_lock;
 		should_release = false;
+
+		// ensure the vertex data to be sent to the RHI is initialized
+		CreateDirectVertexData();
 	}
 
 	virtual ~FProceduralMeshRenderPacket()
@@ -119,32 +138,73 @@ public:
 		should_release = true;
 	}
 
-	void UpdateDirectVertexData() const
+	TArray<FDynamicMeshVertex> VertexCache;
+
+	void CreateDirectVertexData()
 	{
+		SCOPE_CYCLE_COUNTER(STAT_CreateDirectVertexData);
+
 		const int x_id = 0;
 		const int y_id = 2;
 		const int z_id = 1;
 
-		std::lock_guard<std::mutex> scope_lock(*update_lock);
-
-		FDynamicMeshVertex* VertexBufferData = (FDynamicMeshVertex *)RHILockVertexBuffer(VertexBuffer.VertexBufferRHI, 0, this->point_num * sizeof(FDynamicMeshVertex), RLM_WriteOnly);
+		FScopeLock scope_lock(update_lock.Get());
+		
+		if (VertexCache.Num() != point_num)
+		{
+			VertexCache.Reset(point_num);
+			VertexCache.AddUninitialized(point_num);
+		}
 
 		for (int32 i = 0; i < this->point_num; i++)
 		{
-			FDynamicMeshVertex* curVert = VertexBufferData + i;
+			FDynamicMeshVertex& curVert = VertexCache[i];
 
 			int pos_idx = i * 3;
-			curVert->Position = FVector(this->points[pos_idx + x_id],
+			curVert.Position = FVector(this->points[pos_idx + x_id],
 				this->points[pos_idx + y_id],
 				this->points[pos_idx + z_id]);
 
 			float set_alpha = (*this->region_alphas)[i];
-			curVert->Color = FColor(set_alpha, set_alpha, set_alpha, set_alpha);
+			curVert.Color = FColor(set_alpha, set_alpha, set_alpha, set_alpha);
 
 			int uv_idx = i * 2;
-			curVert->TextureCoordinate.Set(this->uvs[uv_idx], this->uvs[uv_idx + 1]);
+			curVert.TextureCoordinate.Set(this->uvs[uv_idx], this->uvs[uv_idx + 1]);
+		}
 
-			curVert->SetTangents(FVector(1, 0, 0), FVector(0, 1, 0), FVector(0, 0, 1));
+		// Set Tangents
+		for (int cur_indice = 0; cur_indice < indices_num; cur_indice += 3)
+		{
+			FDynamicMeshVertex & vert0 = VertexCache[(indices[cur_indice])];
+			FDynamicMeshVertex & vert1 = VertexCache[(indices[cur_indice+1])];
+			FDynamicMeshVertex & vert2 = VertexCache[(indices[cur_indice+2])];
+
+			const FVector Edge01 = (vert1.Position - vert0.Position);
+			const FVector Edge02 = (vert2.Position - vert0.Position);
+
+			const FVector TangentX = Edge01.GetSafeNormal();
+			const FVector TangentZ = (Edge02 ^ Edge01).GetSafeNormal();
+			const FVector TangentY = (TangentX ^ TangentZ).GetSafeNormal();
+
+			vert0.SetTangents(TangentX, TangentY, TangentZ);
+			vert1.SetTangents(TangentX, TangentY, TangentZ);
+			vert2.SetTangents(TangentX, TangentY, TangentZ);
+		}
+
+	}
+
+	void UpdateDirectVertexData() const
+	{
+		SCOPE_CYCLE_COUNTER(STAT_UpdateDirectVertexData);
+		
+		int32 numReadyVertices = VertexCache.Num();
+		check(numReadyVertices == point_num);
+
+		FDynamicMeshVertex* VertexBufferData = (FDynamicMeshVertex *)RHILockVertexBuffer(VertexBuffer.VertexBufferRHI, 0, numReadyVertices * sizeof(FDynamicMeshVertex), RLM_WriteOnly);
+
+		{
+			FScopeLock scope_lock(update_lock.Get());
+			FMemory::Memcpy(VertexBufferData, &VertexCache[0], numReadyVertices * sizeof(FDynamicMeshVertex));
 		}
 
 		RHIUnlockVertexBuffer(VertexBuffer.VertexBufferRHI);
@@ -152,7 +212,9 @@ public:
 
 	void UpdateDirectIndexData() const
 	{
-		std::lock_guard<std::mutex> scope_lock(*update_lock);
+		SCOPE_CYCLE_COUNTER(STAT_UpdateDirectIndexData);
+
+		FScopeLock scope_lock(update_lock.Get());
 		void* Buffer = RHILockIndexBuffer(IndexBuffer.IndexBufferRHI, 0, indices_num * sizeof(int32), RLM_WriteOnly);
 
 		FMemory::Memcpy(Buffer, indices, indices_num * sizeof(int32));
@@ -168,7 +230,7 @@ public:
 	glm::float32 * uvs;
 	int32 point_num, indices_num;
 	TArray<uint8> * region_alphas;
-	std::mutex * update_lock;
+	TSharedPtr<FCriticalSection, ESPMode::ThreadSafe> update_lock;
 	bool should_release;
 };
 
@@ -180,7 +242,6 @@ FCProceduralMeshSceneProxy::FCProceduralMeshSceneProxy(UCustomProceduralMeshComp
 	MaterialRelevance(Component->GetMaterialRelevance(GetScene().GetFeatureLevel()))
 {
 	parentComponent = Component;
-	needs_updating = false;
 	needs_index_updating = false;
 	active_render_packet_idx = INDEX_NONE;
 
@@ -208,6 +269,11 @@ FCProceduralMeshSceneProxy::GetActiveRenderPacket()
 	return &renderPackets[active_render_packet_idx];
 }
 
+bool FCProceduralMeshSceneProxy::GetDoesActiveRenderPacketHaveVertices() const
+{
+	return renderPackets.IsValidIndex(active_render_packet_idx) && renderPackets[active_render_packet_idx].VertexCache.Num() > 0;
+}
+
 void FCProceduralMeshSceneProxy::UpdateMaterial()
 {
 	// Grab material
@@ -216,10 +282,14 @@ void FCProceduralMeshSceneProxy::UpdateMaterial()
 	{
 		Material = UMaterial::GetDefaultMaterial(MD_Surface);
 	}
+
+	needs_material_updating = false;
 }
 
 void FCProceduralMeshSceneProxy::AddRenderPacket(FProceduralMeshTriData * targetTrisIn)
 {
+	FScopeLock packetLock(&renderPacketsCS);
+
 	FProceduralMeshRenderPacket new_packet(targetTrisIn);
 	renderPackets.Add(new_packet);
 
@@ -249,13 +319,31 @@ void FCProceduralMeshSceneProxy::AddRenderPacket(FProceduralMeshTriData * target
 		int pos_idx = i * 3;
 		Vert0.Position = FVector(cur_packet.points[pos_idx + x_id], cur_packet.points[pos_idx + y_id], cur_packet.points[pos_idx + z_id]);
 
-		float set_alpha = (*cur_packet.region_alphas)[i];
-		Vert0.Color = FColor(set_alpha, set_alpha, set_alpha, set_alpha);
+		Vert0.Color = FColor::White;
 		Vert0.SetTangents(FVector(1, 0, 0), FVector(0, 1, 0), FVector(0, 0, 1));
 
 		int uv_idx = i * 2;
 		Vert0.TextureCoordinate.Set(cur_packet.uvs[uv_idx], cur_packet.uvs[uv_idx + 1]);
 		VertexBuffer.Vertices[i] = Vert0;
+	}
+
+	// Set Initial Rest Tangents
+	for (int cur_indice = 0; cur_indice < cur_packet.indices_num; cur_indice += 3)
+	{
+		FDynamicMeshVertex& vert0 = VertexBuffer.Vertices[cur_packet.indices[cur_indice]];
+		FDynamicMeshVertex& vert1 = VertexBuffer.Vertices[cur_packet.indices[cur_indice + 1]];
+		FDynamicMeshVertex& vert2 = VertexBuffer.Vertices[cur_packet.indices[cur_indice + 2]];
+
+		const FVector Edge01 = (vert1.Position - vert0.Position);
+		const FVector Edge02 = (vert2.Position - vert0.Position);
+
+		const FVector TangentX = Edge01.GetSafeNormal();
+		const FVector TangentZ = (Edge02 ^ Edge01).GetSafeNormal();
+		const FVector TangentY = (TangentX ^ TangentZ).GetSafeNormal();
+
+		vert0.SetTangents(TangentX, TangentY, TangentZ);
+		vert1.SetTangents(TangentX, TangentY, TangentZ);
+		vert2.SetTangents(TangentX, TangentY, TangentZ);
 	}
 
 	// Init vertex factory
@@ -272,12 +360,15 @@ void FCProceduralMeshSceneProxy::AddRenderPacket(FProceduralMeshTriData * target
 
 void FCProceduralMeshSceneProxy::ResetAllRenderPackets()
 {
+	FScopeLock packetLock(&renderPacketsCS);
+
 	renderPackets.Reset();
 	active_render_packet_idx = INDEX_NONE;
 }
 
 void FCProceduralMeshSceneProxy::SetActiveRenderPacketIdx(int idxIn)
 {
+	FScopeLock packetLock(&renderPacketsCS);
 	active_render_packet_idx = idxIn;
 }
 
@@ -292,6 +383,12 @@ void FCProceduralMeshSceneProxy::UpdateDynamicComponentData()
 	{
 		UpdateMaterial();
 	}
+
+	FScopeLock packetLock(&renderPacketsCS);
+
+	auto& cur_packet = renderPackets[active_render_packet_idx];
+
+	cur_packet.CreateDirectVertexData();
 
 	/*
 	auto& cur_packet = renderPackets[active_render_packet_idx];
@@ -340,15 +437,6 @@ void FCProceduralMeshSceneProxy::UpdateDynamicComponentData()
 		cnter++;
 	}
 	*/
-
-	needs_updating = true;
-}
-
-void FCProceduralMeshSceneProxy::DoneUpdating()
-{
-	needs_updating = false;
-	needs_index_updating = false;
-	needs_material_updating = false;
 }
 
 void FCProceduralMeshSceneProxy::SetNeedsMaterialUpdate(bool flag_in)
@@ -361,37 +449,59 @@ void FCProceduralMeshSceneProxy::SetNeedsIndexUpdate(bool flag_in)
 	needs_index_updating = flag_in;
 }
 
-void FCProceduralMeshSceneProxy::GetDynamicMeshElements(const TArray<const FSceneView*>& Views,
-	const FSceneViewFamily& ViewFamily,
-	uint32 VisibilityMap,
-	FMeshElementCollector& Collector) const
+void FCProceduralMeshSceneProxy::SetDynamicData_RenderThread()
 {
+	SCOPE_CYCLE_COUNTER(STAT_ProceduralMeshSceneProxy_SetDynamicData);
+
+	FScopeLock packetLock(&renderPacketsCS);
+
 	if (active_render_packet_idx < 0)
 	{
 		return;
 	}
 
 	auto& cur_packet = renderPackets[active_render_packet_idx];
+
+	cur_packet.UpdateDirectVertexData();
+	if (needs_index_updating) 
+	{
+		cur_packet.UpdateDirectIndexData();
+		needs_index_updating = false;
+	}
+}
+
+void FCProceduralMeshSceneProxy::GetDynamicMeshElements(const TArray<const FSceneView*>& Views,
+	const FSceneViewFamily& ViewFamily,
+	uint32 VisibilityMap,
+	FMeshElementCollector& Collector) const
+{
+	SCOPE_CYCLE_COUNTER(STAT_ProceduralMeshSceneProxy_GetDynamicMeshElements);
+
+	int32 showFlag = CVarShowCreatureMeshes.GetValueOnAnyThread();
+	if (showFlag == 0)
+	{
+		// creature mesh rendering is disabled
+		return;
+	}
+
+	if (active_render_packet_idx < 0)
+	{
+		return;
+	}
+
+	FScopeLock packetLock(&renderPacketsCS);
+
+	auto& cur_packet = renderPackets[active_render_packet_idx];
 	auto& VertexBuffer = cur_packet.VertexBuffer;
 	auto& IndexBuffer = cur_packet.IndexBuffer;
 	auto& VertexFactory = cur_packet.VertexFactory;
+	const FEngineShowFlags& EngineShowFlags = ViewFamily.EngineShowFlags;
 
 	if (cur_packet.point_num <= 0)
 	{
 		return;
 	}
-
-	if (needs_updating) {
-		cur_packet.UpdateDirectVertexData();
-		if (needs_index_updating) {
-			cur_packet.UpdateDirectIndexData();
-		}
-	}
-
-	(const_cast<FCProceduralMeshSceneProxy*>(this))->DoneUpdating();
-
-	QUICK_SCOPE_CYCLE_COUNTER(STAT_ProceduralMeshSceneProxy_GetDynamicMeshElements);
-
+			
 	const bool bWireframe = AllowDebugViewmodes() && ViewFamily.EngineShowFlags.Wireframe;
 
 	auto WireframeMaterialInstance = new FColoredMaterialRenderProxy(
@@ -434,7 +544,11 @@ void FCProceduralMeshSceneProxy::GetDynamicMeshElements(const TArray<const FScen
 			Mesh.DepthPriorityGroup = SDPG_World;
 			Mesh.bCanApplyViewModeOverrides = false;
 			Collector.AddMesh(ViewIndex, Mesh);
+
+			INC_DWORD_STAT_BY(STAT_CreatureMeshTriangles, Mesh.GetNumPrimitives());
 		}
+		
+		RenderBounds(Collector.GetPDI(ViewIndex), EngineShowFlags, GetBounds(), !parentComponent || !parentComponent->GetOwner() || IsSelected());
 	}
 }
 
@@ -444,6 +558,10 @@ FPrimitiveViewRelevance FCProceduralMeshSceneProxy::GetViewRelevance(const FScen
 	Result.bDrawRelevance = true;// IsShown(View);
 	Result.bShadowRelevance = IsShadowCast(View);
 	Result.bDynamicRelevance = true;
+	Result.bRenderInMainPass = ShouldRenderInMainPass();
+	Result.bUsesLightingChannels = GetLightingChannelMask() != GetDefaultLightingChannelMask();
+	Result.bRenderCustomDepth = ShouldRenderCustomDepth();
+
 	MaterialRelevance.SetPrimitiveViewRelevance(Result);
 
 	return Result;
@@ -495,24 +613,44 @@ bool UCustomProceduralMeshComponent::SetProceduralMeshTriData(const FProceduralM
 	return true;
 }
 
+void UCustomProceduralMeshComponent::SendRenderDynamicData_Concurrent()
+{
+	FCProceduralMeshSceneProxy *proxy = GetLocalRenderProxy();
+	if (proxy)
+	{
+		// Enqueue command to send to render thread
+		ENQUEUE_UNIQUE_RENDER_COMMAND_ONEPARAMETER(
+			FSendCreatureDynamicData,
+			FCProceduralMeshSceneProxy*, sceneProxy, proxy,
+			{
+				sceneProxy->SetDynamicData_RenderThread();
+			});
+	}
+}
+
 void UCustomProceduralMeshComponent::RecreateRenderProxy(bool flag_in)
 {
 	recreate_render_proxy = flag_in;
 }
 
-void UCustomProceduralMeshComponent::ForceAnUpdate(int render_packet_idx)
+void UCustomProceduralMeshComponent::ForceAnUpdate(int render_packet_idx, bool markDirty /*= true*/)
 {
+	FScopeLock cur_lock(&local_lock);
+
 	// Need to recreate scene proxy to send it over
 	if (recreate_render_proxy)
 	{
-		MarkRenderStateDirty();
-		recreate_render_proxy = false;
+		if (markDirty)
+		{
+			MarkRenderStateDirty();
+			recreate_render_proxy = false;
+		}
 		return;
 	}
 
-	std::lock_guard<std::mutex> cur_lock(local_lock);
 	FCProceduralMeshSceneProxy *localRenderProxy = GetLocalRenderProxy();
-	if (render_proxy_ready && localRenderProxy) {
+	if (render_proxy_ready && localRenderProxy)
+	{
 		if (render_packet_idx >= 0)
 		{
 			localRenderProxy->SetActiveRenderPacketIdx(render_packet_idx);
@@ -520,7 +658,13 @@ void UCustomProceduralMeshComponent::ForceAnUpdate(int render_packet_idx)
 
 		localRenderProxy->UpdateDynamicComponentData();
 		ProcessCalcBounds(localRenderProxy);
-		MarkRenderTransformDirty();
+
+		if (markDirty)
+		{
+			MarkRenderTransformDirty();
+			
+			MarkRenderDynamicDataDirty();
+		}
 	}
 }
 
@@ -532,14 +676,18 @@ UCustomProceduralMeshComponent::SetTagString(FString tag_in)
 
 FPrimitiveSceneProxy* UCustomProceduralMeshComponent::CreateSceneProxy()
 {
-	std::lock_guard<std::mutex> cur_lock(local_lock);
+	FScopeLock cur_lock(&local_lock);
 	
 	FCProceduralMeshSceneProxy* Proxy = NULL;
 	// Only if have enough triangles
 	if(defaultTriData.point_num > 0)
 	{
 		Proxy = new FCProceduralMeshSceneProxy(this, &defaultTriData);
+
+		SendRenderDynamicData_Concurrent();
+
 		render_proxy_ready = true;
+
 		ProcessCalcBounds(Proxy);
 	}
 	

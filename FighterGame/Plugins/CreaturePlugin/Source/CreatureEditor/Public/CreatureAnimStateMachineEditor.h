@@ -8,8 +8,8 @@
 class FCreatureAnimStateMachineEditor :public FAssetEditorToolkit{
 public:
 	//IToolKitInterface
-	virtual void RegisterTabSpawners(const TSharedRef<class FTabManager>& TabManager) override;
-	virtual void UnregisterTabSpawners(const TSharedRef<class FTabManager>& TabManager) override;
+	virtual void RegisterTabSpawners(const TSharedRef<class FTabManager>& TabManagerIn) override;
+	virtual void UnregisterTabSpawners(const TSharedRef<class FTabManager>& TabManagerIn) override;
 	//EndIToolKitInterface
 
 	// FAssetEditorToolkit
@@ -19,7 +19,6 @@ public:
 	virtual FText GetToolkitToolTipText() const override;
 	virtual FLinearColor GetWorldCentricTabColorScale() const override;
 	virtual FString GetWorldCentricTabPrefix() const override;
-	virtual FString GetDocumentationLink() const override;
 	virtual void OnToolkitHostingStarted(const TSharedRef< class IToolkit >& Toolkit) override;
 	virtual void OnToolkitHostingFinished(const TSharedRef< class IToolkit >& Toolkit) override;
 	// End of FAssetEditorToolkit

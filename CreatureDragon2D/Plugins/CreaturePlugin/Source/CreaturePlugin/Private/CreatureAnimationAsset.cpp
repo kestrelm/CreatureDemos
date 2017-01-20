@@ -3,49 +3,68 @@
 #include "CreatureAnimationAsset.h"
 #include "CreatureCore.h"
 
-FString UCreatureAnimationAsset::GetCreatureFilename() const
-{
 #if WITH_EDITORONLY_DATA
+FName UCreatureAnimationAsset::UpdateAndGetCreatureFilename()
+{
 	TArray<FString> filenames;
-	AssetImportData->ExtractFilenames(filenames);
+	if (AssetImportData)
+	{
+		AssetImportData->ExtractFilenames(filenames);
+	}
 	if (filenames.Num() > 0)
 	{
-		return filenames[0];
+		creature_filename = FName(*filenames[0]);
 	}
-	else
-	{
-		return creature_filename;
-	}
-#else
 	return creature_filename;
+}
 #endif
+
+FName UCreatureAnimationAsset::GetCreatureFilename() const
+{
+	return creature_filename;
+}
+
+bool 
+UCreatureAnimationAsset::UseCompressedData() const
+{
+	return (CreatureZipBinary.Num() > 0);
 }
 
 FString& UCreatureAnimationAsset::GetJsonString()
 {
-	// Decompress only when needed
-	if (CreatureFileJSonData.IsEmpty())
+	// Decide if we should decompress or return the raw uncompressed string
+	if(!UseCompressedData())
 	{
-		FArchiveLoadCompressedProxy Decompressor =
-			FArchiveLoadCompressedProxy(CreatureZipBinary, ECompressionFlags::COMPRESS_ZLIB);
-
-		if (Decompressor.IsError() || (CreatureZipBinary.Num() == 0))
+		if (CreatureFileJSonData.IsEmpty())
 		{
-			UE_LOG(LogTemp, Warning, TEXT("UCreatureAnimationAsset::Could not uncompress data"));
-			return CreatureFileJSonData;
+			CreatureFileJSonData = CreatureRawJSONString;
 		}
+	}
+	else {
+		// Decompress only when needed
+		if (CreatureFileJSonData.IsEmpty())
+		{
+			FArchiveLoadCompressedProxy Decompressor =
+				FArchiveLoadCompressedProxy(CreatureZipBinary, ECompressionFlags::COMPRESS_ZLIB);
 
-		FBufferArchive DecompressedBinaryArray;
-		Decompressor << DecompressedBinaryArray;
-		CreatureFileJSonData = UTF8_TO_TCHAR((char *)DecompressedBinaryArray.GetData());
+			if (Decompressor.IsError() || (CreatureZipBinary.Num() == 0))
+			{
+				UE_LOG(LogTemp, Warning, TEXT("UCreatureAnimationAsset::Could not uncompress data"));
+				return CreatureFileJSonData;
+			}
+
+			FBufferArchive DecompressedBinaryArray;
+			Decompressor << DecompressedBinaryArray;
+			CreatureFileJSonData = UTF8_TO_TCHAR((char *)DecompressedBinaryArray.GetData());
+		}
 	}
 
 	return CreatureFileJSonData;
 }
 
-const FCreatureAnimationPointsCache * UCreatureAnimationAsset::GetPointsCacheForClip(const FString & clipName) const
+const FCreatureAnimationDataCache * UCreatureAnimationAsset::GetDataCacheForClip(const FName & clipName) const
 {
-	for (const FCreatureAnimationPointsCache & cache : m_pointsCache)
+	for (const FCreatureAnimationDataCache & cache : m_dataCache)
 	{
 		if (cache.m_animationName == clipName)
 		{
@@ -56,21 +75,34 @@ const FCreatureAnimationPointsCache * UCreatureAnimationAsset::GetPointsCacheFor
 	return nullptr;
 }
 
+float UCreatureAnimationAsset::GetClipLength(const FName & clipName) const
+{
+	const FCreatureAnimationDataCache *cacheForAnim = GetDataCacheForClip(clipName);
+	if (cacheForAnim)
+	{
+		return cacheForAnim->m_length / animation_speed;
+	}
+	else
+	{
+		return 0.0f;
+	}
+}
+
 void UCreatureAnimationAsset::LoadPointCacheForAllClips(class CreatureCore *forCore) const
 {
-	for (const FCreatureAnimationPointsCache & cache : m_pointsCache)
+	for (const FCreatureAnimationDataCache & cache : m_dataCache)
 	{
 		LoadPointCacheForClip(cache.m_animationName, forCore);
 	}
 }
 
-void UCreatureAnimationAsset::LoadPointCacheForClip(const FString &animName, class CreatureCore *forCore) const
+void UCreatureAnimationAsset::LoadPointCacheForClip(const FName &animName, class CreatureCore *forCore) const
 {
 	check(forCore);
-	const FCreatureAnimationPointsCache *cacheForAnim = GetPointsCacheForClip(animName);
+	const FCreatureAnimationDataCache *cacheForAnim = GetDataCacheForClip(animName);
 	if (cacheForAnim && forCore->GetCreatureManager())
 	{
-		CreatureModule::CreatureAnimation *anim = forCore->GetCreatureManager()->GetAnimation(TCHAR_TO_UTF8(*animName));
+		CreatureModule::CreatureAnimation *anim = forCore->GetCreatureManager()->GetAnimation(animName);
 		if (anim == nullptr || anim->hasCachePts())
 		{
 			return;
@@ -88,28 +120,46 @@ void UCreatureAnimationAsset::LoadPointCacheForClip(const FString &animName, cla
 			{
 				new_pts[j] = cacheForAnim->m_points[sourcePtIdx++];
 			}
-			pts.push_back(new_pts);
+			pts.Add(new_pts);
 		}
 	}
 }
 
-#if WITH_EDITORONLY_DATA
-void UCreatureAnimationAsset::SetCreatureFilename(const FString &newFilename)
+void UCreatureAnimationAsset::Serialize(FArchive& Ar)
 {
-	AssetImportData->UpdateFilenameOnly(newFilename);
+	if (Ar.IsSaving() && !Ar.IsCooking())
+	{
+		// when saving non-cooked asset, don't include the datacache as it's huge
+		TArray<FCreatureAnimationDataCache> cacheCopy = m_dataCache;
+		m_dataCache.Reset();
+
+		Super::Serialize(Ar);
+
+		m_dataCache = cacheCopy;
+	}
+	else
+	{
+		Super::Serialize(Ar);
+	}
+}
+
+#if WITH_EDITORONLY_DATA
+void UCreatureAnimationAsset::SetCreatureFilename(const FName &newFilename)
+{
+	AssetImportData->UpdateFilenameOnly(newFilename.ToString());
 
 	// extract again to ensure properly sanitised
 	TArray<FString> filenames;
 	AssetImportData->ExtractFilenames(filenames);
 	if (filenames.Num() > 0)
 	{
-		creature_filename = filenames[0];
+		creature_filename = FName(*filenames[0]);
 	}
 }
 
 void UCreatureAnimationAsset::GetAssetRegistryTags(TArray<FAssetRegistryTag>& OutTags) const
 {
-	if (!creature_filename.IsEmpty())
+	if (creature_filename != NAME_None)
 	{
 		OutTags.Add(FAssetRegistryTag(SourceFileTagName(), AssetImportData->GetSourceData().ToJson(), FAssetRegistryTag::TT_Hidden));
 	}
@@ -121,25 +171,35 @@ void UCreatureAnimationAsset::PostLoad()
 {
 	Super::PostLoad();
 
-	if (!creature_filename.IsEmpty() && AssetImportData && AssetImportData->GetSourceData().SourceFiles.Num() == 0)
+	if (!creature_filename.IsNone() && AssetImportData && AssetImportData->GetSourceData().SourceFiles.Num() == 0)
 	{
 		// convert old source file path to proper UE4 Asset data system
 		FAssetImportInfo Info;
-		Info.Insert(FAssetImportInfo::FSourceFile(creature_filename));
+		Info.Insert(FAssetImportInfo::FSourceFile(creature_filename.ToString()));
 		AssetImportData->SourceData = MoveTemp(Info);
 	}
 
-	if (CreatureZipBinary.Num() != 0 || CreatureFileJSonData.IsEmpty() == false)
+	if (UseCompressedData())
 	{
-		// load the animation data caches from the json data
-		GatherAnimationData();
+		if (CreatureZipBinary.Num() != 0 || CreatureFileJSonData.IsEmpty() == false)
+		{
+			// load the animation data caches from the json data
+			GatherAnimationData();
+		}
+	}
+	else {
+		if (CreatureRawJSONString.Len() > 0)
+		{
+			// load the animation data caches from the json data
+			GatherAnimationData();
+		}
 	}
 }
 
 void UCreatureAnimationAsset::GatherAnimationData()
 {
 	// ensure the filenames are synced
-	creature_filename = GetCreatureFilename();
+	creature_filename = UpdateAndGetCreatureFilename();
 	
 	// load the JSON data into creature so we can extract the animation names and generate the point caches for the anims
 	CreatureCore creature_core;
@@ -151,33 +211,37 @@ void UCreatureAnimationAsset::GatherAnimationData()
 
 	int32 arraySize = creature_core.GetCreatureManager()->GetCreature()->GetTotalNumPoints() * 3;
 
-	m_pointsCache.Reset(all_animation_names.size());
-	m_clipNames.Reset(all_animation_names.size());
+	m_dataCache.Reset(all_animation_names.Num());
 
 	for (auto& cur_name : all_animation_names)
 	{
-		FString animName(cur_name.c_str());
-		m_clipNames.Add(animName);
-
-		if (m_pointsCacheApproximationLevel >= 0)
+		CreatureModule::CreatureAnimation *anim = creature_core.GetCreatureManager()->GetAnimation(cur_name);
+		if (ensure(anim))
 		{
-			creature_core.GetCreatureManager()->ClearPointCache(cur_name);
-			creature_core.GetCreatureManager()->MakePointCache(cur_name, m_pointsCacheApproximationLevel);
-			CreatureModule::CreatureAnimation *anim = creature_core.GetCreatureManager()->GetAnimation(cur_name);
-			if (ensure(anim) && anim->hasCachePts())
+			FCreatureAnimationDataCache &animDataCache = m_dataCache[m_dataCache.AddZeroed(1)];
+			animDataCache.m_animationName = cur_name;
+			animDataCache.m_length = anim->getEndTime() - anim->getStartTime();
+
+			if (m_pointsCacheApproximationLevel >= 0)
 			{
-				auto &pts = anim->getCachePts();
-
-				FCreatureAnimationPointsCache &animPtsCache = m_pointsCache[m_pointsCache.AddZeroed(1)];
-				animPtsCache.m_animationName = animName;
-				animPtsCache.m_numArrays = pts.size();
-				animPtsCache.m_points.Reserve(animPtsCache.m_numArrays * arraySize);
-
-				for (float *pt : pts)
+				creature_core.GetCreatureManager()->ClearPointCache(cur_name);
+				creature_core.GetCreatureManager()->MakePointCache(cur_name, m_pointsCacheApproximationLevel);
+				if (anim->hasCachePts())
 				{
-					for (int32 i = 0; i < arraySize; i++)
+					auto &pts = anim->getCachePts();
+
+					float startTime = anim->getStartTime();
+					float endTime = anim->getEndTime();
+
+					animDataCache.m_numArrays = pts.Num();
+					animDataCache.m_points.Reserve(animDataCache.m_numArrays * arraySize);
+
+					for (float *pt : pts)
 					{
-						animPtsCache.m_points.Add(pt[i]);
+						for (int32 i = 0; i < arraySize; i++)
+						{
+							animDataCache.m_points.Add(pt[i]);
+						}
 					}
 				}
 			}
@@ -185,9 +249,9 @@ void UCreatureAnimationAsset::GatherAnimationData()
 	}
 }
 
-void UCreatureAnimationAsset::PreSave()
+void UCreatureAnimationAsset::PreSave(const class ITargetPlatform* TargetPlatform)
 {
-	Super::PreSave();
+	Super::PreSave(TargetPlatform);
 
 	// before saving, always ensure animation data is up to date
 	GatherAnimationData();
