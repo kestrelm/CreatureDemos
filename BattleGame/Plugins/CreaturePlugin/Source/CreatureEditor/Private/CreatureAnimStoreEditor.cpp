@@ -14,13 +14,18 @@
 #include "DetailCategoryBuilder.h"
 #define LOCTEXT_NAMESPACE "AssetTypeEditors"
 
-void FCreatureAnimStoreEditor::RegisterTabSpawners(const TSharedRef<class FTabManager>& TabManager)
+#if __APPLE__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wshadow"
+#endif
+
+void FCreatureAnimStoreEditor::RegisterTabSpawners(const TSharedRef<class FTabManager>& TabManagerIn)
 {
-	FAssetEditorToolkit::RegisterTabSpawners(TabManager);
+	FAssetEditorToolkit::RegisterTabSpawners(TabManagerIn);
 	TSharedPtr<FCreatureAnimStoreEditor> StoreEditorPtr = SharedThis(this);// Spawn the tab
 	StorePanel = SNew(SStoreDetailPanel, StoreEditorPtr);
 	//×¢²áÏ¸½ÚÃæ°å
-	TabManager->RegisterTabSpawner(FName(TEXT("Details")), FOnSpawnTab::CreateLambda(
+	TabManagerIn->RegisterTabSpawner(FName(TEXT("Details")), FOnSpawnTab::CreateLambda(
 		[&](const FSpawnTabArgs& Args){		
 		return SNew(SDockTab)
 			.Icon(FEditorStyle::GetBrush("LevelEditor.Tabs.Details"))
@@ -37,7 +42,7 @@ void FCreatureAnimStoreEditor::RegisterTabSpawners(const TSharedRef<class FTabMa
 				ClipViewport = SNew(SCreatureAnimClipStoreEditorViewport)
 					.ObjectToEdit(EditClipsStore);
 //×¢²áViewport
-TabManager->RegisterTabSpawner(FName(TEXT("Preview")), FOnSpawnTab::CreateLambda(
+TabManagerIn->RegisterTabSpawner(FName(TEXT("Preview")), FOnSpawnTab::CreateLambda(
 		[&](const FSpawnTabArgs& Args){
 		TSharedPtr<FCreatureAnimStoreEditor> StoreEditorPtr = SharedThis(this);// Spawn the tab
 		return SNew(SDockTab)
@@ -51,9 +56,9 @@ TabManager->RegisterTabSpawner(FName(TEXT("Preview")), FOnSpawnTab::CreateLambda
 		.SetDisplayName(LOCTEXT("ViewportLabel", "Preview"))
 		.SetIcon(FSlateIcon(FEditorStyle::GetStyleSetName(), "LevelEditor.Tabs.Details"));
 }
-void FCreatureAnimStoreEditor::UnregisterTabSpawners(const TSharedRef<class FTabManager>& TabManager)
+void FCreatureAnimStoreEditor::UnregisterTabSpawners(const TSharedRef<class FTabManager>& TabManagerIn)
 {
-	FAssetEditorToolkit::UnregisterTabSpawners(TabManager);
+	FAssetEditorToolkit::UnregisterTabSpawners(TabManagerIn);
 
 }
 FName FCreatureAnimStoreEditor::GetToolkitFName() const
@@ -79,11 +84,6 @@ FText FCreatureAnimStoreEditor::GetToolkitToolTipText() const
 FString FCreatureAnimStoreEditor::GetWorldCentricTabPrefix() const
 {
 	return TEXT("Anim Store Editor");
-}
-
-FString FCreatureAnimStoreEditor::GetDocumentationLink() const
-{
-	return TEXT("Engine/Paper2D/TileMapEditor");
 }
 
 void FCreatureAnimStoreEditor::OnToolkitHostingStarted(const TSharedRef< class IToolkit >& Toolkit)
@@ -215,7 +215,7 @@ void SStoreDetailPanel::ConstructPreviewAnimationList()
 		PreviewAnimationNameList.Empty();
 		for (auto clip : EditorPtr.Pin()->GetEditingClipsStore()->ClipList)
 		{
-			TSharedPtr<FString> AnimName = MakeShareable(new FString(clip.ClipName));
+			TSharedPtr<FString> AnimName = MakeShareable(new FString(clip.ClipName.ToString()));
 			PreviewAnimationNameList.AddUnique(AnimName);
 		}
 	}
@@ -223,5 +223,9 @@ void SStoreDetailPanel::ConstructPreviewAnimationList()
 
 
 #undef LOCTEXT_NAMESPACE  
+
+#if __APPLE__
+#pragma clang diagnostic pop
+#endif
 
 

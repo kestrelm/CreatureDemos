@@ -37,8 +37,8 @@
 
 #include "CustomProceduralMeshComponent.h"
 #include "CreatureModule.h"
-#include <map>
-#include <mutex>
+#include <Runtime/Engine/Classes/Engine/EngineTypes.h>
+#include <vector>
 #include <memory>
 
 // Creature Core is a thin wrapper between the Creature Runtime and any UE4 Creature Object(s)
@@ -49,6 +49,8 @@
 // else altogether. CreatureActor for example contains a CreatureCore object and performs all its playback functionlity
 // using the CreatureCore object.
 
+class CreatureMetaData;
+
 struct FCreatureBoneData
 {
 	FVector point1;
@@ -56,12 +58,16 @@ struct FCreatureBoneData
 	FTransform xform;
 	FTransform startXform;
 	FTransform endXform;
-	FString name;
+	FName name;
 };
 
-class CreatureCore {
+class CREATUREPLUGIN_API CreatureCore {
 public:
 	CreatureCore();
+
+	virtual ~CreatureCore();
+
+	void ClearMemory();
 
 	bool GetAndClearShouldAnimStart();
 
@@ -71,44 +77,50 @@ public:
 
 	bool InitCreatureRender();
 
+	void InitValues();
+
 	void FillBoneData();
 
 	void ParseEvents(float deltaTime);
 
 	void ProcessRenderRegions();
 
-	FProceduralMeshTriData GetProcMeshData();
+	FProceduralMeshTriData GetProcMeshData(EWorldType::Type world_type);
 
 	// Loads a data packet from a file
-	static bool LoadDataPacket(const std::string& filename_in);
+	static bool LoadDataPacket(const FName& filename_in);
 
 	// Loads a data packet from a string in memory
-	static bool LoadDataPacket(const std::string& filename_in,FString* pSourceData);
+	static bool LoadDataPacket(const FName& filename_in,FString* pSourceData);
+
+	// Frees up memory from loading the data packets, this will force the reparsing of JSON strings if
+	// the asset is requested again
+	static void ClearAllDataPackets();
 
 	//////////////////////////////////////////////////////////////////////////
 	// Loads an animation from a file
-	static void LoadAnimation(const std::string& filename_in, const std::string& name_in);
+	static void LoadAnimation(const FName& filename_in, const FName& name_in);
 
 	// Loads the creature character from a file
-	TArray<FProceduralMeshTriangle>& LoadCreature(const std::string& filename_in);
+	TArray<FProceduralMeshTriangle>& LoadCreature(const FName& filename_in);
 
 	// Adds a loaded animation onto the creature character
-	bool AddLoadedAnimation(const std::string& filename_in, const std::string& name_in);
+	bool AddLoadedAnimation(const FName& filename_in, const FName& name_in);
 
 	// Returns the CreatureManager associated with this actor
 	CreatureModule::CreatureManager * GetCreatureManager();
 
-	void SetBluePrintActiveAnimation(FString name_in);
+	void SetBluePrintActiveAnimation(FName name_in);
 
-	void SetBluePrintBlendActiveAnimation(FString name_in, float factor);
+	void SetBluePrintBlendActiveAnimation(FName name_in, float factor);
 
-	void SetBluePrintAnimationCustomTimeRange(FString name_in, int32 start_time, int32 end_time);
+	void SetBluePrintAnimationCustomTimeRange(FName name_in, int32 start_time, int32 end_time);
 
-	void MakeBluePrintPointCache(FString name_in, int32 approximation_level);
+	void MakeBluePrintPointCache(FName name_in, int32 approximation_level);
 
-	void ClearBluePrintPointCache(FString name_in, int32 approximation_level);
+	void ClearBluePrintPointCache(FName name_in, int32 approximation_level);
 
-	FTransform GetBluePrintBoneXform(FString name_in, bool world_transform, float position_slide_factor, FTransform base_transform);
+	FTransform GetBluePrintBoneXform(FName name_in, bool world_transform, float position_slide_factor, FTransform base_transform) const;
 
 	bool IsBluePrintBonesCollide(FVector test_point, float bone_size, FTransform base_transform);
 
@@ -119,34 +131,37 @@ public:
 	void SetBluePrintAnimationPlayFromStart();
 
 	void SetBluePrintAnimationResetToStart();
+	void SetBluePrintAnimationResetToEnd();
 
 	float GetBluePrintAnimationFrame();
 
-	void SetBluePrintRegionAlpha(FString region_name_in, uint8 alpha_in);
+	void SetBluePrintAnimationFrame(float time_in);
 
-	void RemoveBluePrintRegionAlpha(FString region_name_in);
+	void SetBluePrintRegionAlpha(FName region_name_in, uint8 alpha_in);
 
-	void SetBluePrintRegionCustomOrder(TArray<FString> order_in);
+	void RemoveBluePrintRegionAlpha(FName region_name_in);
+
+	void SetBluePrintRegionCustomOrder(TArray<FName> order_in);
 
 	void ClearBluePrintRegionCustomOrder();
 
-	void SetBluePrintRegionItemSwap(FString region_name_in, int32 tag);
+	void SetBluePrintRegionItemSwap(FName region_name_in, int32 tag);
 
-	void RemoveBluePrintRegionItemSwap(FString region_name_in);
+	void RemoveBluePrintRegionItemSwap(FName region_name_in);
 
 	void SetUseAnchorPoints(bool flag_in);
 
 	bool GetUseAnchorPoints() const;
-
+	
 	void RunBeginPlay();
 
 	bool RunTick(float delta_time);
 
 	// Sets the an active animation by name
-	void SetActiveAnimation(const std::string& name_in);
+	void SetActiveAnimation(const FName& name_in);
 
 	// Sets the active animation by smoothly blending, factor is a range of ( 0 < factor < 1 )
-	void SetAutoBlendActiveAnimation(const std::string& name_in, float factor);
+	void SetAutoBlendActiveAnimation(const FName& name_in, float factor);
 
 	void SetIsDisabled(bool flag_in);
 
@@ -160,9 +175,10 @@ public:
 
 	glm::uint32 * GetIndicesCopy(int init_size);
 
+	std::vector<meshBone *> getAllChildrenWithIgnore(const FName& ignore_name, meshBone * base_bone = nullptr);
 
 	// properties
-	FString creature_filename, creature_asset_filename;
+	FName creature_filename, creature_asset_filename;
 
 	float bone_data_size;
 
@@ -172,23 +188,23 @@ public:
 
 	bool smooth_transitions;
 
-	FString start_animation_name;
+	FName start_animation_name;
 
 	float animation_frame;
 
 	TArray<FProceduralMeshTriangle> draw_triangles;
 
-	std::shared_ptr<CreatureModule::CreatureManager> creature_manager;
+	TSharedPtr<CreatureModule::CreatureManager> creature_manager;
 
 	TArray<FCreatureBoneData> bone_data;
 
 	TArray<uint8> region_alphas;
 
-	TMap<FString, uint8> region_alpha_map;
+	TMap<FName, uint8> region_alpha_map;
 
-	TArray<FString> region_custom_order;
+	TArray<FName> region_custom_order;
 
-	FString absolute_creature_filename;
+	FName absolute_creature_filename;
 
 	bool should_play, is_looping;
 
@@ -206,7 +222,7 @@ public:
 
 	bool should_update_render_indices;
 
-	std::mutex * update_lock;
+	TSharedPtr<FCriticalSection, ESPMode::ThreadSafe> update_lock;
 
 	//////////////////////////////////////////////////////////////////////////
 	//Add by God of Pen
@@ -215,7 +231,9 @@ public:
 	bool bUsingCreatureAnimatinAsset=false;//如果使用CreatureAnimationAsset的话，设置为真，不再从硬盘读取，直接从Asset读取动画信息
 	//当从AnimationAsset读取的时候，直接从pJsonData中载入，不再从硬盘中载入
 	FString* pJsonData;
-	std::shared_ptr<glm::uint32> global_indices_copy;
+	CreatureMetaData * meta_data;
+	glm::uint32 * global_indices_copy;
 };
 
-std::string ConvertToString(FString str);
+std::string ConvertToString(const FString &str);
+std::string ConvertToString(FName name);

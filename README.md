@@ -49,6 +49,8 @@ The character art from the game is from the public domain [British Library Flick
 
 ![img](https://raw.githubusercontent.com/kestrelm/CreatureDemos/master/stomp.png)
 
+The demo exists in the directory **BattleGame**.
+
 ### Controls:
 Movement - Click to the Left or Right of the Elephant to move
 

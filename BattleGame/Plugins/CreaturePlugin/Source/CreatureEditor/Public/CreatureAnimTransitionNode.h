@@ -31,17 +31,17 @@ class UCreatureAnimTransitionNode :public UEdGraphNode{
 	GENERATED_BODY()
 public:
 	UPROPERTY(EditAnyWhere, Category = "CreaturePlugin")
-		FString TransitionCondition;
+	FName TransitionCondition;
 	UPROPERTY(EditAnyWhere, Category = "CreaturePlugin")
-		bool	TransitionFlag;
+	bool	TransitionFlag;
 	UPROPERTY()
-	UEdGraphPin* InputPin;
+	FEdGraphPinReference InputPin;
 	UPROPERTY()
-	UEdGraphPin* OutputPin;
+	FEdGraphPinReference OutputPin;
 	UPROPERTY()
 	class	UCreatureAnimStateNode* TransitionTargetNode;
 	UPROPERTY()
-		UCreatureAnimTransition* CompiledTransition;
+	UCreatureAnimTransition* CompiledTransition;
 public:
 	UCreatureAnimTransitionNode();
 
