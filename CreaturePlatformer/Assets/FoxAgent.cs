@@ -5,6 +5,7 @@ public class FoxAgent : CreatureGameAgent
 {
     int moveState = 0;
     bool facingRight = true;
+    int jump_countdown = 0;
 
     const int MOVE_STATE_IDLE = 0;
     const int MOVE_STATE_LEFT = -1;
@@ -91,15 +92,25 @@ public class FoxAgent : CreatureGameAgent
 
             }
             moveState = MOVE_STATE_POST_JUMP;
+            jump_countdown = 10;
         }
         else if (moveState == MOVE_STATE_POST_JUMP)
         {
-            //var ground = GameObject.FindWithTag("ground_tag");
-            //var ground_collider = ground.GetComponent<Collider2D>();
-            //if (parent_rbd.IsTouching(ground_collider))
-            if (creature_renderer.is_colliding)
+            if (jump_countdown <= 0)
             {
-                moveState = MOVE_STATE_IDLE;
+                var groundList = GameObject.FindGameObjectsWithTag("ground_tag");
+                foreach (var ground in groundList)
+                {
+                    var ground_collider = ground.GetComponent<Collider2D>();
+                    if (parent_rbd.IsTouching(ground_collider))
+                    {
+                        moveState = MOVE_STATE_IDLE;
+                    }
+                }
+            }
+            else
+            {
+                jump_countdown--;
             }
         }
     }

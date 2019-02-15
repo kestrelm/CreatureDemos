@@ -9,7 +9,6 @@ using CreatureModule;
 using System.Collections;
 using System.Collections.Generic;
 
-
 [CustomEditor(typeof(CreatureRenderer))]
 public class CreatureRendererInspector : Editor
 {
@@ -112,12 +111,11 @@ public class CreatureRendererInspector : Editor
 
 				should_loop.boolValue = EditorGUILayout.Toggle("Loop", should_loop.boolValue);
 
-                if (!Application.isPlaying)
-                {
-                    updateTargetAnimation();
-                }
-
-                serializedObject.ApplyModifiedProperties();
+				if(!Application.isPlaying)
+				{
+					updateTargetAnimation();
+				}
+				serializedObject.ApplyModifiedProperties();
 			}
 		}
 

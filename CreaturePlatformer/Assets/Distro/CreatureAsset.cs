@@ -117,8 +117,20 @@ public class CreatureAsset : MonoBehaviour
 	[SerializeField]
 	public bool useFlatDataAsset = false;
 
+    [SerializeField]
+    public List<CreaturePhysicsData.BendPhysicsChain> physics_assets = new List<CreaturePhysicsData.BendPhysicsChain>();
+
+    [SerializeField]
+    public List<String> skin_swap_names = new List<String>();
+
+    [SerializeField]
+    public List<String> morph_poses = new List<String>();
+
+    [SerializeField]
+    public List<String> vertex_attachments = new List<String>();
+
 #if UNITY_EDITOR
-	[MenuItem("GameObject/Creature/CreatureAsset")]
+    [MenuItem("GameObject/Creature/CreatureAsset")]
 	static CreatureAsset CreateCreatureAsset()
 	{
 		GameObject newObj = new GameObject();
@@ -271,7 +283,14 @@ public class CreatureAsset : MonoBehaviour
 		if(creatureMetaJSON != null)
 		{
 			creature_meta_data = new CreatureMetaData();
-		 	CreatureModule.Utils.BuildCreatureMetaData(creature_meta_data, creatureMetaJSON.text);
+		 	CreatureModule.Utils.BuildCreatureMetaData(
+                creature_meta_data, 
+                creatureMetaJSON.text,
+                physics_assets,
+                skin_swap_names,
+                morph_poses,
+                vertex_attachments);
+            creature_meta_data.updateRegionColors(creature_manager.animations);
 		}
 
 		return creature_manager;

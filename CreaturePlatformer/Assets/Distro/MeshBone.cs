@@ -38,13 +38,13 @@ using XnaGeometry;
 
 namespace MeshBoneUtil
 {
-  public sealed class Tuple<T1, T2>
+  public sealed class CTuple<T1, T2>
   {
     private readonly T1 item1;
     private readonly T2 item2;
 
     /// <summary>
-    /// Retyurns the first element of the tuple
+    /// Retyurns the first element of the CTuple
     /// </summary>
     public T1 Item1
     {
@@ -52,7 +52,7 @@ namespace MeshBoneUtil
     }
 
     /// <summary>
-    /// Returns the second element of the tuple
+    /// Returns the second element of the CTuple
     /// </summary>
     public T2 Item2
     {
@@ -60,11 +60,11 @@ namespace MeshBoneUtil
     }
 
     /// <summary>
-    /// Create a new tuple value
+    /// Create a new CTuple value
     /// </summary>
-    /// <param name="item1">First element of the tuple</param>
-    /// <param name="second">Second element of the tuple</param>
-    public Tuple(T1 item1, T2 item2)
+    /// <param name="item1">First element of the CTuple</param>
+    /// <param name="second">Second element of the CTuple</param>
+    public CTuple(T1 item1, T2 item2)
     {
       this.item1 = item1;
       this.item2 = item2;
@@ -72,7 +72,7 @@ namespace MeshBoneUtil
 
     public override string ToString()
     {
-      return string.Format("Tuple({0}, {1})", Item1, Item2);
+      return string.Format("CTuple({0}, {1})", Item1, Item2);
     }
 
     public override int GetHashCode()
@@ -85,23 +85,23 @@ namespace MeshBoneUtil
 
     public override bool Equals(object o)
     {
-      if (o.GetType() != typeof(Tuple<T1, T2>)) {
+      if (o.GetType() != typeof(MeshBoneUtil.CTuple<T1, T2>)) {
         return false;
       }
 
-      var other = (Tuple<T1, T2>) o;
+      var other = (MeshBoneUtil.CTuple<T1, T2>) o;
 
       return this == other;
     }
 
-    public static bool operator==(Tuple<T1, T2> a, Tuple<T1, T2> b)
+    public static bool operator==(MeshBoneUtil.CTuple<T1, T2> a, MeshBoneUtil.CTuple<T1, T2> b)
     {
       return 
         a.item1.Equals(b.item1) && 
         a.item2.Equals(b.item2);            
     }
 
-    public static bool operator!=(Tuple<T1, T2> a, Tuple<T1, T2> b)
+    public static bool operator!=(MeshBoneUtil.CTuple<T1, T2> a, MeshBoneUtil.CTuple<T1, T2> b)
     {
       return !(a == b);
     }
@@ -265,8 +265,10 @@ namespace MeshBoneUtil
 		public XnaGeometry.Vector4 world_start_pt, world_end_pt;
 		public XnaGeometry.Matrix world_delta_mat;
 		public dualQuat world_dq;
-		
-		public List<MeshBone> children;
+        private XnaGeometry.Vector4 calc_tangent = new XnaGeometry.Vector4(0, 0, 0, 0);
+        private XnaGeometry.Vector4 calc_normal = new XnaGeometry.Vector4(0, 0, 0, 0);
+
+        public List<MeshBone> children;
 
 		public MeshBone(
 			string key_in,
@@ -334,11 +336,10 @@ namespace MeshBoneUtil
 		
 		public void calcRestData()
 		{
-			Tuple<XnaGeometry.Vector4, XnaGeometry.Vector4> 
-			calc = computeDirs(local_rest_start_pt, local_rest_end_pt);
+            computeDirs(local_rest_start_pt, local_rest_end_pt, ref calc_tangent, ref calc_normal);
 
-			local_rest_dir = calc.Item1;
-			local_rest_normal_dir = calc.Item2;
+			local_rest_dir = calc_tangent;
+			local_rest_normal_dir = calc_normal;
 			
 			computeRestLength();
 		}
@@ -505,9 +506,9 @@ namespace MeshBoneUtil
 		
 		public void computeWorldDeltaTransforms()
 		{
-			Tuple<XnaGeometry.Vector4, XnaGeometry.Vector4> calc = computeDirs(world_start_pt, world_end_pt);
-			XnaGeometry.Vector3 cur_tangent = new XnaGeometry.Vector3(calc.Item1.X, calc.Item1.Y, 0);
-			XnaGeometry.Vector3 cur_normal = new XnaGeometry.Vector3(calc.Item2.X, calc.Item2.Y, 0);
+			computeDirs(world_start_pt, world_end_pt, ref calc_tangent, ref calc_normal);
+			XnaGeometry.Vector3 cur_tangent = new XnaGeometry.Vector3(calc_tangent.X, calc_tangent.Y, 0);
+			XnaGeometry.Vector3 cur_normal = new XnaGeometry.Vector3(calc_normal.X, calc_normal.Y, 0);
 			XnaGeometry.Vector3 cur_binormal = new XnaGeometry.Vector3(local_binormal_dir.X, local_binormal_dir.Y, local_binormal_dir.Z);
 
 			XnaGeometry.Matrix cur_rotate = XnaGeometry.Matrix.Identity;
@@ -653,15 +654,16 @@ namespace MeshBoneUtil
 			return tag_id;
 		}
 
-		public Tuple<XnaGeometry.Vector4, XnaGeometry.Vector4> 
-			computeDirs(XnaGeometry.Vector4 start_pt, XnaGeometry.Vector4 end_pt)
+		public void computeDirs(
+            XnaGeometry.Vector4 start_pt,
+            XnaGeometry.Vector4 end_pt,
+            ref XnaGeometry.Vector4 tangent,
+            ref XnaGeometry.Vector4 normal)
 		{
-			XnaGeometry.Vector4 tangent = end_pt - start_pt;
+			tangent = end_pt - start_pt;
 			tangent.Normalize();
 
-			XnaGeometry.Vector4 normal = Utils.rotateVec4_90(tangent);
-			
-			return new Tuple<XnaGeometry.Vector4, XnaGeometry.Vector4> (tangent, normal);
+			normal = Utils.rotateVec4_90(tangent);
 		}
 		
 		public void computeRestLength()
@@ -687,6 +689,7 @@ namespace MeshBoneUtil
 		public XnaGeometry.Vector2 uv_warp_local_offset, uv_warp_global_offset, uv_warp_scale;
 		public List<XnaGeometry.Vector2> uv_warp_ref_uvs;
 		public float opacity;
+        public float red, green, blue;
 		public Dictionary<string, List<float> > normal_weight_map;
 		public List<List<float> > fast_normal_weight_map;
 		public List<MeshBone> fast_bones_map;
@@ -1294,14 +1297,18 @@ namespace MeshBoneUtil
 	public class MeshOpacityCache {
 		public string key;
 		public float opacity;
+        public float red, green, blue;
 
 		public MeshOpacityCache(string key_in)
 		{
 			key = key_in;
 			opacity = 100.0f;
-		}
-		
-		public void setOpacity(float value_in)
+            red = 100.0f;
+            green = 100.0f;
+            blue = 100.0f;
+        }
+
+        public void setOpacity(float value_in)
 		{
 			opacity = value_in;
 		}
@@ -1795,8 +1802,11 @@ namespace MeshBoneUtil
 				
 				MeshRenderRegion set_region = regions_map[cur_key];
 				set_region.opacity = base_data.getOpacity();
-			}
-		}
+                set_region.red = base_data.red;
+                set_region.green = base_data.green;
+                set_region.blue = base_data.blue;
+            }
+        }
 		
 		public bool allReady()
 		{

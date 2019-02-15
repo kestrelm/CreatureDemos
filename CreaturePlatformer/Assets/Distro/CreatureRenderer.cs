@@ -54,8 +54,10 @@ public class CreatureRenderer : MonoBehaviour
 	private Vector4[] tangents;
 	private Color32[] colors;
 	private Vector2[] uvs;
-	private int[] triangles;
-	private List<int> final_indices;
+    private int[] triangles, skin_swap_triangles;
+    private List<int> final_indices, final_skin_swap_indices;
+    bool skin_swap_active = false;
+    String skin_swap_name = "";
 	private bool swap_mesh;
 	private float local_time;
 	private bool use_custom_time_range;
@@ -63,24 +65,18 @@ public class CreatureRenderer : MonoBehaviour
 	public float local_time_scale;
 	public CreatureAsset creature_asset;
 	public CreatureManager creature_manager;
-	public int animation_choice_index;
+	private CreatureGameController game_controller = null;
+    public int animation_choice_index;
 	public string active_animation_name;
 	public float blend_rate = 0.1f;
 	public float region_offsets_z = 0.01f;
 	public bool should_loop;
 	public bool counter_clockwise = false;
-    public bool is_colliding = false;
-
-	private Mesh createMesh () {
-		Mesh new_mesh = new Mesh();
-		new_mesh.name = "Creature Mesh Object";
-		new_mesh.hideFlags = HideFlags.HideAndDontSave;
-		new_mesh.MarkDynamic();
-		return new_mesh;
-	}
+    public Dictionary<string, CreatureBoneData> feedback_bones;
+    public Dictionary<string, float> custom_speeds;
 
 #if UNITY_EDITOR
-	[MenuItem("GameObject/Creature/CreatureRenderer")]
+    [MenuItem("GameObject/Creature/CreatureRenderer")]
 	static CreatureRenderer CreateRenderer()
 	{
 		GameObject newObj = new GameObject();
@@ -96,20 +92,27 @@ public class CreatureRenderer : MonoBehaviour
 	{
 		local_time_scale = 2.0f;
 		region_offsets_z = 0.01f;
-	}
+        feedback_bones = new Dictionary<string, CreatureBoneData>();
+        custom_speeds = new Dictionary<string, float>();
+    }
 	
 	public virtual void Reset()
 	{
 		meshFilter = GetComponent<MeshFilter>();
 		active_mesh = null;
-		mesh1 = createMesh ();
-		mesh2 = createMesh ();
+		mesh1 = CreatureRenderModule.createMesh();
+		mesh2 = CreatureRenderModule.createMesh();
 		vertices = null;
 		normals = null;
 		colors = null;
 		uvs = null;
 		swap_mesh = false;
 		local_time = 0;
+	}
+
+	public void SetGameController(CreatureGameController controller_in)
+	{
+		game_controller = controller_in;
 	}
 
 	public void InitData()
@@ -121,30 +124,15 @@ public class CreatureRenderer : MonoBehaviour
 			creature_manager.active_blend_run_times = new Dictionary<string, float>(ref_manager.active_blend_run_times);
 			creature_manager.active_blend_animation_names = new List<string>(ref_manager.active_blend_animation_names);
 			creature_manager.auto_blend_names = new List<string>(ref_manager.auto_blend_names);
+            creature_manager.feedback_bones_map = feedback_bones;
 
-			SetActiveAnimation(active_animation_name);
+            SetActiveAnimation(active_animation_name);
 			creature_manager.SetIsPlaying(true);
 		}
 	}
 	
 	void Start () {
-		Reset ();
-		
-		// Testing
-		/*
-		string filepath = "/Users/jychong/Projects/EngineAppMedia/Test/default.json";
-		Dictionary<string, object> load_data = CreatureModule.Utils.LoadCreatureJSONData (filepath);
-		
-		CreatureModule.Creature new_creature = new CreatureModule.Creature(ref load_data);
-		CreatureModule.CreatureManager new_manager = new CreatureModule.CreatureManager (new_creature);
-		new_manager.CreateAnimation (ref load_data, "default");
-		//new_manager.CreateAnimation (ref load_data, "second");
-		
-		new_manager.SetActiveAnimationName ("default");
-		new_manager.SetIsPlaying (true);
-		
-		creature_manager = new_manager;
-		*/
+		Reset ();		
 		InitData ();
 	}
 	
@@ -160,23 +148,14 @@ public class CreatureRenderer : MonoBehaviour
 		InitData ();
 	}
 
-    void OnCollisionEnter2D(Collision2D collisionInfo)
+    // Sets a custom speed override for a specific animation
+    public void SetCustomSpeed(string animation_name, float speed)
     {
-        is_colliding = true;
+        custom_speeds[animation_name] = speed;
     }
 
-    void OnCollisionStay2D(Collision2D collisionInfo)
-    {
-
-    }
-
-    void OnCollisionExit2D(Collision2D coll)
-    {
-        is_colliding = false;
-    }
-
-    // Sets the animation to the specified animation clip name
-    public void SetActiveAnimation(string animation_name, bool already_active_check=false)
+	// Sets the animation to the specified animation clip name
+	public void SetActiveAnimation(string animation_name, bool already_active_check=false)
 	{
 		if (already_active_check) {
 			if (active_animation_name == animation_name) {
@@ -185,8 +164,9 @@ public class CreatureRenderer : MonoBehaviour
 		}
 
 		active_animation_name = animation_name;
+        creature_manager.SetAutoBlending(false);
 
-		bool can_set = creature_manager.SetActiveAnimationName (active_animation_name);
+        bool can_set = creature_manager.SetActiveAnimationName (active_animation_name);
 		if (!can_set) {
 			creature_manager.SetActiveAnimationName(creature_manager.GetAnimationNames()[0]);
 			active_animation_name = creature_manager.GetActiveAnimationName();
@@ -195,6 +175,11 @@ public class CreatureRenderer : MonoBehaviour
 
 
 		local_time = creature_manager.animations [creature_manager.GetActiveAnimationName()].start_time;
+
+		if(game_controller)
+		{
+			game_controller.AnimClipChangeEvent();
+		}
 	}
 
 	public void BlendToAnimation(string animation_name)
@@ -203,9 +188,14 @@ public class CreatureRenderer : MonoBehaviour
 			return;
 		}
 
-		active_animation_name = String.Copy(animation_name);
+		active_animation_name = animation_name;
 		creature_manager.SetAutoBlending (true);
 		creature_manager.AutoBlendTo (animation_name, blend_rate);
+
+		if(game_controller)
+		{
+			game_controller.AnimClipChangeEvent();
+		}
 	}
 
 	// Returns the local playback time
@@ -238,140 +228,96 @@ public class CreatureRenderer : MonoBehaviour
 		custom_start_time = start_time;
 		custom_end_time = end_time;
 	}
-	
+
+    public void EnableSkinSwap(String swap_name_in, bool active)
+    {
+        CreatureRenderModule.EnableSkinSwap(
+            swap_name_in,
+            active,
+            creature_manager,
+            creature_asset,
+            ref skin_swap_active,
+            ref skin_swap_name,
+            ref skin_swap_triangles,
+            ref final_skin_swap_indices);
+    }
+
+    public void DisableSkinSwap()
+    {
+        EnableSkinSwap("", false);
+    }
+
+    // Add your own custom Skin Swap into the object
+    public bool AddSkinSwap(String swap_name, HashSet<String> swap_set)
+    {
+        return CreatureRenderModule.AddSkinSwap(creature_asset, swap_name, swap_set);
+    }
+
 	public void CreateRenderingData()
 	{
-		vertices = new Vector3[creature_manager.target_creature.total_num_pts];
-		normals = new Vector3[creature_manager.target_creature.total_num_pts];
-		tangents = new Vector4[creature_manager.target_creature.total_num_pts];
-		colors = new Color32[creature_manager.target_creature.total_num_pts];
-		uvs = new Vector2[creature_manager.target_creature.total_num_pts];
-		triangles = new int[creature_manager.target_creature.total_num_indices];
-		final_indices = new List<int>(new int[creature_manager.target_creature.total_num_indices]);
+        CreatureRenderModule.CreateRenderingData(
+            creature_manager,
+            ref vertices, 
+            ref normals,
+            ref tangents,
+            ref colors, 
+            ref uvs, 
+            ref triangles,
+            ref final_indices);
 	}
-	
+
 	public void UpdateRenderingData()
 	{
-		int pt_index = 0;
-		int uv_index = 0;
-		int color_index = 0;
-		
-		List<float> render_pts = creature_manager.target_creature.render_pts;
-		List<float> render_uvs = creature_manager.target_creature.global_uvs;
-		List<byte> render_colors = creature_manager.target_creature.render_colours;
-		float normal_z = 1.0f;
-		if(counter_clockwise)
-		{
-			normal_z = -1.0f;
-		}
+        CreatureRenderModule.UpdateRenderingData(
+            creature_manager,
+            counter_clockwise,
+            ref vertices,
+            ref normals,
+            ref tangents,
+            ref colors,
+            ref uvs,
+            creature_asset,
+            skin_swap_active,
+            active_animation_name,
+            ref final_indices,
+            ref final_skin_swap_indices,
+            ref triangles,
+            ref skin_swap_triangles);
 
-		for(int i = 0; i < creature_manager.target_creature.total_num_pts; i++)
-		{
-			vertices[i].x = render_pts[pt_index + 0];
-			vertices[i].y = render_pts[pt_index + 1];
-			vertices[i].z = render_pts[pt_index + 2];
+        bool should_skin_swap = CreatureRenderModule.shouldSkinSwap(creature_asset, skin_swap_active, ref skin_swap_triangles);
 
-			normals[i].x = 0;
-			normals[i].y = 0;
-			normals[i].z = normal_z;
-
-			tangents[i].x = 1.0f;
-			tangents[i].y = 0;
-			tangents[i].z = 0;
-			
-			uvs[i].x = render_uvs[uv_index + 0];
-			uvs[i].y = 1.0f - render_uvs[uv_index + 1];
-			
-			colors[i].r = render_colors[color_index + 0];
-			colors[i].g = render_colors[color_index + 1];
-			colors[i].b = render_colors[color_index + 2];
-			colors[i].a = render_colors[color_index + 3];
-			
-			pt_index += 3;
-			uv_index += 2;
-			color_index += 4;
-		}
-		
-		List<int> render_indices = creature_manager.target_creature.global_indices;
-
-		// index re-ordering
-		if(creature_asset.creature_meta_data != null)
-		{
-			// do index re-ordering
-			creature_asset.creature_meta_data.updateIndicesAndPoints(
-				final_indices,
-				render_indices,
-				render_pts,
-				0,
-				creature_manager.target_creature.total_num_indices,
-				creature_manager.target_creature.total_num_pts,
-				creature_manager.active_animation_name,
-				(int)creature_manager.run_time);
-
-		}
-		else {
-			// plain copy
-			for(int i = 0; i < render_indices.Count; i++)
-			{
-				final_indices[i] = render_indices[i];
-			}
-		}
-
-		if(!counter_clockwise)
-		{
-			for(int i = 0; i < creature_manager.target_creature.total_num_indices; i++)
-			{
-				triangles[i] = final_indices[i];
-			}
-		}
-		else {
-			for(int i = 0; i < creature_manager.target_creature.total_num_indices; i+=3)
-			{
-				triangles[i] = final_indices[i];
-				triangles[i + 1] = final_indices[i + 2];
-				triangles[i + 2] = final_indices[i + 1];
-			}
-		}
-
-
-		active_mesh.vertices = vertices;
+        active_mesh.vertices = vertices;
 		active_mesh.colors32 = colors;
-		active_mesh.triangles = triangles;
+		active_mesh.triangles = should_skin_swap ? skin_swap_triangles: triangles;
 		active_mesh.normals = normals;
 		active_mesh.tangents = tangents;
 		active_mesh.uv = uvs;
 
-		//debugDrawBones (creature_manager.target_creature.render_composition.getRootBone ());
-	}
-
-	public void debugDrawBones(MeshBone bone_in)
-	{
-		XnaGeometry.Vector4 pt1 = bone_in.world_start_pt;
-		XnaGeometry.Vector4 pt2 = bone_in.world_end_pt;
-		
-		Debug.DrawLine (new Vector3((float)pt1.X, (float)pt1.Y, 0), 
-		                new Vector3((float)pt2.X, (float)pt2.Y, 0), Color.white);
-		
-		foreach(MeshBone cur_child in bone_in.children)
-		{
-			debugDrawBones(cur_child);
-		}
+		//CreatureRenderModule.debugDrawBones(creature_manager.target_creature.render_composition.getRootBone ());
 	}
 
 	public void UpdateTime()
 	{
-		if (active_animation_name == null || active_animation_name.Length == 0) {
-			return;
-		}
+        float real_time_scale = Application.isPlaying ? local_time_scale : 0.0f;
+        if(custom_speeds.Count > 0)
+        {
+            var cur_animation_name = creature_manager.GetActiveAnimationName();
+            if (custom_speeds.ContainsKey(cur_animation_name))
+            {
+                real_time_scale = Application.isPlaying ? custom_speeds[cur_animation_name] : 0.0f;
+            }
+        }
 
-
-		float time_delta = (Time.deltaTime * local_time_scale);
-
-		creature_manager.region_offsets_z = region_offsets_z;
-		creature_manager.should_loop = should_loop;
-		creature_manager.Update(time_delta);
-		local_time = creature_manager.getRunTime();
-	}
+        CreatureRenderModule.UpdateTime(
+            creature_manager,
+            game_controller,
+            creature_asset.creature_meta_data,
+            active_animation_name,
+            real_time_scale,
+            region_offsets_z,
+            should_loop,
+            ref local_time);
+    }
 
 	public virtual void LateUpdate () 
 	{

@@ -8,6 +8,23 @@ using UnityEditor;
 using CreatureModule;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
+using System.IO;
+
+public class LiveSync
+{
+    [DllImport("CreatureClientDLL")]
+    public static extern bool creatureClient_startConnection();
+
+    [DllImport("CreatureClientDLL")]
+    public static extern bool creatureClient_stopConnection();
+
+    [DllImport("CreatureClientDLL")]
+    public static extern bool creatureClient_isConnected();
+
+    [DllImport("CreatureClientDLL")]
+    public static extern System.IntPtr creatureClient_retrieveRequestExportFilename([MarshalAs(UnmanagedType.LPStr)]string msg_type);
+}
 
 [CustomEditor(typeof(CreatureAsset))]
 public class CreatureAssetInspector : Editor {
@@ -36,42 +53,70 @@ public class CreatureAssetInspector : Editor {
 		creatureMetaJSON = serializedObject.FindProperty("creatureMetaJSON");
 	}
 
+    string GetLiveSyncType()
+    {
+        CreatureAsset creature_asset = (CreatureAsset)target;
+
+        if (!creature_asset.useFlatDataAsset)
+        {
+            TextAsset text_asset = (TextAsset)creatureJSON.objectReferenceValue;
+            if (text_asset)
+            {
+                if (text_asset.text.Length > 0)
+                {
+                    return "REQUEST_JSON";
+                }
+            }
+        }
+        else
+        {
+            TextAsset flat_text_asset = (TextAsset)flatCreatureData.objectReferenceValue;
+            if (flat_text_asset)
+            {
+                if (flat_text_asset.text.Length > 0)
+                {
+                    return "REQUEST_BYTES";
+                }
+            }
+        }
+
+        return "";
+    }
+
 	void UpdateData()
 	{
 		CreatureAsset creature_asset = (CreatureAsset)target;
+        creature_asset.ResetState();
 
-		TextAsset text_asset = (TextAsset)creatureJSON.objectReferenceValue;
-		if (text_asset) {
+        TextAsset text_asset = (TextAsset)creatureJSON.objectReferenceValue;
+        creature_asset.creatureJSON = text_asset;
+        if (text_asset) {
 			if (text_asset.text.Length > 0) {
-				creature_asset.ResetState ();
-				creature_asset.creatureJSON = text_asset;
 				FillAnimationNames ();
 			}
 		}
 
 		TextAsset compressed_text_asset = (TextAsset)compressedCreatureJSON.objectReferenceValue;
-		if (compressed_text_asset) {
+        creature_asset.compressedCreatureJSON = compressed_text_asset;
+        if (compressed_text_asset) {
 			if (compressed_text_asset.text.Length > 0) {
-				creature_asset.ResetState ();
-				creature_asset.compressedCreatureJSON = compressed_text_asset;
 				FillAnimationNames ();
 			} 
 		}
 
 		TextAsset flat_text_asset = (TextAsset)flatCreatureData.objectReferenceValue;
-		if (flat_text_asset) {
+        creature_asset.flatCreatureData = flat_text_asset;
+        if (flat_text_asset) {
 			if (flat_text_asset.text.Length > 0) {
-				creature_asset.ResetState ();
-				creature_asset.flatCreatureData = flat_text_asset;
 				FillAnimationNames ();
 			} 
 		}
 
 		TextAsset meta_text_asset = (TextAsset)creatureMetaJSON.objectReferenceValue;
-		if (meta_text_asset) {
+        creature_asset.creatureMetaJSON = meta_text_asset;
+        if (meta_text_asset) {
 			if (meta_text_asset.text.Length > 0) {
-				creature_asset.ResetState ();
-				creature_asset.creatureMetaJSON = meta_text_asset;
+                creature_asset.creature_manager = null;
 			} 
 		}
 
@@ -134,7 +179,8 @@ public class CreatureAssetInspector : Editor {
 
 			int i = 1;
 			foreach (string cur_name in animation_names) {
-				EditorGUILayout.LabelField ("Animation Clip #" + i.ToString () + ":", 
+                EditorGUILayout.Space();
+                EditorGUILayout.LabelField ("Animation Clip #" + i.ToString () + ":", 
 				                            cur_name);
 
 				var cur_start_time = animation_clip_overrides[cur_name].start_frame;
@@ -170,17 +216,168 @@ public class CreatureAssetInspector : Editor {
 			}
 		}
 
-		if (GUILayout.Button ("Build State Machine")) 
+        if (Application.platform == RuntimePlatform.WindowsEditor)
+        {
+            EditorGUILayout.Space();
+            EditorGUILayout.LabelField("Live Sync Options", EditorStyles.boldLabel);
+            if (GUILayout.Button("Live Sync"))
+            {
+                RunLiveSync();
+            }
+        }
+
+        EditorGUILayout.Space();
+        EditorGUILayout.LabelField("Animation State Options", EditorStyles.boldLabel);
+        if (GUILayout.Button ("Build State Machine")) 
 		{
 			CreateStateMachine();
 		}
 
-		EditorGUILayout.LabelField("Compression Options", GUILayout.MaxHeight(20));
-		if (GUILayout.Button ("Export as Compressed File")) 
-		{
-			SaveCompressedFile();
-		}
-	}
+        if(creature_asset.physics_assets.Count > 0)
+        {
+            EditorGUILayout.Space();
+            EditorGUILayout.LabelField("Bend Physics Chains", EditorStyles.boldLabel);
+
+            foreach (var cur_chain in creature_asset.physics_assets)
+            {
+                EditorGUILayout.Space();
+                EditorGUILayout.BeginHorizontal(GUILayout.MaxHeight(20));
+                EditorGUILayout.LabelField("Motor Name:", GUILayout.MaxWidth(100));
+                EditorGUILayout.LabelField(cur_chain.motor_name, GUILayout.MaxWidth(100));
+                EditorGUILayout.EndHorizontal();
+
+                EditorGUILayout.BeginHorizontal(GUILayout.MaxHeight(20));
+                EditorGUILayout.LabelField("Anim Clip:", GUILayout.MaxWidth(100));
+                EditorGUILayout.LabelField(cur_chain.anim_clip_name, GUILayout.MaxWidth(100));
+                EditorGUILayout.EndHorizontal();
+
+                bool chain_active = cur_chain.active;
+                EditorGUILayout.BeginHorizontal(GUILayout.MaxHeight(20));
+                chain_active = EditorGUILayout.Toggle("Active:", chain_active);
+                EditorGUILayout.EndHorizontal();
+                cur_chain.active = chain_active;
+
+                EditorGUILayout.BeginHorizontal(GUILayout.MaxHeight(20));
+                EditorGUILayout.LabelField("Num Bones:", GUILayout.MaxWidth(100));
+                EditorGUILayout.LabelField(cur_chain.num_bones.ToString(), GUILayout.MaxWidth(100));
+                EditorGUILayout.EndHorizontal();
+
+                float chain_stiffness = cur_chain.stiffness;
+                EditorGUILayout.BeginHorizontal(GUILayout.MaxHeight(20));
+                EditorGUILayout.LabelField("Stiffness:", GUILayout.MaxWidth(100));
+                chain_stiffness = EditorGUILayout.FloatField(chain_stiffness, GUILayout.MaxWidth(50));
+                EditorGUILayout.EndHorizontal();
+                cur_chain.stiffness = chain_stiffness;
+
+                float chain_damping = cur_chain.damping;
+                EditorGUILayout.BeginHorizontal(GUILayout.MaxHeight(20));
+                EditorGUILayout.LabelField("Damping:", GUILayout.MaxWidth(100));
+                chain_damping = EditorGUILayout.FloatField(chain_damping, GUILayout.MaxWidth(50));
+                EditorGUILayout.EndHorizontal();
+                cur_chain.damping = chain_damping;
+            }
+        }
+
+        if (creature_asset.skin_swap_names.Count > 0)
+        {
+            EditorGUILayout.Space();
+            EditorGUILayout.LabelField("Skin Swaps", EditorStyles.boldLabel);
+            foreach (var cur_swap_name in creature_asset.skin_swap_names)
+            {
+                EditorGUILayout.Space();
+                EditorGUILayout.BeginHorizontal(GUILayout.MaxHeight(20));
+                EditorGUILayout.LabelField(cur_swap_name, GUILayout.MaxWidth(100));
+                EditorGUILayout.EndHorizontal();
+            }
+        }
+
+        if(creature_asset.morph_poses.Count > 0)
+        {
+            EditorGUILayout.Space();
+            EditorGUILayout.LabelField("Morph Target Poses", EditorStyles.boldLabel);
+            foreach (var cur_pose_name in creature_asset.morph_poses)
+            {
+                EditorGUILayout.Space();
+                EditorGUILayout.BeginHorizontal(GUILayout.MaxHeight(20));
+                EditorGUILayout.LabelField(cur_pose_name, GUILayout.MaxWidth(100));
+                EditorGUILayout.EndHorizontal();
+            }
+        }
+
+        if(creature_asset.vertex_attachments.Count > 0)
+        {
+            EditorGUILayout.Space();
+            EditorGUILayout.LabelField("Vertex Attachments", EditorStyles.boldLabel);
+            foreach (var cur_attachment_name in creature_asset.vertex_attachments)
+            {
+                EditorGUILayout.Space();
+                EditorGUILayout.BeginHorizontal(GUILayout.MaxHeight(20));
+                EditorGUILayout.LabelField(cur_attachment_name, GUILayout.MaxWidth(100));
+                EditorGUILayout.EndHorizontal();
+            }
+        }
+    }
+
+    public void RunLiveSync()
+    {
+        CreatureAsset creature_asset = (CreatureAsset)target;
+        if (Application.platform == RuntimePlatform.WindowsEditor)
+        {
+            if(!LiveSync.creatureClient_isConnected())
+            {
+                var can_connect = LiveSync.creatureClient_startConnection();
+                if(!can_connect)
+                {
+                    LiveSync.creatureClient_stopConnection();
+                }
+            }
+
+            if(LiveSync.creatureClient_isConnected())
+            {
+                var sync_type = GetLiveSyncType();
+
+                if (sync_type.Length > 0)
+                {
+                    System.IntPtr raw_ptr =
+                        LiveSync.creatureClient_retrieveRequestExportFilename(sync_type);
+                    string response_str = Marshal.PtrToStringAnsi(raw_ptr);
+                    if (response_str.Length == 0)
+                    {
+                        UnityEditor.EditorUtility.DisplayDialog("Creature Live Sync Error", "Make sure Creature Pro is running in Animate Mode to Live Sync!", "Ok");
+                    }
+                    else
+                    {
+                        if(sync_type == "REQUEST_JSON")
+                        {
+                            string file_contents = System.IO.File.ReadAllText(response_str);
+                            TextAsset text_asset = (TextAsset)creatureJSON.objectReferenceValue;
+                            File.WriteAllText(AssetDatabase.GetAssetPath(text_asset), file_contents);
+                            EditorUtility.SetDirty(text_asset);
+                            creature_asset.creature_manager = null;
+                            UpdateData();
+                            creature_asset.SetIsDirty(true);
+                        }
+                        else if(sync_type == "REQUEST_BYTES")
+                        {
+                            byte[] file_contents = System.IO.File.ReadAllBytes(response_str);
+                            TextAsset flat_text_asset = (TextAsset)flatCreatureData.objectReferenceValue;
+                            File.WriteAllBytes(AssetDatabase.GetAssetPath(flat_text_asset), file_contents);
+                            EditorUtility.SetDirty(flat_text_asset);
+                            creature_asset.creature_manager = null;
+                            UpdateData();
+                            creature_asset.SetIsDirty(true);
+                        }
+
+                        AssetDatabase.Refresh();
+                    }
+                }
+            }
+            else
+            {
+                UnityEditor.EditorUtility.DisplayDialog("Creature Live Sync Error", "Make sure Creature Pro is running in Animate Mode to Live Sync!", "Ok");
+            }
+        }
+    }
 
 	public void SaveCompressedFile()
 	{
